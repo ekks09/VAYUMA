@@ -1,0 +1,235 @@
+.va-profile-document {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 12% 0%, rgb(8 125 66 / 0.07), transparent 38%),
+    var(--va-bg);
+}
+
+.va-profile-document :is(.va-profile-page, .va-form-page) {
+  width: min(100% - 32px, 950px);
+  max-width: 950px;
+  margin: 0 auto;
+  padding: clamp(20px, 4vw, 48px) 0;
+}
+
+.va-profile-document > .container {
+  box-sizing: border-box;
+  width: min(calc(100% - 32px), 950px);
+  max-width: 950px;
+  margin: 0 auto;
+  padding: clamp(20px, 4vw, 48px) 0;
+}
+
+.va-profile-navigation {
+  width: min(100% - 32px, 950px);
+  margin: 0 auto;
+  padding-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.va-profile-navigation a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 15px;
+  border: 1px solid var(--va-border);
+  border-radius: var(--va-radius-full);
+  background: var(--va-surface);
+  color: var(--va-primary);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: border-color var(--va-transition), background var(--va-transition), transform var(--va-transition);
+}
+
+.va-profile-navigation a:hover {
+  border-color: var(--va-primary);
+  background: var(--va-primary-light);
+  transform: translateX(-2px);
+}
+
+.va-profile-navigation span {
+  color: var(--va-text-muted);
+  font-size: 0.8rem;
+}
+
+.va-profile-document :is(.va-profile-card, .va-form-card) {
+  padding: clamp(20px, 4vw, 40px);
+}
+
+.va-profile-document :is(.va-profile-form-grid, .va-form-grid, .profile-form-grid) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 22px 24px;
+  width: 100%;
+}
+
+.va-profile-document :is(.va-profile-form-grid, .va-form-grid, .profile-form-grid) > *,
+.va-profile-document :is(.va-profile-form-group, .va-form-group, .field, .form-group) {
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+}
+
+.va-profile-document .unit-box {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+.va-profile-document .unit-box > * {
+  min-width: 0;
+}
+
+.va-profile-document :is(.profile-extra, .va-profile-section) {
+  margin: 28px 0;
+}
+
+.va-profile-document :is(.profile-extra, .va-profile-section) > h3 {
+  margin: 0 0 18px;
+  color: var(--va-text-primary);
+  font-size: 1.15rem;
+}
+
+.va-profile-document :is(.va-profile-full, .va-form-full, .full, .field.full, .form-group.full) {
+  grid-column: 1 / -1;
+}
+
+.va-profile-document :is(label, .va-profile-label-field, .va-form-label-field) {
+  display: block;
+  margin: 0 0 8px;
+  color: var(--va-text-secondary);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.va-profile-document :is(input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 50px;
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--va-border);
+  border-radius: var(--va-radius);
+  background: var(--va-surface);
+  color: var(--va-text-primary);
+  font: inherit;
+  font-size: 0.96rem;
+  line-height: 1.45;
+  box-shadow: none;
+  transition: border-color var(--va-transition), box-shadow var(--va-transition);
+}
+
+.va-profile-document :is(input, select, textarea)::placeholder {
+  color: var(--va-text-muted);
+  opacity: 1;
+}
+
+.va-profile-document :is(input, select, textarea):focus {
+  border-color: var(--va-border-focus);
+  outline: 0;
+  box-shadow: 0 0 0 3px rgb(8 125 66 / 0.12);
+}
+
+.va-profile-document textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.va-profile-document :is(.hint, .va-profile-hint, .va-form-hint) {
+  margin: 7px 0 0;
+  color: var(--va-text-muted);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.va-profile-document :is(.va-profile-error, .va-form-error, .alert, .notice) {
+  margin: 0 0 20px;
+  padding: 13px 16px;
+  border: 1px solid #f5c2c2;
+  border-radius: var(--va-radius);
+  background: #fde7e7;
+  color: #8d2020;
+  line-height: 1.5;
+}
+
+.va-profile-document form button[type="submit"],
+.va-profile-document form input[type="submit"] {
+  display: inline-flex;
+  width: min(100%, 360px);
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 26px;
+  padding: 13px 22px;
+  border: 1px solid var(--va-primary);
+  border-radius: var(--va-radius);
+  background: var(--va-primary);
+  color: #fff;
+  font: inherit;
+  font-weight: 750;
+  line-height: 1.25;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgb(8 125 66 / 0.16);
+  transition: background var(--va-transition), box-shadow var(--va-transition), transform var(--va-transition);
+}
+
+.va-profile-document form button[type="submit"]:hover,
+.va-profile-document form input[type="submit"]:hover {
+  background: var(--va-primary-hover);
+  box-shadow: 0 8px 20px rgb(8 125 66 / 0.22);
+  transform: translateY(-1px);
+}
+
+.va-profile-document form button[type="submit"]:focus-visible,
+.va-profile-document form input[type="submit"]:focus-visible,
+.va-profile-navigation a:focus-visible {
+  outline: 3px solid rgb(8 125 66 / 0.28);
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  .va-profile-document :is(.va-profile-form-grid, .va-form-grid, .profile-form-grid) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .va-profile-document :is(.va-profile-full, .va-form-full, .full, .field.full, .form-group.full) {
+    grid-column: auto;
+  }
+
+  .va-profile-document .unit-box {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  }
+
+  .va-profile-navigation {
+    align-items: flex-start;
+  }
+
+  .va-profile-navigation span {
+    max-width: 112px;
+    text-align: right;
+  }
+
+  .va-profile-document form button[type="submit"],
+  .va-profile-document form input[type="submit"] {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .va-profile-navigation a,
+  .va-profile-document :is(input, select, textarea),
+  .va-profile-document form button[type="submit"] {
+    transition: none;
+  }
+}

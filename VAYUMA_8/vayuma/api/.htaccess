@@ -1,0 +1,21 @@
+# Keep API scripts private except for the public county lookup used by
+# stakeholder profile forms.
+<Files *>
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order deny,allow
+    Deny from all
+  </IfModule>
+</Files>
+
+<Files "location_options.php">
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Allow from all
+  </IfModule>
+</Files>

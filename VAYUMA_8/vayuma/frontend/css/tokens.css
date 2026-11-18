@@ -1,0 +1,641 @@
+/* =========================================
+   VAYUMA CLEAN — DESIGN TOKENS
+   Minimal, modern, consistent.
+   ========================================= */
+
+:root {
+  color-scheme: light;
+  /* Brand palette (authoritative) */
+  --va-primary: #087d42;
+  --va-primary-hover: #066a36;
+  --va-primary-light: #e5f5e9;
+  --va-secondary: #176b3a;
+  --va-accent: #e2b93b;
+  --va-surface-hover: #fbfefc;
+
+  /* Surfaces */
+  --va-bg: #f4f8f5;
+  --va-surface: #ffffff;
+
+  /* Text */
+  --va-text-primary: #173d2a;
+  --va-text: var(--va-text-primary);
+  --va-text-secondary: #69786e;
+  --va-text-muted: #8c958e;
+
+  /* Borders */
+  --va-border: #dce8dd;
+  --va-border-light: #e8efe9;
+
+  /* Semantic */
+  --va-success: #087d42;
+  --va-warning: #e8a33d;
+  --va-danger: #cf4b4b;
+  --va-info: #245b9b;
+  --va-info-bg: #e5eefc;
+  --va-success-bg: #e4f6e9;
+  --va-warning-bg: #fff4d6;
+  --va-danger-bg: #fde7e7;
+  --va-text-inverse: #ffffff;
+  --va-border-focus: #087d42;
+
+  /* Radius */
+  --va-radius-sm: 8px;
+  --va-radius: 10px;
+  --va-radius-md: 12px;
+  --va-radius-lg: 14px;
+  --va-radius-xl: 20px;
+  --va-radius-full: 9999px;
+
+  /* Shadow */
+  --va-shadow-sm: 0 1px 3px rgb(20 60 35 / 0.06);
+  --va-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --va-shadow-lg: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+
+  /* Transition */
+  --va-transition: 0.15s ease;
+  --va-transition-fast: 0.1s ease;
+
+  /* Spacing */
+  --va-space-0: 0;
+  --va-space-1: 0.25rem;
+  --va-space-2: 0.5rem;
+  --va-space-3: 0.75rem;
+  --va-space-4: 1rem;
+  --va-space-5: 1.25rem;
+  --va-space-6: 1.5rem;
+  --va-space-7: 2rem;
+  --va-space-8: 2.5rem;
+  --va-space-10: 4rem;
+
+  /* Typography */
+  --va-font-size-xs: 0.75rem;
+  --va-font-size-sm: 0.875rem;
+  --va-font-size-base: 1rem;
+  --va-font-size-lg: 1.125rem;
+  --va-font-size-xl: 1.25rem;
+  --va-font-size-2xl: 1.5rem;
+  --va-font-size-3xl: 1.875rem;
+  --va-font-weight-normal: 400;
+  --va-font-weight-medium: 500;
+  --va-font-weight-semibold: 600;
+  --va-font-weight-bold: 700;
+  --va-line-height-normal: 1.5;
+  --va-line-height-relaxed: 1.65;
+
+  /* Application shell and layering */
+  --va-topbar-height: 64px;
+  --va-sidebar-width: 260px;
+  --va-z-dropdown: 100;
+  --va-z-sticky: 200;
+  --va-z-modal: 300;
+  --va-z-toast: 400;
+
+  /* Breakpoints */
+  --va-sm: 640px;
+  --va-md: 768px;
+  --va-lg: 1024px;
+  --va-breakpoint-sm: 640px;
+  --va-breakpoint-md: 768px;
+  --va-breakpoint-lg: 1024px;
+  --va-breakpoint-xl: 1280px;
+}
+
+/* Reset */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--va-bg);
+  color: var(--va-text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--va-primary);
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--va-primary);
+  outline-offset: 2px;
+}
+
+/* Container */
+.va-container {
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Page shell */
+.va-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.va-page-main {
+  flex: 1;
+}
+
+/* Spacing utilities */
+.va-mt-2 { margin-top: 0.5rem; }
+.va-mt-4 { margin-top: 1rem; }
+.va-mt-6 { margin-top: 1.5rem; }
+.va-mb-2 { margin-bottom: 0.5rem; }
+.va-mb-4 { margin-bottom: 1rem; }
+.va-mb-6 { margin-bottom: 1.5rem; }
+.va-mb-8 { margin-bottom: 2rem; }
+
+.va-d-flex { display: flex; }
+.va-d-grid { display: grid; }
+.va-items-center { align-items: center; }
+.va-justify-between { justify-content: space-between; }
+.va-justify-center { justify-content: center; }
+.va-gap-2 { gap: 0.5rem; }
+.va-gap-4 { gap: 1rem; }
+.va-wrap { flex-wrap: wrap; }
+.va-w-full { width: 100%; }
+
+/* Typography scale */
+.va-text-xs { font-size: 0.75rem; }
+.va-text-sm { font-size: 0.875rem; }
+.va-text-base { font-size: 1rem; }
+.va-text-lg { font-size: 1.125rem; }
+.va-text-xl { font-size: 1.25rem; }
+.va-text-2xl { font-size: 1.5rem; }
+.va-text-3xl { font-size: 1.875rem; }
+
+.va-font-medium { font-weight: 500; }
+.va-font-semibold { font-weight: 600; }
+.va-font-bold { font-weight: 700; }
+
+.va-text-primary { color: var(--va-text); }
+.va-text-secondary { color: var(--va-text-secondary); }
+.va-text-muted { color: var(--va-text-muted); }
+.va-text-success { color: var(--va-primary); }
+
+.va-text-center { text-align: center; }
+
+/* ── Buttons ── */
+.va-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--va-radius);
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color var(--va-transition), box-shadow var(--va-transition), transform var(--va-transition);
+}
+
+.va-btn--primary {
+  background: var(--va-primary);
+  color: var(--va-text-inverse);
+}
+
+.va-btn--primary:hover {
+  background: var(--va-primary-hover);
+}
+
+.va-btn--outline {
+  background: transparent;
+  color: var(--va-primary);
+  border: 1px solid var(--va-primary);
+}
+
+.va-btn--outline:hover {
+  background: var(--va-primary-light);
+}
+
+.va-btn--ghost {
+  background: transparent;
+  color: var(--va-text-secondary);
+}
+
+.va-btn--ghost:hover {
+  background: #f1f5f9;
+  color: var(--va-text);
+}
+
+.va-btn--sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+}
+
+.va-btn--lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+}
+
+.va-btn--full {
+  width: 100%;
+}
+
+.va-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Cards ── */
+.va-card {
+  background: var(--va-surface);
+  border: 1px solid var(--va-border);
+  border-radius: var(--va-radius-lg);
+  box-shadow: var(--va-shadow);
+}
+
+.va-card--p {
+  padding: 1.5rem;
+}
+
+.va-card--header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.va-card--title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--va-text);
+}
+
+.va-card--sub {
+  font-size: 0.875rem;
+  color: var(--va-text-secondary);
+  margin-top: 0.25rem;
+}
+
+/* ── Badges ── */
+.va-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: var(--va-radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.va-badge--active {
+  background: var(--va-success-bg);
+  color: var(--va-success);
+}
+
+.va-badge--free {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.va-badge--negotiated {
+  background: #fef3c7;
+  color: #ca8a04;
+}
+
+.va-badge--paid {
+  background: var(--va-success-bg);
+  color: var(--va-success);
+}
+
+/* ── Inputs ── */
+.va-input {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  font-family: inherit;
+  border: 1px solid var(--va-border);
+  border-radius: var(--va-radius);
+  background: var(--va-surface);
+  color: var(--va-text);
+  transition: border-color var(--va-transition), box-shadow var(--va-transition);
+}
+
+.va-input:focus {
+  outline: none;
+  border-color: var(--va-border-focus);
+  box-shadow: 0 0 0 3px rgb(5 150 105 / 0.1);
+}
+
+.va-input::placeholder {
+  color: var(--va-text-muted);
+}
+
+.va-field {
+  margin-bottom: 1rem;
+}
+
+.va-field-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--va-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.375rem;
+}
+
+.va-field-helper {
+  font-size: 0.75rem;
+  color: var(--va-text-muted);
+  margin-top: 0.25rem;
+}
+
+.va-field-error {
+  font-size: 0.75rem;
+  color: var(--va-danger);
+  margin-top: 0.25rem;
+}
+
+.va-input--error {
+  border-color: var(--va-danger);
+}
+
+/* ── Status pill ── */
+.va-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  border-radius: var(--va-radius-full);
+}
+
+.va-status--active {
+  background: var(--va-success-bg);
+  color: var(--va-success);
+}
+
+.va-status--payment-due {
+  background: var(--va-warning-bg);
+  color: var(--va-warning);
+}
+
+.va-status--expired {
+  background: var(--va-danger-bg);
+  color: var(--va-danger);
+}
+
+.va-status--free {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.va-status--negotiated {
+  background: #fef3c7;
+  color: #ca8a04;
+}
+
+/* ── Grid cards (stakeholder selection) ── */
+.va-plan-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.va-plan-card {
+  border: 1px solid var(--va-border);
+  border-radius: var(--va-radius-lg);
+  padding: 1.25rem;
+  transition: border-color var(--va-transition), box-shadow var(--va-transition), transform var(--va-transition);
+}
+
+.va-plan-card:hover {
+  border-color: var(--va-primary);
+  box-shadow: var(--va-shadow-lg);
+  transform: translateY(-2px);
+}
+
+.va-plan-card--name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--va-text);
+  margin-bottom: 0.25rem;
+}
+
+.va-plan-card--price {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--va-text);
+  margin-bottom: 0.25rem;
+}
+
+.va-plan-card--period {
+  font-size: 0.75rem;
+  color: var(--va-text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.va-plan-card--btn {
+  width: 100%;
+  padding: 0.625rem;
+  font-size: 0.875rem;
+}
+
+/* ── Empty state ── */
+.va-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.va-empty--icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.va-empty--title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--va-text);
+  margin-bottom: 0.5rem;
+}
+
+.va-empty--desc {
+  font-size: 0.875rem;
+  color: var(--va-text-secondary);
+  max-width: 400px;
+  margin: 0 auto 1.5rem;
+}
+
+/* ── Divider ── */
+.va-divider {
+  border: none;
+  height: 1px;
+  background: var(--va-border);
+  margin: 1.5rem 0;
+}
+
+/* ── Top navigation (simple) ── */
+.va-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--va-surface);
+  border-bottom: 1px solid var(--va-border);
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+}
+
+.va-topbar--brand {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.va-topbar--brand img {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+}
+
+.va-topbar--brand strong {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--va-primary);
+  letter-spacing: -0.02em;
+}
+
+.va-topbar--nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.va-topbar--nav a {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--va-text-secondary);
+}
+
+.va-topbar--nav a:hover {
+  color: var(--va-primary);
+}
+
+.va-topbar--user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.va-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--va-primary-light);
+  color: var(--va-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.va-menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  color: var(--va-text);
+  cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .va-container {
+    padding: 0 1rem;
+  }
+  .va-page-main {
+    padding: 0 1rem 2rem;
+  }
+  .va-topbar {
+    padding: 0 1rem;
+  }
+  .va-topbar--nav {
+    display: none;
+  }
+  .va-menu-btn {
+    display: block;
+  }
+}
+
+/* Skip to content link */
+.va-skip-link {
+  position: absolute;
+  top: -10000px;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  padding: var(--va-space-3) var(--va-space-4);
+  background: var(--va-primary);
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: var(--va-font-weight-bold);
+  text-align: center;
+  border-radius: 0 0 var(--va-radius) var(--va-radius);
+  transition: top 0.2s ease;
+}
+.va-skip-link:focus {
+  top: 0;
+}
+
+/* Focus visible states for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--va-primary);
+  outline-offset: 2px;
+}

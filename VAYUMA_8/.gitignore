@@ -1,0 +1,21 @@
+# Local secrets and environment-specific configuration
+.env
+.env.*
+!.env.example
+/vayuma/config/*local.php
+
+# User-generated content and local backups
+/vayuma/uploads/
+/vayuma/backups/
+
+# Downloaded project archive
+/vayuma.zip
+
+# Local tooling and generated files
+/.vscode/
+/vayuma/vendor/
+/vayuma/node_modules/
+*.log
+*.cache
+Thumbs.db
+.DS_Store

@@ -1,0 +1,436 @@
+/* =========================================
+   VAYUMA — PAGES
+   Page-specific styles that extend components.
+   ========================================= */
+
+/* ── Stakeholder selection ── */
+.va-stakeholder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--va-space-4);
+}
+
+.va-stakeholder-card {
+  border: 1px solid var(--va-border);
+  border-radius: var(--va-radius-lg);
+  padding: var(--va-space-5);
+  transition: border-color var(--va-transition), box-shadow var(--va-transition), transform var(--va-transition);
+}
+
+.va-stakeholder-card:hover {
+  border-color: var(--va-primary);
+  box-shadow: var(--va-shadow-lg);
+  transform: translateY(-2px);
+}
+
+.va-stakeholder-card--header {
+  display: flex;
+  align-items: center;
+  gap: var(--va-space-3);
+  margin-bottom: var(--va-space-3);
+}
+
+.va-stakeholder-card--icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: var(--va-radius);
+  background: var(--va-primary-light);
+  color: var(--va-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--va-font-size-xl);
+}
+
+.va-stakeholder-card--name {
+  font-size: var(--va-font-size-lg);
+  font-weight: var(--va-font-weight-bold);
+  color: var(--va-text-primary);
+}
+
+.va-stakeholder-card--price {
+  font-size: var(--va-font-size-2xl);
+  font-weight: var(--va-font-weight-bold);
+  color: var(--va-text-primary);
+}
+
+.va-stakeholder-card--period {
+  font-size: var(--va-font-size-sm);
+  color: var(--va-text-muted);
+  margin-top: var(--va-space-1);
+}
+
+.va-stakeholder-card--badge {
+  font-size: var(--va-font-size-xs);
+  font-weight: var(--va-font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: var(--va-space-1) var(--va-space-3);
+  border-radius: var(--va-radius-full);
+}
+
+.va-stakeholder-card--badge--paid {
+  background: var(--va-success-bg);
+  color: var(--va-success);
+}
+
+.va-stakeholder-card--badge--free {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.va-stakeholder-card--badge--negotiated {
+  background: #fef3c7;
+  color: #ca8a04;
+}
+
+.va-stakeholder-card--desc {
+  font-size: var(--va-font-size-sm);
+  color: var(--va-text-secondary);
+  margin-bottom: var(--va-space-4);
+  line-height: var(--va-line-height-relaxed);
+}
+
+/* ── Subscription summary ── */
+.va-subscription-card {
+  border: 1px solid var(--va-border);
+  border-radius: var(--va-radius-lg);
+  padding: var(--va-space-5);
+  box-shadow: var(--va-shadow);
+}
+
+.va-subscription--header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--va-space-5);
+}
+
+.va-subscription--amount {
+  font-size: var(--va-font-size-3xl);
+  font-weight: var(--va-font-weight-bold);
+  color: var(--va-text-primary);
+}
+
+.va-subscription--period {
+  font-size: var(--va-font-size-sm);
+  color: var(--va-text-muted);
+}
+
+.va-subscription--detail {
+  display: flex;
+  align-items: center;
+  gap: var(--va-space-2);
+  margin-bottom: var(--va-space-3);
+}
+
+.va-subscription--detail-label {
+  font-size: var(--va-font-size-sm);
+  color: var(--va-text-muted);
+}
+
+.va-subscription--detail-value {
+  font-size: var(--va-font-size-sm);
+  font-weight: var(--va-font-weight-medium);
+  color: var(--va-text-primary);
+}
+
+.va-subscription--divider {
+  border: none;
+  height: 1px;
+  background: var(--va-border);
+  margin: var(--va-space-4) 0;
+}
+
+/* ── Payment section ── */
+.va-payment-options {
+  display: flex;
+  gap: var(--va-space-3);
+  flex-wrap: wrap;
+  margin-top: var(--va-space-4);
+}
+
+.va-payment-options .va-btn {
+  flex: 1;
+  min-width: 200px;
+}
+
+.va-payment--note {
+  font-size: var(--va-font-size-sm);
+  color: var(--va-text-secondary);
+  margin-top: var(--va-space-2);
+}
+
+/* ── Receipt ── */
+.va-receipt {
+  border: 1px solid var(--va-border);
+  border-radius: var(--va-radius-lg);
+  padding: var(--va-space-6);
+  box-shadow: var(--va-shadow);
+}
+
+.va-receipt--header {
+  text-align: center;
+  margin-bottom: var(--va-space-6);
+}
+
+.va-receipt--title {
+  font-size: var(--va-font-size-2xl);
+  font-weight: var(--va-font-weight-bold);
+  color: var(--va-text-primary);
+  margin-bottom: var(--va-space-1);
+}
+
+.va-receipt--subtitle {
+  font-size: var(--va-font-size-sm);
+  color: var(--va-text-secondary);
+}
+
+.va-receipt--field {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--va-space-4);
+  margin-bottom: var(--va-space-3);
+}
+
+.va-receipt--field-label {
+  font-size: var(--va-font-size-sm);
+  color: var(--va-text-secondary);
+}
+
+.va-receipt--field-value {
+  font-size: var(--va-font-size-sm);
+  font-weight: var(--va-font-weight-semibold);
+  color: var(--va-text-primary);
+  text-align: right;
+}
+
+.va-receipt--amount {
+  font-size: var(--va-font-size-2xl);
+  font-weight: var(--va-font-weight-bold);
+  color: var(--va-primary);
+}
+
+/* ── Table ── */
+.va-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.va-table th,
+.va-table td {
+  padding: var(--va-space-3) var(--va-space-4);
+  text-align: left;
+  border-bottom: 1px solid var(--va-border);
+}
+
+.va-table th {
+  font-size: var(--va-font-size-xs);
+  font-weight: var(--va-font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--va-text-muted);
+}
+
+.va-table td {
+  font-size: var(--va-font-size-sm);
+  color: var(--va-text-primary);
+}
+
+.va-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── Modal ── */
+.va-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: var(--va-z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--va-space-4);
+  backdrop-filter: blur(2px);
+}
+
+.va-modal {
+  background: var(--va-surface);
+  border-radius: var(--va-radius-lg);
+  box-shadow: var(--va-shadow-lg);
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.va-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--va-space-4) var(--va-space-5);
+  border-bottom: 1px solid var(--va-border);
+}
+
+.va-modal-title {
+  font-size: var(--va-font-size-lg);
+  font-weight: var(--va-font-weight-bold);
+  color: var(--va-text-primary);
+}
+
+.va-modal-close {
+  background: transparent;
+  border: none;
+  font-size: var(--va-font-size-lg);
+  color: var(--va-text-muted);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.va-modal-body {
+  padding: var(--va-space-5);
+}
+
+.va-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--va-space-3);
+  padding: var(--va-space-3) var(--va-space-5);
+  border-top: 1px solid var(--va-border);
+}
+
+/* ── Empty state ── */
+.va-empty {
+  text-align: center;
+  padding: var(--va-space-10) var(--va-space-4);
+}
+
+.va-empty--icon {
+  font-size: 3rem;
+  margin-bottom: var(--va-space-3);
+}
+
+.va-empty--title {
+  font-size: var(--va-font-size-xl);
+  font-weight: var(--va-font-weight-bold);
+  color: var(--va-text-primary);
+  margin-bottom: var(--va-space-2);
+}
+
+.va-empty--desc {
+  font-size: var(--va-font-size-sm);
+  color: var(--va-text-secondary);
+  max-width: 400px;
+  margin: 0 auto var(--va-space-6);
+}
+
+/* ── Toast ── */
+.va-toast-container {
+  position: fixed;
+  top: var(--va-space-4);
+  right: var(--va-space-4);
+  z-index: var(--va-z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--va-space-3);
+  pointer-events: none;
+}
+
+.va-toast {
+  pointer-events: auto;
+  background: var(--va-surface);
+  border: 1px solid var(--va-border);
+  border-left: 3px solid var(--va-primary);
+  border-radius: var(--va-radius);
+  box-shadow: var(--va-shadow-lg);
+  padding: var(--va-space-3) var(--va-space-4);
+  min-width: 300px;
+  max-width: 400px;
+}
+
+.va-toast--error {
+  border-left-color: var(--va-danger);
+}
+
+.va-toast--success {
+  border-left-color: var(--va-success);
+}
+
+.va-toast--warning {
+  border-left-color: var(--va-warning);
+}
+
+.va-toast--title {
+  font-weight: var(--va-font-weight-bold);
+  font-size: var(--va-font-size-sm);
+  color: var(--va-text-primary);
+  margin-bottom: var(--va-space-1);
+}
+
+.va-toast--msg {
+  font-size: var(--va-font-size-xs);
+  color: var(--va-text-secondary);
+}
+
+/* ── Skeleton ── */
+.va-skeleton {
+  background: #f1f5f9;
+  border-radius: var(--va-radius-sm);
+  animation: va-pulse 1.5s ease-in-out infinite;
+}
+
+.va-skeleton--text { height: var(--va-font-size-sm); }
+.va-skeleton--text-lg { height: var(--va-font-size-base); width: 60%; }
+.va-skeleton--avatar { width: 32px; height: 32px; border-radius: 50%; }
+.va-skeleton--card { height: 140px; }
+
+@keyframes va-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ── Confirmation dialog ── */
+.va-confirm-dialog {
+  background: var(--va-surface);
+  border-radius: var(--va-radius-lg);
+  padding: var(--va-space-5);
+  box-shadow: var(--va-shadow-lg);
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+}
+
+.va-confirm-dialog--title {
+  font-size: var(--va-font-size-lg);
+  font-weight: var(--va-font-weight-bold);
+  color: var(--va-text-primary);
+  margin-bottom: var(--va-space-2);
+}
+
+.va-confirm-dialog--desc {
+  font-size: var(--va-font-size-sm);
+  color: var(--va-text-secondary);
+  margin-bottom: var(--va-space-5);
+}
+
+.va-confirm-dialog--actions {
+  display: flex;
+  gap: var(--va-space-3);
+  justify-content: center;
+}
+
+/* ── Print receipt ── */
+@media print {
+  .va-no-print {
+    display: none !important;
+  }
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .va-receipt {
+    box-shadow: none;
+    border: none;
+  }
+}

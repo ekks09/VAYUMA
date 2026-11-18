@@ -1,0 +1,45 @@
+<?php
+session_start();require_once __DIR__.'/config/db.php';require_once __DIR__.'/includes/language.php';require_once __DIR__.'/includes/csrf.php';
+if(!isset($_SESSION['user_id'])||($_SESSION['logged_in']??false)!==true){header('Location: login.php');exit;}$uid=(int)$_SESSION['user_id'];$view=($_GET['view']??'')==='received'?'received':'sent';$type=($_GET['type']??'');$type=$type==='veterinary'?'veterinary':($type==='extension'?'extension':'');
+$sets=[];$params=[];$types='';
+if($view==='sent'||$view==='all'){$sets[]="SELECT id,'veterinary' AS request_type,provider_id,requester_id,animal_species AS subject,urgency AS subinfo,details,county,locality,status,preferred_date,created_at FROM veterinary_service_requests WHERE requester_id=?";$params[]=$uid;$types.='i';$sets[]="SELECT id,'extension' AS request_type,provider_id,requester_id,topic AS subject,support_mode AS subinfo,details,county,locality,status,preferred_date,created_at FROM extension_support_requests WHERE requester_id=?";$params[]=$uid;$types.='i';}
+if($view==='received'){$sets[]="SELECT id,'veterinary' AS request_type,provider_id,requester_id,animal_species AS subject,urgency AS subinfo,details,county,locality,status,preferred_date,created_at FROM veterinary_service_requests WHERE provider_id=?";$params[]=$uid;$types.='i';$sets[]="SELECT id,'extension' AS request_type,provider_id,requester_id,topic AS subject,support_mode AS subinfo,details,county,locality,status,preferred_date,created_at FROM extension_support_requests WHERE provider_id=?";$params[]=$uid;$types.='i';}
+$sql='SELECT q.*, requester.full_name AS requester_name, provider.full_name AS provider_name FROM ('.implode(' UNION ALL ',$sets).') q INNER JOIN users requester ON requester.id=q.requester_id INNER JOIN users provider ON provider.id=q.provider_id';if($type)$sql.=' WHERE q.request_type=?';if($type){$types.='s';$params[]=$type;}$sql.=' ORDER BY q.created_at DESC LIMIT 100';$stmt=$conn->prepare($sql);$stmt->bind_param($types,...$params);$stmt->execute();$rows=$stmt->get_result();function rh($v){return htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8');}
+?>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Agricultural Support Requests | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
+<link rel="stylesheet" href="frontend/css/components.css">
+<link rel="stylesheet" href="frontend/css/components_addition.css">
+<link rel="stylesheet" href="frontend/css/layout.css">
+<link rel="stylesheet" href="frontend/css/pages.css">
+<style>
+.va-profile-page { max-width: 950px; margin: 0 auto; padding: var(--va-space-6); }
+.va-profile-brand { text-align: center; margin-bottom: var(--va-space-6); }
+.va-profile-brand h1 { color: var(--va-primary); font-size: var(--va-font-size-3xl); letter-spacing: 0.05em; margin: 0; }
+.va-profile-brand p { color: var(--va-text-muted); font-size: var(--va-font-size-xs); letter-spacing: 0.05em; margin-top: var(--va-space-1); }
+.va-profile-card { background: var(--va-surface); border-radius: var(--va-radius-lg); padding: var(--va-space-6); box-shadow: var(--va-shadow-sm); border: 1px solid var(--va-border); }
+.va-profile-heading { margin-bottom: var(--va-space-5); }
+.va-profile-label { color: var(--va-primary); font-size: var(--va-font-size-xs); font-weight: var(--va-font-weight-bold); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: var(--va-space-2); }
+.va-profile-heading h2 { font-size: var(--va-font-size-2xl); margin-bottom: var(--va-space-2); color: var(--va-text-primary); }
+.va-profile-heading p { color: var(--va-text-secondary); line-height: var(--va-line-height-relaxed); }
+.va-profile-welcome { background: var(--va-primary-light); border-radius: var(--va-radius-md); padding: var(--va-space-4); margin: var(--va-space-6) 0; color: #17663a; line-height: var(--va-line-height-relaxed); }
+.va-profile-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--va-space-4); }
+.va-profile-form-group { display: flex; flex-direction: column; }
+.va-profile-full { grid-column: 1 / -1; }
+.va-profile-label-field { font-size: var(--va-font-size-sm); font-weight: var(--va-font-weight-bold); margin-bottom: var(--va-space-2); color: var(--va-text-secondary); }
+.va-profile-input { width: 100%; padding: 0.75rem 1rem; font-size: var(--va-font-size-base); font-family: inherit; border: 1px solid var(--va-border); border-radius: var(--va-radius); background: var(--va-surface); color: var(--va-text-primary); }
+.va-profile-input:focus { outline: none; border-color: var(--va-border-focus); box-shadow: 0 0 0 3px rgba(10, 138, 73, 0.1); }
+.va-profile-hint { font-size: var(--va-font-size-xs); color: var(--va-text-muted); margin-top: var(--va-space-1); }
+.va-profile-button-area { margin-top: var(--va-space-6); }
+.va-profile-btn { width: 100%; border: none; padding: var(--va-space-4); background: var(--va-primary); color: #fff; border-radius: var(--va-radius); font-size: var(--va-font-size-base); font-weight: var(--va-font-weight-bold); cursor: pointer; }
+.va-profile-btn:hover { background: var(--va-primary-hover); }
+.va-profile-back { display: inline-block; margin-top: var(--va-space-4); color: var(--va-primary); text-decoration: none; font-weight: var(--va-font-weight-bold); }
+.va-profile-error { background: #fde7e7; color: #a32121; padding: var(--va-space-3); border-radius: var(--va-radius-md); margin-bottom: var(--va-space-4); }
+@media (max-width: 700px) {
+  .va-profile-page { padding: var(--va-space-4); }
+  .va-profile-card { padding: var(--va-space-4); }
+  .va-profile-form-grid { grid-template-columns: 1fr; }
+  .va-profile-full { grid-column: auto; }
+}
+</style></head><body><?php vayuma_language_selector();?><main class="va-profile-page"><div class="va-profile-brand">VAYUMA</div><h1>Agricultural Support Requests</h1><nav class="nav"><a href="dashboard.php">Dashboard</a><a href="stakeholder_directory.php">Stakeholder directory</a></nav><div class="tabs"><a href="?view=sent">Requests I sent</a><a href="?view=received">Requests received</a></div><form class="filter"><input class="va-profile-input" type="hidden" name="view" value="<?=rh($view)?>"><select class="va-profile-input" name="type" onchange="this.form.submit()"><option value="">All request types</option><option value="veterinary" <?=$type==='veterinary'?'selected':''?>>Veterinary</option><option value="extension" <?=$type==='extension'?'selected':''?>>Extension</option></select></form>
+<?php if($rows->num_rows):while($r=$rows->fetch_assoc()):?><article class="card"><strong><?=rh(ucfirst($r['request_type']))?> · <?=rh($r['subject'])?></strong><div class="meta">From: <?=rh($r['requester_name'])?> · To: <?=rh($r['provider_name'])?><br>Location: <?=rh($r['county'])?> <?=rh($r['locality'])?><br>Details: <?=nl2br(rh($r['details']))?><br><?=rh($r['subinfo'])?> · Preferred date: <?=rh($r['preferred_date']?:'Not specified')?> · Created: <?=rh($r['created_at'])?></div><p>Status: <span class="status"><?=rh(str_replace('_',' ',$r['status']))?></span></p>
+<?php if($view==='received'&&$r['status']==='pending'):?><form class="actions" method="post" action="auth/update_agricultural_support_request.php"><?=vayuma_csrf_field()?><input class="va-profile-input" type="hidden" name="type" value="<?=rh($r['request_type'])?>"><input class="va-profile-input" type="hidden" name="id" value="<?=(int)$r['id']?>"><input class="va-profile-input" type="hidden" name="action" value="accept"><button>Accept</button><button class="decline" name="action" value="decline">Decline</button></form><?php elseif($view==='received'&&$r['status']==='accepted'):?><form method="post" action="auth/update_agricultural_support_request.php" class="actions"><?=vayuma_csrf_field()?><input class="va-profile-input" type="hidden" name="type" value="<?=rh($r['request_type'])?>"><input class="va-profile-input" type="hidden" name="id" value="<?=(int)$r['id']?>"><button name="action" value="in_progress">Mark in progress</button><button name="action" value="completed">Mark completed</button></form><?php elseif($view==='received'&&$r['status']==='in_progress'):?><form method="post" action="auth/update_agricultural_support_request.php" class="actions"><?=vayuma_csrf_field()?><input class="va-profile-input" type="hidden" name="type" value="<?=rh($r['request_type'])?>"><input class="va-profile-input" type="hidden" name="id" value="<?=(int)$r['id']?>"><button name="action" value="completed">Mark completed</button></form><?php elseif($view==='sent'&&$r['status']==='pending'):?><form method="post" action="auth/update_agricultural_support_request.php" class="actions"><?=vayuma_csrf_field()?><input class="va-profile-input" type="hidden" name="type" value="<?=rh($r['request_type'])?>"><input class="va-profile-input" type="hidden" name="id" value="<?=(int)$r['id']?>"><button class="decline" name="action" value="cancel">Cancel request</button></form><?php endif;?></article><?php endwhile;else:?><div class="empty">No support requests found for this view.</div><?php endif;?></main></body></html>

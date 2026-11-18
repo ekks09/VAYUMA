@@ -1,0 +1,1230 @@
+/* =====================================================
+   VAYUMA FARMER DASHBOARD
+===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+
+    background: #f5f8f6;
+
+    color: #183b28;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.farmer-sidebar {
+    position: fixed;
+
+    left: 0;
+    top: 0;
+
+    width: 255px;
+    height: 100vh;
+
+    background: #ffffff;
+
+    border-right: 1px solid #e4ebe6;
+
+    display: flex;
+
+    flex-direction: column;
+
+    z-index: 1000;
+}
+
+
+/* LOGO */
+
+.sidebar-logo {
+    height: 85px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 15px 20px;
+
+    border-bottom: 1px solid #edf1ee;
+}
+
+.sidebar-logo img {
+    width: 48px;
+
+    height: 48px;
+
+    object-fit: contain;
+
+    border-radius: 50%;
+}
+
+.sidebar-logo strong {
+    display: block;
+
+    color: #08763e;
+
+    font-size: 18px;
+
+    letter-spacing: 1px;
+}
+
+.sidebar-logo small {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #9aa59f;
+
+    font-size: 9px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.8px;
+}
+
+
+/* NAVIGATION */
+
+.sidebar-navigation {
+    padding: 18px 12px;
+
+    overflow-y: auto;
+
+    flex: 1;
+}
+
+.nav-section-title {
+    padding: 13px 13px 7px;
+
+    color: #a2ada6;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+.nav-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 11px 13px;
+
+    margin-bottom: 3px;
+
+    border-radius: 9px;
+
+    color: #607169;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    transition: 0.2s;
+}
+
+.nav-item:hover {
+    background: #eef8f1;
+
+    color: #08763e;
+}
+
+.nav-item.active {
+    background: #e5f5e9;
+
+    color: #08763e;
+
+    font-weight: 800;
+}
+
+.nav-icon {
+    width: 20px;
+
+    text-align: center;
+
+    font-size: 16px;
+}
+
+
+/* SIDEBAR BOTTOM */
+
+.sidebar-bottom {
+    padding: 12px;
+
+    border-top: 1px solid #edf1ee;
+}
+
+.logout-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 11px 13px;
+
+    color: #cf4b4b;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    border-radius: 9px;
+}
+
+.logout-item:hover {
+    background: #fff2f2;
+}
+
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.farmer-main {
+    margin-left: 255px;
+
+    min-height: 100vh;
+}
+
+
+/* =====================================================
+   TOPBAR
+===================================================== */
+
+.farmer-topbar {
+    height: 75px;
+
+    background: white;
+
+    border-bottom: 1px solid #e5ebe7;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 30px;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 100;
+}
+
+
+/* SEARCH */
+
+.topbar-search {
+    width: 300px;
+
+    height: 40px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 0 13px;
+
+    border: 1px solid #e2e9e4;
+
+    border-radius: 9px;
+
+    background: #f8faf9;
+}
+
+.topbar-search span {
+    color: #98a59d;
+
+    font-size: 18px;
+}
+
+.topbar-search input {
+    width: 100%;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    font-size: 12px;
+}
+
+
+/* TOP ACTIONS */
+
+.topbar-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+}
+
+.notification-button {
+    position: relative;
+
+    border: none;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    font-size: 17px;
+}
+
+.notification-dot {
+    position: absolute;
+
+    right: 0;
+    top: 0;
+
+    width: 6px;
+    height: 6px;
+
+    background: #e15a4f;
+
+    border-radius: 50%;
+}
+
+.topbar-user {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+}
+
+.user-avatar {
+    width: 38px;
+
+    height: 38px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #dff1e5;
+
+    color: #08763e;
+
+    border-radius: 50%;
+
+    font-size: 14px;
+
+    font-weight: 800;
+}
+
+.topbar-user-info strong {
+    display: block;
+
+    font-size: 12px;
+}
+
+.topbar-user-info small {
+    color: #8c9991;
+
+    font-size: 9px;
+}
+
+
+/* =====================================================
+   CONTENT
+===================================================== */
+
+.dashboard-content {
+    max-width: 1500px;
+
+    margin: auto;
+
+    padding: 30px;
+}
+
+
+/* WELCOME */
+
+.welcome-section {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 28px;
+}
+
+.welcome-label {
+    color: #0a8746;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.2px;
+
+    margin-bottom: 7px;
+}
+
+.welcome-section h1 {
+    font-size: 29px;
+
+    color: #173c28;
+}
+
+.welcome-section p:last-child {
+    margin-top: 8px;
+
+    color: #7b8981;
+
+    font-size: 12px;
+}
+
+.ai-button {
+    border: none;
+
+    padding: 13px 19px;
+
+    border-radius: 10px;
+
+    background: #08763e;
+
+    color: white;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow: 0 7px 18px rgba(8, 118, 62, 0.18);
+}
+
+
+/* =====================================================
+   OVERVIEW CARDS
+===================================================== */
+
+.dashboard-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 18px;
+
+    margin-bottom: 20px;
+}
+
+.score-card,
+.opportunity-card,
+.weather-card {
+    min-height: 190px;
+
+    padding: 21px;
+
+    border-radius: 15px;
+
+    background: white;
+
+    border: 1px solid #e6ece8;
+
+    box-shadow: 0 4px 15px rgba(20, 60, 35, 0.035);
+}
+
+.card-top {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+.card-label {
+    color: #8a9890;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.8px;
+}
+
+.score-card h2 {
+    margin-top: 7px;
+
+    font-size: 31px;
+}
+
+.score-card h2 small {
+    color: #9aa59e;
+
+    font-size: 12px;
+}
+
+.score-circle {
+    width: 65px;
+
+    height: 65px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border: 7px solid #dff1e5;
+
+    color: #08763e;
+
+    font-size: 11px;
+
+    font-weight: 800;
+}
+
+.progress-bar {
+    width: 100%;
+
+    height: 6px;
+
+    margin-top: 16px;
+
+    border-radius: 20px;
+
+    background: #edf2ee;
+
+    overflow: hidden;
+}
+
+.progress-value {
+    height: 100%;
+
+    background: #0b9950;
+
+    border-radius: 20px;
+}
+
+.score-card p,
+.opportunity-card p {
+    margin-top: 12px;
+
+    color: #7e8b84;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+.score-card a,
+.opportunity-card a,
+.weather-card a {
+    display: inline-block;
+
+    margin-top: 13px;
+
+    color: #08763e;
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+
+/* OPPORTUNITY */
+
+.opportunity-card {
+    position: relative;
+}
+
+.card-icon {
+    margin-bottom: 7px;
+
+    font-size: 22px;
+}
+
+.opportunity-card h2 {
+    margin-top: 7px;
+
+    font-size: 23px;
+}
+
+.opportunity-score {
+    position: absolute;
+
+    right: 20px;
+
+    top: 55px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+}
+
+.opportunity-score strong {
+    color: #08763e;
+
+    font-size: 23px;
+}
+
+.opportunity-score span {
+    color: #99a49e;
+
+    font-size: 7px;
+
+    text-align: center;
+}
+
+
+/* WEATHER */
+
+.weather-top {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+.weather-card h2 {
+    margin-top: 8px;
+
+    font-size: 30px;
+}
+
+.weather-card p {
+    margin-top: 3px;
+
+    color: #7f8d85;
+
+    font-size: 11px;
+}
+
+.weather-icon {
+    font-size: 42px;
+}
+
+.weather-details {
+    display: flex;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+
+    margin-top: 18px;
+}
+
+.weather-details span {
+    color: #75847b;
+
+    font-size: 9px;
+}
+
+
+/* =====================================================
+   MAIN CARDS
+===================================================== */
+
+.main-dashboard-grid {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 18px;
+}
+
+.dashboard-card {
+    padding: 23px;
+
+    border-radius: 15px;
+
+    background: white;
+
+    border: 1px solid #e6ece8;
+}
+
+.card-heading {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    margin-bottom: 20px;
+}
+
+.small-label {
+    color: #8d9a92;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+.card-heading h2 {
+    margin-top: 6px;
+
+    font-size: 17px;
+}
+
+.heading-icon {
+    width: 40px;
+
+    height: 40px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #edf8f0;
+
+    border-radius: 10px;
+
+    font-size: 19px;
+}
+
+
+/* GUIDANCE */
+
+.guidance-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 13px;
+
+    margin-bottom: 18px;
+}
+
+.guidance-item {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 12px;
+}
+
+.guidance-icon {
+    width: 34px;
+
+    height: 34px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #f0f8f2;
+
+    border-radius: 8px;
+}
+
+.guidance-item strong {
+    display: block;
+
+    font-size: 11px;
+}
+
+.guidance-item p {
+    margin-top: 4px;
+
+    color: #85918a;
+
+    font-size: 9px;
+
+    line-height: 1.4;
+}
+
+
+/* BUTTON */
+
+.outline-button {
+    padding: 10px 14px;
+
+    border: 1px solid #b9d8c2;
+
+    border-radius: 8px;
+
+    background: white;
+
+    color: #08763e;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+
+/* =====================================================
+   CROP CALENDAR
+===================================================== */
+
+.calendar-progress {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0;
+}
+
+.calendar-step {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+}
+
+.calendar-step > span {
+    width: 27px;
+
+    height: 27px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #edf0ee;
+
+    color: #7e8982;
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+.calendar-step.completed > span {
+    background: #08763e;
+
+    color: white;
+}
+
+.calendar-step.current > span {
+    background: #dff2e5;
+
+    color: #08763e;
+
+    border: 2px solid #08763e;
+}
+
+.calendar-step strong {
+    display: block;
+
+    font-size: 10px;
+}
+
+.calendar-step small {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #8c9891;
+
+    font-size: 8px;
+}
+
+.calendar-line {
+    width: 1px;
+
+    height: 18px;
+
+    background: #dbe3de;
+
+    margin-left: 13px;
+}
+
+
+/* =====================================================
+   BUSINESS
+===================================================== */
+
+.section-title {
+    margin: 30px 0 16px;
+}
+
+.section-title span {
+    color: #0a8746;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+.section-title h2 {
+    margin-top: 5px;
+
+    font-size: 20px;
+}
+
+.business-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 15px;
+}
+
+.feature-card {
+    display: flex;
+
+    gap: 15px;
+
+    padding: 20px;
+
+    background: white;
+
+    border: 1px solid #e6ece8;
+
+    border-radius: 14px;
+}
+
+.feature-icon {
+    width: 43px;
+
+    height: 43px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: #edf8f0;
+
+    font-size: 20px;
+}
+
+.feature-card span {
+    color: #8c9991;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: .8px;
+}
+
+.feature-card h3 {
+    margin-top: 5px;
+
+    font-size: 13px;
+}
+
+.feature-card p {
+    margin-top: 7px;
+
+    color: #849189;
+
+    font-size: 9px;
+
+    line-height: 1.5;
+}
+
+/* MARKET ACTIONS */
+.market-action-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.market-primary-action,
+.market-secondary-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 15px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.market-primary-action {
+    background: #247a3b;
+    color: #fff;
+}
+
+.market-secondary-action {
+    background: #eaf5ec;
+    color: #247a3b;
+}
+
+.market-primary-action:hover,
+.market-secondary-action:hover {
+    transform: translateY(-2px);
+}
+
+.feature-card a {
+    display: inline-block;
+
+    margin-top: 10px;
+
+    color: #08763e;
+
+    font-size: 9px;
+
+    font-weight: 800;
+}
+
+
+/* =====================================================
+   AI BANNER
+===================================================== */
+
+.ai-banner {
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    margin-top: 22px;
+
+    padding: 22px;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            120deg,
+            #0a7040,
+            #0b9950
+        );
+
+    color: white;
+}
+
+.ai-banner-icon {
+    width: 52px;
+
+    height: 52px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: rgba(255,255,255,.15);
+
+    border-radius: 13px;
+
+    font-size: 25px;
+}
+
+.ai-banner-content {
+    flex: 1;
+}
+
+.ai-banner-content span {
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    opacity: .75;
+}
+
+.ai-banner-content h2 {
+    margin-top: 4px;
+
+    font-size: 18px;
+}
+
+.ai-banner-content p {
+    margin-top: 5px;
+
+    font-size: 10px;
+
+    opacity: .78;
+}
+
+.ai-banner-button {
+    padding: 11px 16px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: white;
+
+    color: #08763e;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+.mobile-menu {
+    display: none;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 22px;
+
+    cursor: pointer;
+}
+
+.sidebar-overlay {
+    display: none;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1100px) {
+
+    .dashboard-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .weather-card {
+        grid-column: span 2;
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 800px) {
+
+    .farmer-sidebar {
+        transform: translateX(-100%);
+
+        transition: transform .3s ease;
+    }
+
+    .farmer-sidebar.open {
+        transform: translateX(0);
+    }
+
+    .farmer-main {
+        margin-left: 0;
+    }
+
+    .mobile-menu {
+        display: block;
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+
+        position: fixed;
+
+        inset: 0;
+
+        background: rgba(0,0,0,.35);
+
+        z-index: 900;
+    }
+
+    .farmer-topbar {
+        padding: 0 16px;
+    }
+
+    .topbar-search {
+        display: none;
+    }
+
+    .topbar-user-info {
+        display: none;
+    }
+
+    .dashboard-content {
+        padding: 20px 15px;
+    }
+
+    .welcome-section {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+    .dashboard-grid,
+    .main-dashboard-grid,
+    .business-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .weather-card {
+        grid-column: auto;
+    }
+
+    .ai-banner {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .ai-banner-button {
+        width: 100%;
+    }
+
+}

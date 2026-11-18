@@ -1,0 +1,475 @@
+/* =========================================
+   VAYUMA — LAYOUT
+   Shared application shell: topbar, sidebar,
+   dashboard grid, page containers.
+   ========================================= */
+
+/* ── Top navigation ── */
+.va-topbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--va-z-sticky);
+  background: var(--va-surface);
+  border-bottom: 1px solid var(--va-border);
+  height: var(--va-topbar-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--va-space-4);
+}
+
+.va-mobile-menu-btn,
+.va-sidebar-close {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid var(--va-border);
+  border-radius: var(--va-radius);
+  background: var(--va-surface);
+  color: var(--va-text-primary);
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.va-sidebar-close {
+  position: absolute;
+  top: var(--va-space-3);
+  right: var(--va-space-3);
+  z-index: 1;
+}
+
+.va-sidebar-close span {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.va-topbar--brand {
+  display: flex;
+  align-items: center;
+  gap: var(--va-space-2);
+}
+
+.va-topbar--brand img {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--va-radius-sm);
+}
+
+.va-topbar--brand strong {
+  font-size: var(--va-font-size-lg);
+  font-weight: var(--va-font-weight-bold);
+  color: var(--va-primary);
+  letter-spacing: -0.02em;
+}
+
+.va-topbar--brand small {
+  font-size: var(--va-font-size-xs);
+  color: var(--va-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.va-topbar--nav {
+  display: flex;
+  align-items: center;
+  gap: var(--va-space-5);
+}
+
+.va-topbar--nav a {
+  font-size: var(--va-font-size-sm);
+  font-weight: var(--va-font-weight-medium);
+  color: var(--va-text-secondary);
+}
+
+.va-topbar--nav a:hover {
+  color: var(--va-primary);
+}
+
+.va-topbar--user {
+  display: flex;
+  align-items: center;
+  gap: var(--va-space-2);
+}
+
+.va-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--va-primary-light);
+  color: var(--va-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--va-font-weight-bold);
+  font-size: var(--va-font-size-sm);
+}
+
+/* ── Sidebar ── */
+.va-sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--va-sidebar-width);
+  background: var(--va-surface);
+  border-right: 1px solid var(--va-border);
+  display: flex;
+  flex-direction: column;
+  z-index: var(--va-z-sticky);
+  transition: transform var(--va-transition);
+}
+
+.va-sidebar--logo {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: var(--va-space-2);
+  padding: var(--va-space-3);
+  border-bottom: 1px solid var(--va-border);
+}
+
+.va-sidebar--logo img {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--va-radius-sm);
+}
+
+.va-sidebar--logo strong {
+  font-size: var(--va-font-size-lg);
+  font-weight: var(--va-font-weight-bold);
+  color: var(--va-primary);
+  letter-spacing: -0.01em;
+}
+
+.va-sidebar--logo small {
+  font-size: var(--va-font-size-xs);
+  color: var(--va-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.va-sidebar--nav {
+  flex: 1;
+  padding: var(--va-space-4);
+  overflow-y: auto;
+}
+
+.va-nav-section {
+  margin-bottom: var(--va-space-4);
+}
+
+.va-nav-section-title {
+  font-size: var(--va-font-size-xs);
+  font-weight: var(--va-font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--va-text-muted);
+  padding: var(--va-space-3) var(--va-space-4) var(--va-space-1);
+}
+
+.va-nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--va-space-3);
+  padding: var(--va-space-3) var(--va-space-4);
+  border-radius: var(--va-radius);
+  color: var(--va-text-secondary);
+  font-size: var(--va-font-size-sm);
+  font-weight: var(--va-font-weight-medium);
+  transition: background-color var(--va-transition), color var(--va-transition);
+  border: none;
+  background: transparent;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+}
+
+.va-nav-item:hover {
+  background: var(--va-primary-light);
+  color: var(--va-primary);
+}
+
+.va-nav-item--active {
+  background: var(--va-primary-light);
+  color: var(--va-primary);
+  font-weight: var(--va-font-weight-bold);
+}
+
+.va-nav-item--active .va-nav-icon {
+  color: var(--va-primary);
+}
+
+.va-nav-icon {
+  width: 20px;
+  text-align: center;
+  font-size: var(--va-font-size-base);
+}
+
+.va-sidebar--bottom {
+  padding: var(--va-space-3);
+  border-top: 1px solid var(--va-border);
+}
+
+.va-logout-item {
+  display: flex;
+  align-items: center;
+  gap: var(--va-space-2);
+  padding: var(--va-space-3) var(--va-space-4);
+  border-radius: var(--va-radius);
+  color: var(--va-danger);
+  font-size: var(--va-font-size-sm);
+  font-weight: var(--va-font-weight-semibold);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--va-transition), color var(--va-transition);
+  width: 100%;
+  text-align: left;
+}
+
+.va-logout-item:hover {
+  background: var(--va-danger-bg);
+  color: var(--va-danger);
+}
+
+/* ── Main content ── */
+.va-main {
+  margin-left: var(--va-sidebar-width);
+  min-height: 100vh;
+}
+
+.va-main--content {
+  padding: var(--va-space-6);
+}
+
+/* ── Dashboard grid ── */
+.va-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--va-space-5);
+  margin-bottom: var(--va-space-6);
+}
+
+.va-stat-card {
+  background: var(--va-surface);
+  border: 1px solid var(--va-border);
+  border-radius: var(--va-radius-lg);
+  padding: var(--va-space-5);
+  box-shadow: var(--va-shadow-sm);
+  transition: border-color var(--va-transition), box-shadow var(--va-transition);
+}
+
+.va-stat-card:hover {
+  border-color: var(--va-primary-light);
+  box-shadow: var(--va-shadow);
+}
+
+.va-stat-card--header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--va-space-4);
+}
+
+.va-stat-card--label {
+  font-size: var(--va-font-size-xs);
+  font-weight: var(--va-font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--va-text-muted);
+}
+
+.va-stat-card--value {
+  font-size: var(--va-font-size-2xl);
+  font-weight: var(--va-font-weight-bold);
+  color: var(--va-text-primary);
+}
+
+.va-stat-card--sub {
+  font-size: var(--va-font-size-sm);
+  color: var(--va-text-secondary);
+  margin-top: var(--va-space-1);
+}
+
+.va-stat-card--icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--va-radius);
+  background: var(--va-primary-light);
+  color: var(--va-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--va-font-size-lg);
+}
+
+/* ── Feature cards ── */
+.va-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--va-space-4);
+}
+
+.va-feature-card {
+  display: flex;
+  gap: var(--va-space-4);
+  padding: var(--va-space-5);
+  background: var(--va-surface);
+  border: 1px solid var(--va-border);
+  border-radius: var(--va-radius-lg);
+  transition: border-color var(--va-transition), box-shadow var(--va-transition);
+}
+
+.va-feature-card:hover {
+  border-color: var(--va-primary-light);
+  box-shadow: var(--va-shadow);
+}
+
+.va-feature-card--icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: var(--va-radius);
+  background: var(--va-primary-light);
+  color: var(--va-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--va-font-size-xl);
+}
+
+.va-feature-card--content {
+  flex: 1;
+}
+
+.va-feature-card--badge {
+  display: inline-block;
+  font-size: var(--va-font-size-xs);
+  font-weight: var(--va-font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--va-primary);
+  margin-bottom: var(--va-space-2);
+}
+
+.va-feature-card--title {
+  font-size: var(--va-font-size-lg);
+  font-weight: var(--va-font-weight-bold);
+  color: var(--va-text-primary);
+  margin-bottom: var(--va-space-2);
+}
+
+.va-feature-card--desc {
+  font-size: var(--va-font-size-sm);
+  color: var(--va-text-secondary);
+  line-height: var(--va-line-height-relaxed);
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .va-sidebar {
+    transform: translateX(-100%);
+    z-index: calc(var(--va-z-modal) + 1);
+    max-width: min(var(--va-sidebar-width), 86vw);
+  }
+
+  .va-sidebar--open {
+    transform: translateX(0);
+  }
+
+  .va-mobile-menu-btn,
+  .va-sidebar-close {
+    display: inline-flex;
+  }
+
+  .va-sidebar-open {
+    overflow: hidden;
+  }
+
+  .va-main {
+    margin-left: 0;
+  }
+
+  .va-menu-btn {
+    display: block;
+  }
+
+  .va-topbar--search {
+    margin: 0 var(--va-space-2);
+  }
+}
+
+@media (max-width: 768px) {
+  .va-main--content {
+    padding: var(--va-space-4);
+  }
+
+  .va-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .va-topbar {
+    padding: 0 var(--va-space-3);
+  }
+
+  .va-topbar--search {
+    display: none;
+  }
+
+  .va-sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: var(--va-z-modal);
+    display: none;
+    backdrop-filter: blur(2px);
+  }
+
+  .va-sidebar-overlay--active {
+    display: block;
+  }
+}
+
+@media (max-width: 650px) {
+  .va-dash-main .va-mobile-menu-btn {
+    display: inline-flex;
+    margin-bottom: var(--va-space-3);
+  }
+
+  .va-dash-sidebar.va-dash-sidebar--open {
+    z-index: calc(var(--va-z-modal) + 1);
+  }
+
+  .va-dash-sidebar .va-sidebar-close {
+    display: inline-flex;
+  }
+}
+
+@media (min-width: 651px) {
+  .va-dash-main .va-mobile-menu-btn {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .va-sidebar,
+  .va-dash-sidebar {
+    transition: none !important;
+  }
+}
+
+.va-dash-sidebar--nav-item[aria-disabled="true"],
+.va-dash-action[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.va-dash-sidebar--nav-item[aria-disabled="true"]:hover,
+.va-dash-action[aria-disabled="true"]:hover {
+  background: transparent;
+  border-color: var(--va-border);
+  color: var(--va-text-muted);
+}

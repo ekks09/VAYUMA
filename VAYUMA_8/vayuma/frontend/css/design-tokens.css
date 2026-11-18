@@ -1,0 +1,178 @@
+/* =========================================
+   VAYUMA DESIGN SYSTEM — DESIGN TOKENS
+   Single source of truth for colors, spacing,
+   typography, borders, shadows, and breakpoints.
+   ========================================= */
+
+:root {
+  /* ── Brand Palette ── */
+  --va-green-dark: #063b24;
+  --va-green: #087d42;
+  --va-green-hover: #066a36;
+  --va-green-light: #e5f5e9;
+  --va-green-lighter: #f0faf3;
+
+  --va-accent: #e2b93b;
+  --va-accent-dark: #c9a22e;
+
+  /* ── Neutrals ── */
+  --va-bg: #f4f8f5;
+  --va-surface: #ffffff;
+  --va-surface-hover: #fbfefc;
+  --va-border: #dce8dd;
+  --va-border-focus: #0a8a49;
+
+  --va-text-primary: #173d2a;
+  --va-text-secondary: #69786e;
+  --va-text-muted: #8c958e;
+  --va-text-inverse: #ffffff;
+
+  /* ── Semantic ── */
+  --va-success: #087d42;
+  --va-success-bg: #e4f6e9;
+  --va-warning: #b06a00;
+  --va-warning-bg: #fff4d6;
+  --va-danger: #a32121;
+  --va-danger-bg: #fde7e7;
+  --va-info: #245b9b;
+  --va-info-bg: #e5eefc;
+
+  /* ── Layout ── */
+  --va-radius-sm: 8px;
+  --va-radius: 12px;
+  --va-radius-lg: 16px;
+  --va-radius-xl: 20px;
+  --va-radius-full: 9999px;
+
+  --va-shadow-sm: 0 1px 3px rgba(20, 60, 35, 0.06);
+  --va-shadow: 0 4px 15px rgba(20, 60, 35, 0.08);
+  --va-shadow-lg: 0 8px 30px rgba(20, 60, 35, 0.12);
+  --va-shadow-xl: 0 20px 60px rgba(20, 60, 35, 0.18);
+
+  --va-transition: 0.2s ease;
+  --va-transition-fast: 0.1s ease;
+
+  /* ── Breakpoints ── */
+  --va-breakpoint-sm: 640px;
+  --va-breakpoint-md: 768px;
+  --va-breakpoint-lg: 1024px;
+  --va-breakpoint-xl: 1280px;
+
+  /* ── Z-index ── */
+  --va-z-dropdown: 100;
+  --va-z-sticky: 200;
+  --va-z-modal: 300;
+  --va-z-toast: 400;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --va-bg: #0f1e16;
+    --va-surface: #162c22;
+    --va-border: #2d4a3c;
+    --va-text-primary: #e8f5ec;
+    --va-text-secondary: #a8b8ae;
+    --va-text-muted: #6e7c72;
+    --va-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
+  }
+}
+
+/* ── Reset ── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--va-bg);
+  color: var(--va-text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--va-green);
+  text-decoration: none;
+  transition: color var(--va-transition);
+}
+
+a:hover {
+  color: var(--va-green-hover);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ── Visually hidden for accessibility ── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ── Focus visible ── */
+*:focus-visible {
+  outline: 3px solid var(--va-accent);
+  outline-offset: 2px;
+}
+
+/* ── Container ── */
+.va-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ── Page wrapper ── */
+.va-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.va-page-main {
+  flex: 1;
+}
+
+/* ── Utility ── */
+.va-text-center { text-align: center; }
+.va-text-left { text-align: left; }
+.va-text-right { text-align: right; }
+
+.va-mb-1 { margin-bottom: 0.25rem; }
+.va-mb-2 { margin-bottom: 0.5rem; }
+.va-mb-3 { margin-bottom: 0.75rem; }
+.va-mb-4 { margin-bottom: 1rem; }
+.va-mb-6 { margin-bottom: 1.5rem; }
+.va-mt-4 { margin-top: 1rem; }
+
+.va-d-none { display: none; }
+.va-d-block { display: block; }
+.va-d-flex { display: flex; }
+.va-d-grid { display: grid; }
+.va-items-center { align-items: center; }
+.va-justify-between { justify-content: space-between; }
+.va-justify-center { justify-content: center; }
+.va-gap-2 { gap: 0.5rem; }
+.va-gap-3 { gap: 0.75rem; }
+.va-gap-4 { gap: 1rem; }
+.va-w-full { width: 100%; }

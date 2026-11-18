@@ -1,0 +1,498 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+
+    background: #f4f8f5;
+
+    color: #183b28;
+}
+
+.profile-page {
+    min-height: 100vh;
+}
+
+
+/* HEADER */
+
+.profile-header {
+    height: 75px;
+
+    padding: 0 5%;
+
+    background: white;
+
+    border-bottom: 1px solid #e3ebe5;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+.back-button {
+    color: #08763e;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+.profile-brand {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.profile-brand img {
+    width: 43px;
+
+    height: 43px;
+
+    object-fit: contain;
+
+    border-radius: 50%;
+}
+
+.profile-brand strong {
+    display: block;
+
+    color: #08763e;
+
+    font-size: 17px;
+
+    letter-spacing: 1px;
+}
+
+.profile-brand small {
+    color: #9aa59f;
+
+    font-size: 8px;
+
+    text-transform: uppercase;
+}
+
+
+/* CONTAINER */
+
+.profile-container {
+    width: 92%;
+
+    max-width: 900px;
+
+    margin: auto;
+
+    padding: 45px 0 60px;
+}
+
+
+/* HEADING */
+
+.profile-heading {
+    margin-bottom: 25px;
+}
+
+.profile-heading > span {
+    color: #08763e;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.2px;
+}
+
+.profile-heading h1 {
+    margin-top: 8px;
+
+    font-size: 30px;
+}
+
+.profile-heading p {
+    margin-top: 8px;
+
+    color: #7d8a82;
+
+    font-size: 12px;
+}
+
+
+/* PROGRESS */
+
+.profile-progress {
+    margin-bottom: 20px;
+
+    padding: 17px 20px;
+
+    background: white;
+
+    border: 1px solid #e5ece7;
+
+    border-radius: 13px;
+}
+
+.progress-top {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 9px;
+
+    font-size: 10px;
+}
+
+.progress-top span {
+    color: #08763e;
+
+    font-weight: 800;
+}
+
+.progress-track {
+    width: 100%;
+
+    height: 6px;
+
+    overflow: hidden;
+
+    background: #edf1ee;
+
+    border-radius: 20px;
+}
+
+.progress-fill {
+    height: 100%;
+
+    background: #0a9149;
+
+    border-radius: 20px;
+}
+
+
+/* CARDS */
+
+.profile-card {
+    margin-bottom: 18px;
+
+    padding: 25px;
+
+    background: white;
+
+    border: 1px solid #e3ebe5;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 4px 15px rgba(20, 60, 35, .025);
+}
+
+.section-heading {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 22px;
+}
+
+.section-icon {
+    width: 42px;
+
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #e8f6ec;
+
+    font-size: 19px;
+}
+
+.section-heading h2 {
+    font-size: 16px;
+}
+
+.section-heading p {
+    margin-top: 4px;
+
+    color: #89958e;
+
+    font-size: 10px;
+}
+
+
+/* FORM */
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+
+    margin-top: 17px;
+}
+
+.form-group label {
+    margin-bottom: 7px;
+
+    color: #52655a;
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+.form-group label span {
+    color: #e35a4e;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+
+    border: 1px solid #dce6df;
+
+    outline: none;
+
+    border-radius: 9px;
+
+    padding: 12px;
+
+    background: #fbfcfb;
+
+    color: #294535;
+
+    font-family: inherit;
+
+    font-size: 11px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #0a8b48;
+
+    box-shadow:
+        0 0 0 3px rgba(10,139,72,.07);
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.form-group input[readonly] {
+    background: #f3f6f4;
+
+    color: #7f8b84;
+}
+
+
+/* INPUT WITH UNIT */
+
+.input-with-unit {
+    display: flex;
+}
+
+.input-with-unit input {
+    border-radius: 9px 0 0 9px;
+}
+
+.input-with-unit select {
+    width: 110px;
+
+    border-left: none;
+
+    border-radius: 0 9px 9px 0;
+}
+
+
+/* PHOTO */
+
+.photo-upload {
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+}
+
+.photo-preview {
+    width: 85px;
+
+    height: 85px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    overflow: hidden;
+
+    background: #edf6ef;
+
+    border: 1px dashed #afd0b8;
+
+    border-radius: 50%;
+
+    font-size: 30px;
+}
+
+.photo-preview img {
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.upload-button {
+    display: inline-block;
+
+    padding: 10px 14px;
+
+    border: 1px solid #b7d7c0;
+
+    border-radius: 8px;
+
+    color: #08763e;
+
+    background: white;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+.photo-upload p {
+    margin-top: 8px;
+
+    color: #99a49e;
+
+    font-size: 9px;
+}
+
+
+/* ACTIONS */
+
+.form-actions {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 12px;
+
+    margin-top: 25px;
+}
+
+.cancel-button,
+.save-button {
+    padding: 13px 20px;
+
+    border-radius: 9px;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+.cancel-button {
+    color: #68766e;
+
+    background: white;
+
+    border: 1px solid #dce5df;
+}
+
+.save-button {
+    border: none;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #08743d,
+            #0b9a50
+        );
+
+    box-shadow:
+        0 8px 20px rgba(8,116,61,.18);
+}
+
+
+/* MOBILE */
+
+@media(max-width:650px) {
+
+    .profile-header {
+        padding: 0 18px;
+    }
+
+    .profile-container {
+        width: 94%;
+
+        padding-top: 30px;
+    }
+
+    .profile-heading h1 {
+        font-size: 25px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full-width {
+        grid-column: auto;
+    }
+
+    .photo-upload {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .cancel-button,
+    .save-button {
+        width: 100%;
+
+        text-align: center;
+    }
+
+}

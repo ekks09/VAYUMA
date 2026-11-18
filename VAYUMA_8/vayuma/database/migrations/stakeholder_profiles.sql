@@ -1,0 +1,26 @@
+-- VAYUMA stakeholder profile foundation. Run once in vayuma_db.
+CREATE TABLE IF NOT EXISTS stakeholder_profiles (
+ id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+ user_id INT NOT NULL,
+ role VARCHAR(100) NOT NULL,
+ organization_name VARCHAR(180) NOT NULL,
+ organization_type VARCHAR(120) DEFAULT NULL,
+ county VARCHAR(100) NOT NULL,
+ location VARCHAR(180) DEFAULT NULL,
+ contact_phone VARCHAR(30) DEFAULT NULL,
+ service_focus VARCHAR(180) DEFAULT NULL,
+ description TEXT DEFAULT NULL,
+ license_number VARCHAR(100) DEFAULT NULL,
+ registration_number VARCHAR(100) DEFAULT NULL,
+ capacity VARCHAR(180) DEFAULT NULL,
+ service_area VARCHAR(180) DEFAULT NULL,
+ verification_status ENUM('pending','verified','rejected') NOT NULL DEFAULT 'pending',
+ profile_completed TINYINT(1) NOT NULL DEFAULT 1,
+ created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ PRIMARY KEY (id),
+ UNIQUE KEY uq_stakeholder_user (user_id),
+ KEY idx_stakeholder_role (role),
+ KEY idx_stakeholder_county (county),
+ CONSTRAINT fk_stakeholder_profile_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

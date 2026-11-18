@@ -1,0 +1,160 @@
+/* =========================================
+   VAYUMA CLEAN — COMPONENTS
+   Reusable components for the minimal UI.
+   ========================================= */
+
+/* ── Toast ── */
+.va-toast-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.va-toast {
+  pointer-events: auto;
+  background: var(--va-surface);
+  border: 1px solid var(--va-border);
+  border-left: 3px solid var(--va-primary);
+  border-radius: var(--va-radius);
+  box-shadow: var(--va-shadow-lg);
+  padding: 0.75rem 1rem;
+  min-width: 280px;
+  max-width: 400px;
+  animation: va-slide 0.3s ease;
+}
+
+.va-toast--error {
+  border-left-color: var(--va-danger);
+}
+
+.va-toast--success {
+  border-left-color: var(--va-success);
+}
+
+.va-toast--title {
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: var(--va-text);
+  margin-bottom: 0.125rem;
+}
+
+.va-toast--msg {
+  font-size: 0.8125rem;
+  color: var(--va-text-secondary);
+}
+
+@keyframes va-slide {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* ── Skeleton ── */
+.va-skel {
+  background: #f1f5f9;
+  border-radius: 6px;
+  animation: va-pulse 1.5s ease-in-out infinite;
+}
+
+.va-skel--text { height: 0.875rem; }
+.va-skel--text-lg { height: 1rem; width: 60%; }
+.va-skel--avatar { width: 32px; height: 32px; border-radius: 50%; }
+.va-skel--card { height: 140px; }
+
+@keyframes va-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ── Section header ── */
+.va-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.va-section--title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--va-text);
+}
+
+.va-section--sub {
+  font-size: 0.875rem;
+  color: var(--va-text-secondary);
+  margin-top: 0.25rem;
+}
+
+/* ── Plan card (stakeholder) ── */
+.va-plan {
+  border: 1px solid var(--va-border);
+  border-radius: var(--va-radius-lg);
+  padding: 1.25rem;
+  transition: border-color var(--va-transition), box-shadow var(--va-transition), transform var(--va-transition);
+}
+
+.va-plan:hover {
+  border-color: var(--va-primary);
+  box-shadow: var(--va-shadow-lg);
+  transform: translateY(-2px);
+}
+
+.va-plan--header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.va-plan--name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--va-text);
+}
+
+.va-plan--price {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--va-text);
+}
+
+.va-plan--period {
+  font-size: 0.75rem;
+  color: var(--va-text-muted);
+}
+
+.va-plan--badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--va-radius-full);
+}
+
+.va-plan--badge--paid {
+  background: var(--va-success-bg);
+  color: var(--va-success);
+}
+
+.va-plan--badge--free {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.va-plan--badge--negotiated {
+  background: #fef3c7;
+  color: #ca8a04;
+}
+
+.va-plan--desc {
+  font-size: 0.8125rem;
+  color: var(--va-text-secondary);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
