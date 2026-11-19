@@ -23,6 +23,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
 <html lang="<?= htmlspecialchars($current_language, ENT_QUOTES, 'UTF-8') ?>">
 
 <head>
+    <?php require __DIR__ . '/includes/pwa.php'; ?>
 
     <meta charset="UTF-8">
 
@@ -60,20 +61,20 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
                     >
                 </a>
                 <p class="login-brand-kicker">VAYUMA SMART ECOSYSTEM</p>
-                <h2>Growing opportunity, together.</h2>
+                <h2><?= htmlspecialchars(t('login_brand_title'), ENT_QUOTES, 'UTF-8') ?></h2>
                 <p class="login-brand-copy">
-                    A connected place for farmers, buyers and agricultural partners to build a stronger food system.
+                    <?= htmlspecialchars(t('login_brand_copy'), ENT_QUOTES, 'UTF-8') ?>
                 </p>
                 <div class="login-brand-footer">
-                    <span>Market access</span>
-                    <span>Farm insights</span>
-                    <span>Trusted connections</span>
+                    <span><?= htmlspecialchars(t('market_access'), ENT_QUOTES, 'UTF-8') ?></span>
+                    <span><?= htmlspecialchars(t('farm_insights'), ENT_QUOTES, 'UTF-8') ?></span>
+                    <span><?= htmlspecialchars(t('trusted_connections'), ENT_QUOTES, 'UTF-8') ?></span>
                 </div>
             </section>
 
             <section class="login-content">
                 <div class="login-header">
-                    <div class="login-badge">MEMBER SIGN IN</div>
+                    <div class="login-badge"><?= htmlspecialchars(t('member_sign_in'), ENT_QUOTES, 'UTF-8') ?></div>
                     <h1><?= htmlspecialchars(t('welcome_back'), ENT_QUOTES, 'UTF-8') ?></h1>
                     <p><?= htmlspecialchars(t('login_intro'), ENT_QUOTES, 'UTF-8') ?></p>
                 </div>
@@ -115,7 +116,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
                             <label for="loginPassword">
                                 <?= htmlspecialchars(t('password'), ENT_QUOTES, 'UTF-8') ?>
                             </label>
-                            <span class="password-help">Password recovery is not available yet.</span>
+                            <span class="password-help"><?= htmlspecialchars(t('password_recovery_unavailable'), ENT_QUOTES, 'UTF-8') ?></span>
                         </div>
                         <div class="password-wrapper">
                             <input
@@ -130,7 +131,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
                                 type="button"
                                 class="password-toggle"
                                 aria-controls="loginPassword"
-                                aria-label="Show password"
+                                aria-label="<?= htmlspecialchars(t('show_password'), ENT_QUOTES, 'UTF-8') ?>"
                                 aria-pressed="false"
                                 onclick="togglePassword()"
                             >
@@ -146,7 +147,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
                     </button>
                 </form>
 
-                <div class="login-divider"><span>OR</span></div>
+                <div class="login-divider"><span><?= htmlspecialchars(t('or'), ENT_QUOTES, 'UTF-8') ?></span></div>
                 <p class="register-prompt">
                     <?= htmlspecialchars(t('no_account'), ENT_QUOTES, 'UTF-8') ?>
                     <a href="register.php">
@@ -163,6 +164,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
 
 
 <script>
+const passwordToggleText = <?= json_encode([t('show_password'), t('hide_password')], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE) ?>;
 
 function togglePassword() {
 
@@ -174,7 +176,7 @@ function togglePassword() {
 
     const isVisible = password.type === "password";
     password.type = isVisible ? "text" : "password";
-    button.setAttribute("aria-label", isVisible ? "Hide password" : "Show password");
+    button.setAttribute("aria-label", isVisible ? passwordToggleText[1] : passwordToggleText[0]);
     button.setAttribute("aria-pressed", isVisible ? "true" : "false");
     button.querySelector(".password-eye-show").hidden = isVisible;
     button.querySelector(".password-eye-hide").hidden = !isVisible;

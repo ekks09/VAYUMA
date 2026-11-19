@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+require_once __DIR__ . '/includes/role_routes.php';
 require_once __DIR__ . '/includes/language.php';
 
 if (
@@ -20,7 +21,7 @@ $full_name = $_SESSION['full_name'] ?? 'Farmer';
 
 <html lang="en">
 
-<head>
+<head><?php require __DIR__ . '/includes/pwa.php'; ?>
 
 <meta charset="UTF-8">
 
@@ -100,10 +101,10 @@ $full_name = $_SESSION['full_name'] ?? 'Farmer';
         </div>
 
         <a
-            href="farmer_dashboard.php"
+            href="<?= htmlspecialchars(vayuma_dashboard_return_route(), ENT_QUOTES, 'UTF-8') ?>"
             class="back"
         >
-            ← Farmer Dashboard
+            ← Back to Dashboard
         </a>
 
     </div>

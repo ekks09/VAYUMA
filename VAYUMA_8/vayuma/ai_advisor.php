@@ -1,4 +1,3 @@
-```php
 <?php
 session_start();
 require_once __DIR__ . '/includes/language.php';
@@ -29,7 +28,7 @@ $roleLabel = ucwords(str_replace('_', ' ', $role ?: 'user'));
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head><?php require __DIR__ . '/includes/pwa.php'; ?>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 

@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: vayuma-staging
+    runtime: docker
+    dockerfilePath: ./VAYUMA_8/Dockerfile
+    dockerContext: ./VAYUMA_8
+    healthCheckPath: /health.php
+    envVars:
+      - key: APP_ENV
+        value: staging
+      - key: PORT
+        value: "8080"
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "4000"
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false

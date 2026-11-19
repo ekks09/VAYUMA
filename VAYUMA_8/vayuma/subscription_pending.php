@@ -31,7 +31,7 @@ $failed = in_array($status, ['failed', 'cancelled'], true);
 ?>
 <!doctype html>
 <html lang="<?= htmlspecialchars($current_language ?? 'en', ENT_QUOTES, 'UTF-8') ?>">
-<head>
+<head><?php require __DIR__ . '/includes/pwa.php'; ?>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>M-Pesa subscription | VAYUMA</title>

@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/includes/payment_gate.php';
+vayuma_require_payment_processing();
 /**
  * VAYUMA — M-Pesa STK Push initiation for marketplace orders.
  * Customer enters phone number → STK push sent → PIN entered on phone → callback confirms.

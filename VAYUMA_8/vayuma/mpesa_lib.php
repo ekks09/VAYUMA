@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/config/db.php';
+require_once __DIR__ . '/includes/payment_gate.php';
 
 function mpesa_config(): array
 {
@@ -19,6 +20,7 @@ function mpesa_base_url(): string
 
 function mpesa_json_request(string $url, array $headers, ?array $payload = null): array
 {
+    if (!vayuma_payment_processing_enabled()) throw new RuntimeException('Payment processing is unavailable.');
     $ch = curl_init($url);
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
@@ -223,6 +225,7 @@ function mpesa_query_is_final(array $query): bool
 
 function mpesa_refresh_order_payment(mysqli $conn, int $paymentId): string
 {
+    if (!vayuma_payment_processing_enabled()) throw new RuntimeException('Payment processing is unavailable.');
     $stmt = $conn->prepare('SELECT id, order_id, amount, status, checkout_request_id FROM payments WHERE id=? LIMIT 1');
     $stmt->bind_param('i', $paymentId);
     $stmt->execute();
@@ -297,6 +300,7 @@ function mpesa_refresh_order_payment(mysqli $conn, int $paymentId): string
 
 function mpesa_refresh_subscription_payment(mysqli $conn, int $paymentId): string
 {
+    if (!vayuma_payment_processing_enabled()) throw new RuntimeException('Payment processing is unavailable.');
     require_once __DIR__ . '/lib/subscription_lib.php';
 
     $stmt = $conn->prepare('SELECT id, subscription_id, amount, billing_interval, status, checkout_request_id FROM subscription_payments WHERE id=? LIMIT 1');

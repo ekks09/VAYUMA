@@ -12,18 +12,15 @@ if (!isset($_SESSION['vayuma_language']) || !in_array($_SESSION['vayuma_language
     $_SESSION['vayuma_language'] = 'en';
 }
 
-// Change language without discarding other query-string parameters.
-if (isset($_GET['lang'])) {
-    $requested = strtolower(trim((string)$_GET['lang']));
+// Render the selected language on this request too. A redirect here can lose
+// the preference when a preview iframe or browser blocks session cookies.
+// Other query parameters stay intact; the session remembers the choice when
+// cookies are available for subsequent pages.
+if (isset($_GET['lang']) && is_string($_GET['lang'])) {
+    $requested = strtolower(trim($_GET['lang']));
     if (in_array($requested, $supported_languages, true)) {
         $_SESSION['vayuma_language'] = $requested;
     }
-    $params = $_GET;
-    unset($params['lang']);
-    $path = strtok($_SERVER['REQUEST_URI'] ?? '/', '?');
-    $query = http_build_query($params);
-    header('Location: ' . $path . ($query !== '' ? '?' . $query : ''));
-    exit;
 }
 
 $current_language = $_SESSION['vayuma_language'];
@@ -93,6 +90,50 @@ $translations = [
   'welcome_title'=>'Mustakabali wa Kilimo Bora Una Anza Hapa.',
   'ecosystem_intro'=>'VAYUMA inawaleta wakulima, wanunuzi, watumiaji, wasafirishaji, watafiti, maafisa ugani, vyama vya ushirika na washirika wa kifedha pamoja katika mfumo mmoja wa kilimo.'
  ]
+];
+
+// Authentication copy is translated server-side so it also works without JavaScript.
+$translations['en'] += [
+ 'auth_tagline' => 'Connecting Agriculture. Empowering Every Harvest.',
+ 'register_brand_message' => 'One platform for smarter farming, better markets and stronger agricultural communities.',
+ 'register_step' => 'STEP 1 OF 3', 'register_title' => 'Create Your Account',
+ 'register_intro' => 'Join the VAYUMA Smart Ecosystem.', 'full_name' => 'Full Name',
+ 'enter_full_name' => 'Enter your full name', 'phone_number' => 'Phone Number',
+ 'phone_example' => 'e.g. 0712345678', 'phone_hint' => 'Use the phone number you will use for VAYUMA services.',
+ 'email_address' => 'Email Address', 'optional' => 'Optional', 'confirm_password' => 'Confirm Password',
+ 'create_password' => 'Create a strong password', 'confirm_password_placeholder' => 'Confirm your password',
+ 'password_hint' => 'Use at least 8 characters.', 'weak_password' => 'Weak password.',
+ 'moderate_password' => 'Moderate password.', 'strong_password' => 'Strong password.',
+ 'very_strong_password' => 'Very strong password.', 'passwords_match' => 'Passwords match.',
+ 'passwords_differ' => 'Passwords do not match.', 'password_minimum' => 'Password must contain at least 8 characters.',
+ 'show_password' => 'Show password', 'hide_password' => 'Hide password',
+ 'agree_terms' => 'I agree to the VAYUMA', 'terms_of_service' => 'Terms of Service',
+ 'and' => 'and', 'privacy_policy' => 'Privacy Policy', 'continue' => 'Continue',
+ 'already_account' => 'Already have a VAYUMA account?', 'login_brand_title' => 'Growing opportunity, together.',
+ 'login_brand_copy' => 'A connected place for farmers, buyers and agricultural partners to build a stronger food system.',
+ 'market_access' => 'Market access', 'farm_insights' => 'Farm insights', 'trusted_connections' => 'Trusted connections',
+ 'member_sign_in' => 'MEMBER SIGN IN', 'password_recovery_unavailable' => 'Password recovery is not available yet.', 'or' => 'OR',
+];
+$translations['sw'] += [
+ 'auth_tagline' => 'Kuunganisha Kilimo. Kuwezesha Kila Mavuno.',
+ 'register_brand_message' => 'Jukwaa moja kwa kilimo bora, masoko bora na jamii imara za kilimo.',
+ 'register_step' => 'HATUA YA 1 KATI YA 3', 'register_title' => 'Fungua Akaunti Yako',
+ 'register_intro' => 'Jiunge na Mfumo Mahiri wa VAYUMA.', 'full_name' => 'Jina Kamili',
+ 'enter_full_name' => 'Weka jina lako kamili', 'phone_number' => 'Nambari ya Simu',
+ 'phone_example' => 'mf. 0712345678', 'phone_hint' => 'Tumia nambari ya simu utakayotumia kwa huduma za VAYUMA.',
+ 'email_address' => 'Barua Pepe', 'optional' => 'Si lazima', 'confirm_password' => 'Thibitisha Nenosiri',
+ 'create_password' => 'Tengeneza nenosiri imara', 'confirm_password_placeholder' => 'Thibitisha nenosiri lako',
+ 'password_hint' => 'Tumia angalau herufi 8.', 'weak_password' => 'Nenosiri dhaifu.',
+ 'moderate_password' => 'Nenosiri la wastani.', 'strong_password' => 'Nenosiri imara.',
+ 'very_strong_password' => 'Nenosiri imara sana.', 'passwords_match' => 'Manenosiri yanalingana.',
+ 'passwords_differ' => 'Manenosiri hayalingani.', 'password_minimum' => 'Nenosiri lazima liwe na angalau herufi 8.',
+ 'show_password' => 'Onyesha nenosiri', 'hide_password' => 'Ficha nenosiri',
+ 'agree_terms' => 'Nakubali', 'terms_of_service' => 'Masharti ya Huduma ya VAYUMA',
+ 'and' => 'na', 'privacy_policy' => 'Sera ya Faragha', 'continue' => 'Endelea',
+ 'already_account' => 'Tayari una akaunti ya VAYUMA?', 'login_brand_title' => 'Kukuza fursa, pamoja.',
+ 'login_brand_copy' => 'Mahali pa wakulima, wanunuzi na washirika wa kilimo kujenga mfumo imara wa chakula.',
+ 'market_access' => 'Ufikiaji wa soko', 'farm_insights' => 'Taarifa za kilimo', 'trusted_connections' => 'Mahusiano ya kuaminika',
+ 'member_sign_in' => 'INGIA KAMA MWANACHAMA', 'password_recovery_unavailable' => 'Kurejesha nenosiri hakupatikani kwa sasa.', 'or' => 'AU',
 ];
 
 function t(string $key): string {

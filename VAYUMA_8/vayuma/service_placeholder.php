@@ -6,7 +6,7 @@ $service=trim($_GET['service']??'VAYUMA Service');
 $role=strtolower(trim($_SESSION['role']??''));
 $dashboard=$role==='farmer'?'farmer_dashboard.php':($role==='buyer'?'buyer_dashboard.php':'dashboard.php');
 ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title><?=htmlspecialchars($service)?> | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
+<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title><?=htmlspecialchars($service)?> | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">

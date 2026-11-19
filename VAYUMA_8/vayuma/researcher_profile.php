@@ -38,7 +38,7 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+<head><?php require __DIR__ . '/includes/pwa.php'; ?>
 
     <meta charset="UTF-8">
 

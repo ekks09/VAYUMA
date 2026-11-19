@@ -1,5 +1,5 @@
-# Keep API scripts private except for the public county lookup used by
-# stakeholder profile forms.
+# Only explicitly listed browser endpoints are exposed. Each status endpoint
+# still enforces its own session and ownership checks in PHP.
 <Files *>
   <IfModule mod_authz_core.c>
     Require all denied
@@ -9,8 +9,7 @@
     Deny from all
   </IfModule>
 </Files>
-
-<Files "location_options.php">
+<FilesMatch "^(location_options|order_payment_status|subscription_status)\.php$">
   <IfModule mod_authz_core.c>
     Require all granted
   </IfModule>
@@ -18,4 +17,4 @@
     Order allow,deny
     Allow from all
   </IfModule>
-</Files>
+</FilesMatch>

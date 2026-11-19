@@ -193,7 +193,7 @@ $waterDisplay = trim((string)($profile['irrigation'] ?? '')) ?: 'Not provided';
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+<head><?php require __DIR__ . '/includes/pwa.php'; ?>
 
 <meta charset="UTF-8">
 

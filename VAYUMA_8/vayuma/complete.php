@@ -17,7 +17,7 @@ $role = $_SESSION["role"] ?? "";
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+<head><?php require __DIR__ . '/includes/pwa.php'; ?>
 
     <meta charset="UTF-8">
 

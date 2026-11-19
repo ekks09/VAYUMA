@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/includes/language.php';require_once __DIR__.'/config/db.php';if(!isset($_SESSION['user_id'])||($_SESSION['logged_in']??false)!==true){header('Location: login.php');exit;}$role=strtolower(trim($_SESSION['role']??''));$dashboard=$role==='farmer'?'farmer_dashboard.php':'buyer_dashboard.php';$items=$conn->query("SELECT pl.id,pl.produce_name,pl.category,pl.quantity,pl.unit,pl.price_per_unit,pl.location,pl.image FROM produce_listings pl WHERE pl.status='available' ORDER BY pl.created_at DESC LIMIT 8");?>
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Recommended Produce | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
+<!doctype html><html><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Recommended Produce | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">

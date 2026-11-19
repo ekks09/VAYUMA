@@ -8,12 +8,31 @@ $platformHomeUrl = vayuma_platform_home_route();
 
 $error = $_SESSION['register_error'] ?? '';
 unset($_SESSION['register_error']);
+if ($current_language === 'sw') {
+    $registerErrorTranslations = [
+        'Your session expired. Refresh the form and try again.' => 'Muda wa kikao chako umekwisha. Pakia upya fomu na ujaribu tena.',
+        'Please fill in all required fields.' => 'Tafadhali jaza sehemu zote zinazohitajika.',
+        'Please enter a valid full name.' => 'Tafadhali weka jina kamili sahihi.',
+        'Please enter a valid phone number.' => 'Tafadhali weka nambari sahihi ya simu.',
+        'Please enter a valid email address.' => 'Tafadhali weka anwani sahihi ya barua pepe.',
+        'Password must contain at least 8 characters.' => 'Nenosiri lazima liwe na angalau herufi 8.',
+        'Passwords do not match.' => 'Manenosiri hayalingani.',
+        'You must accept the Terms of Service and Privacy Policy.' => 'Lazima ukubali Masharti ya Huduma na Sera ya Faragha.',
+        'An account with this phone number already exists.' => 'Akaunti yenye nambari hii ya simu tayari ipo.',
+        'An account with this email already exists.' => 'Akaunti yenye barua pepe hii tayari ipo.',
+        'That phone number or email is already in use.' => 'Nambari hiyo ya simu au barua pepe tayari inatumika.',
+        'Unable to create your account. Please try again.' => 'Imeshindikana kufungua akaunti yako. Tafadhali jaribu tena.',
+    ];
+    $error = $registerErrorTranslations[$error] ?? $error;
+}
+
 ?>
 
 <!DOCTYPE html>
 <html lang="<?= htmlspecialchars($current_language, ENT_QUOTES, 'UTF-8') ?>">
 
 <head>
+    <?php require __DIR__ . '/includes/pwa.php'; ?>
 
     <meta charset="UTF-8">
 
@@ -34,7 +53,7 @@ unset($_SESSION['register_error']);
 <link rel="stylesheet" href="frontend/css/components_addition.css?v=account-nav-1">
 <link rel="stylesheet" href="frontend/css/layout.css">
 <link rel="stylesheet" href="frontend/css/pages.css">
-<link rel="stylesheet" href="assets/css/style.css?v=register-1">
+<link rel="stylesheet" href="assets/css/style.css?v=register-2">
 
 </head>
 
@@ -62,8 +81,7 @@ unset($_SESSION['register_error']);
                 <h2>SMART ECOSYSTEM</h2>
 
                 <p>
-                    Connecting Agriculture.
-                    Empowering Every Harvest.
+                    <?= htmlspecialchars(t('auth_tagline'), ENT_QUOTES, 'UTF-8') ?>
                 </p>
 
                 <div class="brand-line"></div>
@@ -73,9 +91,7 @@ unset($_SESSION['register_error']);
                     <span><svg class="va-icon" width="24" height="24"><use href="frontend/images/icons.svg#va-icon-crops"/></svg></span>
 
                     <p>
-                        One platform for smarter farming,
-                        better markets and stronger
-                        agricultural communities.
+                        <?= htmlspecialchars(t('register_brand_message'), ENT_QUOTES, 'UTF-8') ?>
                     </p>
 
                 </div>
@@ -90,15 +106,15 @@ unset($_SESSION['register_error']);
                 <div class="form-header">
 
                     <span class="form-badge">
-                        STEP 1 OF 3
+                        <?= htmlspecialchars(t('register_step'), ENT_QUOTES, 'UTF-8') ?>
                     </span>
 
                     <h2>
-                        Create Your Account
+                        <?= htmlspecialchars(t('register_title'), ENT_QUOTES, 'UTF-8') ?>
                     </h2>
 
                     <p>
-                        Join the VAYUMA Smart Ecosystem.
+                        <?= htmlspecialchars(t('register_intro'), ENT_QUOTES, 'UTF-8') ?>
                     </p>
 
                 </div>
@@ -126,20 +142,20 @@ unset($_SESSION['register_error']);
                     <div class="input-group">
 
                         <label for="full_name">
-                            Full Name
+                            <?= htmlspecialchars(t('full_name'), ENT_QUOTES, 'UTF-8') ?>
                         </label>
 
                         <div class="input-wrapper">
 
                             <span class="input-icon">
-                                <svg class="va-icon input-icon" width="16" height="16"><use href="frontend/images/icons.svg#va-icon-profile"/></svg>
+                                <svg class="va-icon" aria-hidden="true" focusable="false"><use href="frontend/images/icons.svg?v=auth-icons-1#va-icon-profile"/></svg>
                             </span>
 
                             <input
                                 type="text"
                                 id="full_name"
                                 name="full_name"
-                                placeholder="Enter your full name"
+                                placeholder="<?= htmlspecialchars(t('enter_full_name'), ENT_QUOTES, 'UTF-8') ?>"
                                 autocomplete="name"
                                 required
                             >
@@ -154,20 +170,20 @@ unset($_SESSION['register_error']);
                     <div class="input-group">
 
                         <label for="phone">
-                            Phone Number
+                            <?= htmlspecialchars(t('phone_number'), ENT_QUOTES, 'UTF-8') ?>
                         </label>
 
                         <div class="input-wrapper">
 
                             <span class="input-icon">
-                                <svg class="va-icon input-icon" width="16" height="16"><use href="frontend/images/icons.svg#va-icon-money"/></svg>
+                                <svg class="va-icon" aria-hidden="true" focusable="false"><use href="frontend/images/icons.svg?v=auth-icons-1#va-icon-phone"/></svg>
                             </span>
 
                             <input
                                 type="tel"
                                 id="phone"
                                 name="phone"
-                                placeholder="e.g. 0712345678"
+                                placeholder="<?= htmlspecialchars(t('phone_example'), ENT_QUOTES, 'UTF-8') ?>"
                                 autocomplete="tel"
                                 required
                             >
@@ -175,7 +191,7 @@ unset($_SESSION['register_error']);
                         </div>
 
                         <small>
-                            Use the phone number you will use for VAYUMA services.
+                            <?= htmlspecialchars(t('phone_hint'), ENT_QUOTES, 'UTF-8') ?>
                         </small>
 
                     </div>
@@ -186,16 +202,16 @@ unset($_SESSION['register_error']);
                     <div class="input-group">
 
                         <label for="email">
-                            Email Address
+                            <?= htmlspecialchars(t('email_address'), ENT_QUOTES, 'UTF-8') ?>
                             <span class="optional">
-                                Optional
+                                <?= htmlspecialchars(t('optional'), ENT_QUOTES, 'UTF-8') ?>
                             </span>
                         </label>
 
                         <div class="input-wrapper">
 
                             <span class="input-icon">
-                                <svg class="va-icon input-icon" width="16" height="16"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg>
+                                <svg class="va-icon" aria-hidden="true" focusable="false"><use href="frontend/images/icons.svg?v=auth-icons-1#va-icon-email"/></svg>
                             </span>
 
                             <input
@@ -216,20 +232,20 @@ unset($_SESSION['register_error']);
                     <div class="input-group">
 
                         <label for="password">
-                            Password
+                            <?= htmlspecialchars(t('password'), ENT_QUOTES, 'UTF-8') ?>
                         </label>
 
                         <div class="input-wrapper">
 
                             <span class="input-icon">
-                                <svg class="va-icon input-icon" width="16" height="16"><use href="frontend/images/icons.svg#va-icon-bank"/></svg>
+                                <svg class="va-icon" aria-hidden="true" focusable="false"><use href="frontend/images/icons.svg?v=auth-icons-1#va-icon-lock"/></svg>
                             </span>
 
                             <input
                                 type="password"
                                 id="password"
                                 name="password"
-                                placeholder="Create a strong password"
+                                placeholder="<?= htmlspecialchars(t('create_password'), ENT_QUOTES, 'UTF-8') ?>"
                                 autocomplete="new-password"
                                 required
                             >
@@ -238,7 +254,7 @@ unset($_SESSION['register_error']);
                                 type="button"
                                 class="password-toggle"
                                 onclick="togglePassword('password', this)"
-                                aria-label="Show password"
+                                aria-label="<?= htmlspecialchars(t('show_password'), ENT_QUOTES, 'UTF-8') ?>"
                                 aria-pressed="false"
                             >
                                 <svg class="password-eye-show" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -257,7 +273,7 @@ unset($_SESSION['register_error']);
                         </div>
 
                         <small id="passwordMessage">
-                            Use at least 8 characters.
+                            <?= htmlspecialchars(t('password_hint'), ENT_QUOTES, 'UTF-8') ?>
                         </small>
 
                     </div>
@@ -268,20 +284,20 @@ unset($_SESSION['register_error']);
                     <div class="input-group">
 
                         <label for="confirm_password">
-                            Confirm Password
+                            <?= htmlspecialchars(t('confirm_password'), ENT_QUOTES, 'UTF-8') ?>
                         </label>
 
                         <div class="input-wrapper">
 
                             <span class="input-icon">
-                                <svg class="va-icon input-icon" width="16" height="16"><use href="frontend/images/icons.svg#va-icon-bank"/></svg>
+                                <svg class="va-icon" aria-hidden="true" focusable="false"><use href="frontend/images/icons.svg?v=auth-icons-1#va-icon-lock"/></svg>
                             </span>
 
                             <input
                                 type="password"
                                 id="confirm_password"
                                 name="confirm_password"
-                                placeholder="Confirm your password"
+                                placeholder="<?= htmlspecialchars(t('confirm_password_placeholder'), ENT_QUOTES, 'UTF-8') ?>"
                                 autocomplete="new-password"
                                 required
                             >
@@ -290,7 +306,7 @@ unset($_SESSION['register_error']);
                                 type="button"
                                 class="password-toggle"
                                 onclick="togglePassword('confirm_password', this)"
-                                aria-label="Show password"
+                                aria-label="<?= htmlspecialchars(t('show_password'), ENT_QUOTES, 'UTF-8') ?>"
                                 aria-pressed="false"
                             >
                                 <svg class="password-eye-show" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -318,13 +334,13 @@ unset($_SESSION['register_error']);
 
                         <label for="terms">
 
-                            I agree to the VAYUMA
+                            <?= htmlspecialchars(t('agree_terms'), ENT_QUOTES, 'UTF-8') ?>
                             <a href="#" onclick="return false;">
-                                Terms of Service
+                                <?= htmlspecialchars(t('terms_of_service'), ENT_QUOTES, 'UTF-8') ?>
                             </a>
-                            and
+                            <?= htmlspecialchars(t('and'), ENT_QUOTES, 'UTF-8') ?>
                             <a href="#" onclick="return false;">
-                                Privacy Policy
+                                <?= htmlspecialchars(t('privacy_policy'), ENT_QUOTES, 'UTF-8') ?>
                             </a>.
 
                         </label>
@@ -339,7 +355,7 @@ unset($_SESSION['register_error']);
                         class="register-button"
                     >
 
-                        Continue
+                        <?= htmlspecialchars(t('continue'), ENT_QUOTES, 'UTF-8') ?>
 
                         <span>
                             →
@@ -352,10 +368,10 @@ unset($_SESSION['register_error']);
 
                 <div class="login-link">
 
-                    Already have a VAYUMA account?
+                    <?= htmlspecialchars(t('already_account'), ENT_QUOTES, 'UTF-8') ?>
 
                     <a href="login.php">
-                        Login
+                        <?= htmlspecialchars(t('login'), ENT_QUOTES, 'UTF-8') ?>
                     </a>
 
                 </div>
@@ -368,6 +384,7 @@ unset($_SESSION['register_error']);
 
 
 <script>
+const authText = <?= json_encode(array_map('t', ['show_password','hide_password','password_hint','weak_password','moderate_password','strong_password','very_strong_password','passwords_match','passwords_differ','password_minimum']), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE) ?>;
 
 function togglePassword(fieldId, button) {
 
@@ -375,7 +392,7 @@ function togglePassword(fieldId, button) {
     const isVisible = field.type === "password";
 
     field.type = isVisible ? "text" : "password";
-    button.setAttribute("aria-label", isVisible ? "Hide password" : "Show password");
+    button.setAttribute("aria-label", isVisible ? authText[1] : authText[0]);
     button.setAttribute("aria-pressed", isVisible ? "true" : "false");
     button.querySelector(".password-eye-show").hidden = isVisible;
     button.querySelector(".password-eye-hide").hidden = !isVisible;
@@ -419,35 +436,35 @@ password.addEventListener("input", function () {
         strengthBar.style.width = "0%";
 
         passwordMessage.textContent =
-            "Use at least 8 characters.";
+            authText[2];
 
     } else if (strength <= 1) {
 
         strengthBar.style.width = "25%";
 
         passwordMessage.textContent =
-            "Weak password.";
+            authText[3];
 
     } else if (strength === 2) {
 
         strengthBar.style.width = "50%";
 
         passwordMessage.textContent =
-            "Moderate password.";
+            authText[4];
 
     } else if (strength === 3) {
 
         strengthBar.style.width = "75%";
 
         passwordMessage.textContent =
-            "Strong password.";
+            authText[5];
 
     } else {
 
         strengthBar.style.width = "100%";
 
         passwordMessage.textContent =
-            "Very strong password.";
+            authText[6];
 
     }
 
@@ -463,7 +480,7 @@ confirmPassword.addEventListener("input", function () {
     } else if (password.value === confirmPassword.value) {
 
         matchMessage.textContent =
-            "Passwords match.";
+            authText[7];
 
         matchMessage.className =
             "success-message";
@@ -471,7 +488,7 @@ confirmPassword.addEventListener("input", function () {
     } else {
 
         matchMessage.textContent =
-            "Passwords do not match.";
+            authText[8];
 
         matchMessage.className =
             "error-message";
@@ -491,7 +508,7 @@ document.getElementById("registrationForm")
 
             event.preventDefault();
 
-            alert("Password must contain at least 8 characters.");
+            alert(authText[9]);
 
             password.focus();
 
@@ -502,7 +519,7 @@ document.getElementById("registrationForm")
 
             event.preventDefault();
 
-            alert("Passwords do not match.");
+            alert(authText[8]);
 
             confirmPassword.focus();
 

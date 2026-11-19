@@ -1,0 +1,57 @@
+// Disposable MariaDB compatibility check; this does not test TiDB or PHP integration.
+import { readFileSync } from 'node:fs';
+import assert from 'node:assert/strict';
+import path from 'node:path';
+import { pathToFileURL } from 'node:url';
+const modulePath = process.env.VAYUMA_MARIADB_MODULE;
+if (!modulePath || !path.isAbsolute(modulePath)) throw new Error('Set VAYUMA_MARIADB_MODULE');
+const { Lite4MariaDB } = await import(pathToFileURL(modulePath).href);
+const db = await Lite4MariaDB.create();
+try {
+  const root = new URL('../staging/sql/', import.meta.url);
+  db.execMulti(readFileSync(new URL('01_attached_schema_REFERENCE.sql', root), 'utf8'));
+  db.execMulti(readFileSync(new URL('06_fresh_schema_additions_REVIEW.sql', root), 'utf8'));
+  db.execMulti(readFileSync(new URL('07_fresh_subscriptions_REVIEW.sql', root), 'utf8'));
+  const cols = db.query("SELECT table_name, column_name FROM information_schema.columns WHERE table_schema='vayuma_db' AND ((table_name='users' AND column_name='avatar_url') OR (table_name='produce_listings' AND column_name='category_id'))");
+  assert.equal(cols.length, 2);
+  const tables = db.query("SELECT table_name FROM information_schema.tables WHERE table_schema='vayuma_db' AND table_name IN ('produce_categories','saved_items','subscription_status_history')");
+  assert.equal(tables.length, 3);
+  db.exec("INSERT INTO users (full_name,role) VALUES ('Demo', 'farmer')");
+  db.exec("INSERT INTO produce_categories (name,slug) VALUES ('Sample', 'sample')");
+  db.exec("INSERT INTO produce_listings (farmer_id,produce_name,category,quantity,unit,price_per_unit,location,category_id) VALUES (1,'Demo','Sample',1,'kg',1,'Nairobi',1)");
+  db.exec('INSERT INTO saved_items (user_id,produce_listing_id) VALUES (1,1)');
+  assert.throws(() => db.exec('INSERT INTO saved_items (user_id,produce_listing_id) VALUES (1,1)'));
+  db.exec('DELETE FROM produce_categories WHERE id=1');
+  assert.equal(db.query('SELECT category_id FROM produce_listings WHERE id=1')[0].category_id, null);
+  db.exec('DELETE FROM produce_listings WHERE id=1');
+  assert.equal(Number(db.query('SELECT COUNT(*) AS n FROM saved_items')[0].n), 0);
+  const subs = db.query("SELECT column_name FROM information_schema.columns WHERE table_schema='vayuma_db' AND table_name='subscription_plans' AND column_name IN ('paystack_plan_code','billing_interval','currency')");
+  assert.equal(subs.length, 3);
+  db.execMulti(readFileSync(new URL('02_catalog_seeds.sql', root), 'utf8'));
+  assert.equal(Number(db.query('SELECT COUNT(*) AS n FROM subscription_plans')[0].n), 19);
+  const expected = {
+    farmer: 299, consumer: 199, buyer: 499, transport_provider: 399,
+    input_supplier: 999, manufacturer: 999, warehouse_provider: 799,
+    retailer: 499, agribusiness: 699, cooperative: 999, researcher: 999,
+    extension_officer: null, veterinary_officer: 499, financial_institution: 2999,
+    insurance_provider: 1999, government_officer: null, ngo_partner: 1499,
+    agricultural_service_provider: 799, strategic_partner: null
+  };
+  for (const plan of db.query('SELECT role_key,monthly_price,plan_type,billing_interval,currency FROM subscription_plans')) {
+    assert.ok(Object.hasOwn(expected, plan.role_key));
+    assert.equal(plan.monthly_price === null ? null : Number(plan.monthly_price), expected[plan.role_key]);
+    const type = plan.role_key === 'strategic_partner' ? 'negotiated' : (expected[plan.role_key] === null ? 'free' : 'paid');
+    assert.equal(plan.plan_type, type);
+    assert.equal(plan.billing_interval, 'monthly');
+    assert.equal(plan.currency, 'KES');
+  }
+
+  assert.equal(Number(db.query("SELECT COUNT(*) AS n FROM administrative_units WHERE unit_type='county'")[0].n), 47);
+  assert.equal(Number(db.query('SELECT COUNT(*) AS n FROM produce_categories')[0].n), 9);
+  db.exec("INSERT INTO user_subscriptions (user_id,plan_id,status,billing_interval,negotiated_approved) VALUES (1,1,'payment_due','monthly',0)");
+  const joined = db.query('SELECT s.*, p.role_key, p.stakeholder_name, p.monthly_price, p.plan_type, p.paystack_plan_code, p.billing_interval AS plan_billing_interval, p.currency FROM user_subscriptions s INNER JOIN subscription_plans p ON p.id=s.plan_id WHERE s.user_id=1');
+  assert.equal(joined.length, 1); assert.equal(joined[0].currency, 'KES');
+  db.exec("UPDATE user_subscriptions SET plan_id=1,status='payment_due',payment_provider=NULL,paystack_customer_code=NULL,paystack_subscription_code=NULL,expires_at=NULL,next_billing_date=NULL,billing_interval='monthly',negotiated_approved=0 WHERE user_id=1");
+  db.exec("INSERT INTO subscription_status_history (user_membership_id,old_status,new_status,reason,source) VALUES (1,'payment_due','expired','Test','test')");
+  console.log('PASS: additive schema, constraints and subscription queries (disposable MariaDB only)');
+} finally { await db.close(); }

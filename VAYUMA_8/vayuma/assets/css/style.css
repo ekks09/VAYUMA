@@ -917,14 +917,23 @@ body {
     align-items: center;
 }
 
-.input-icon {
+.register-form-section .input-wrapper > .input-icon {
     position: absolute;
-
     left: 15px;
-
-    font-size: 17px;
-
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     pointer-events: none;
+}
+
+.register-form-section .input-wrapper > .input-icon svg {
+    display: block;
+    width: 20px;
+    height: 20px;
 }
 
 .input-wrapper input {

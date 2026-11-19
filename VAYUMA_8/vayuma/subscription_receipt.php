@@ -4,13 +4,16 @@
  * Professional printable receipt for confirmed payments.
  */
 session_start();
+header('Cache-Control: private, no-store, max-age=0');
+header('Pragma: no-cache');
+header('X-Content-Type-Options: nosniff');
 require_once __DIR__ . '/includes/language.php';
 $simpleShellOnly = true;
 $showSidebarMenu = true;
 $showNav = false;
 require_once __DIR__ . '/config/db.php';
 
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id']) || ($_SESSION['logged_in'] ?? false) !== true) {
     header('Location: login.php');
     exit;
 }
@@ -30,7 +33,9 @@ $p = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
 if (!$p) {
-    die('Receipt is not available yet.');
+    http_response_code(404);
+    echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Receipt unavailable | VAYUMA</title></head><body><main><h1>Receipt unavailable</h1><p>This receipt is unavailable or does not belong to your account.</p><a href="subscription.php">Back to subscription</a></main></body></html>';
+    exit;
 }
 
 function h($v) {

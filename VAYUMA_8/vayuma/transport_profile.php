@@ -40,7 +40,7 @@ function transport_h($value) { return htmlspecialchars((string)$value, ENT_QUOTE
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head><?php require __DIR__ . '/includes/pwa.php'; ?>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Transport Provider Profile | VAYUMA</title>

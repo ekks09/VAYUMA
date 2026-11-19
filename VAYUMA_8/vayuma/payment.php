@@ -114,7 +114,7 @@ if ($phonePrefill === '') {
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head><?php require __DIR__ . '/includes/pwa.php'; ?>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -159,7 +159,7 @@ if ($phonePrefill === '') {
 <div class="va-payment-card">
 
 <h1 class="va-section-title">Complete Payment — M-Pesa STK Push</h1>
-<p class="va-section-subtitle">Review your order before making payment. VAYUMA sends an STK push to your phone. Enter your M-Pesa PIN on the phone to confirm.</p>
+<p class="va-section-subtitle">Review your order. Payment processing is currently unavailable.</p>
 
 <div class="va-product-row">
 <?php if ($image): ?>
@@ -180,6 +180,7 @@ if ($phonePrefill === '') {
 <div class="va-summary-row va-summary-total"><span>Total</span><span>KSh <?= $total ?></span></div>
 </div>
 
+<?php if (vayuma_payment_processing_enabled()): ?>
 <div class="va-payment-methods">
 <h3 class="va-method-label">Pay with M-Pesa STK Push</h3>
 <p>Enter the Safaricom number that should receive the payment prompt. VAYUMA sends an STK push to that phone. The order is marked paid only after you enter your M-Pesa PIN and Safaricom confirms the payment.</p>
@@ -197,12 +198,15 @@ if ($phonePrefill === '') {
 <button type="submit" class="va-btn va-btn--primary va-btn--full" style="margin-top:1rem">Send M-Pesa prompt</button>
 </form>
 <p class="va-pay-note">A pop-up from M-Pesa will appear on that phone. Enter your PIN there. Do not share the PIN on this page.</p>
+<?php else: ?>
+<p role="status">M-Pesa payment is temporarily unavailable. No payment prompt will be sent.</p>
+<?php endif; ?>
 
 </div>
 </div>
 
 <script>
-document.getElementById('mpesaForm').addEventListener('submit', function () {
+document.getElementById('mpesaForm')?.addEventListener('submit', function () {
   const button = this.querySelector('button[type="submit"]');
   button.disabled = true;
   button.textContent = 'Sending M-Pesa prompt…';

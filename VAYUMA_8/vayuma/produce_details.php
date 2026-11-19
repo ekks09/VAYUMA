@@ -99,7 +99,8 @@ $navLinks = [
               $catBadgeLink = 'market_connect.php';
               if (!empty($produce['category_id'])) {
                   $catBadgeStmt = $conn->prepare('SELECT name, color_hex, slug FROM produce_categories WHERE id = ? LIMIT 1');
-                  $catBadgeStmt->bind_param('i', (int)$produce['category_id']);
+                  $catBadgeId = (int)$produce['category_id'];
+                  $catBadgeStmt->bind_param('i', $catBadgeId);
                   $catBadgeStmt->execute();
                   $catBadgeRow = $catBadgeStmt->get_result()->fetch_assoc();
                   $catBadgeStmt->close();
@@ -201,6 +202,7 @@ $navLinks = [
 $relatedCategoryId = !empty($produce['category_id']) ? (int)$produce['category_id'] : null;
 $relatedCategoryText = !empty($produce['category']) ? $produce['category'] : '';
 $relatedListings = [];
+$relatedProduceId = (int)$produce['id'];
 if ($relatedCategoryId > 0) {
     $relStmt = $conn->prepare(
         'SELECT pl.id, pl.produce_name, pl.category, pl.image, pl.location,
@@ -211,7 +213,7 @@ if ($relatedCategoryId > 0) {
          ORDER BY pl.created_at DESC
          LIMIT 4'
     );
-    $relStmt->bind_param('ii', $relatedCategoryId, (int)$produce['id']);
+    $relStmt->bind_param('ii', $relatedCategoryId, $relatedProduceId);
 } elseif ($relatedCategoryText !== '') {
     $relStmt = $conn->prepare(
         'SELECT pl.id, pl.produce_name, pl.category, pl.image, pl.location,
@@ -222,7 +224,7 @@ if ($relatedCategoryId > 0) {
          ORDER BY pl.created_at DESC
          LIMIT 4'
     );
-    $relStmt->bind_param('si', $relatedCategoryText, (int)$produce['id']);
+    $relStmt->bind_param('si', $relatedCategoryText, $relatedProduceId);
 }
 if (isset($relStmt)) {
     $relStmt->execute();

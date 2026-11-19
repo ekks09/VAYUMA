@@ -1,0 +1,7 @@
+.git
+.env
+.env.*
+vayuma/config/*local.php
+vayuma/uploads
+vayuma/backups
+staging

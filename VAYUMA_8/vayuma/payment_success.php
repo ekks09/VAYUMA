@@ -58,7 +58,7 @@ $paymentReference = trim((string)($order['transaction_reference'] ?? ''));
 ?>
 <!doctype html>
 <html lang="<?= htmlspecialchars($current_language, ENT_QUOTES, 'UTF-8') ?>">
-<head>
+<head><?php require __DIR__ . '/includes/pwa.php'; ?>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Payment Status | VAYUMA</title>

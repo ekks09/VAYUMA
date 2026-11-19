@@ -46,7 +46,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
 $farmers=[];$r=$conn->query("SELECT id,full_name FROM users WHERE LOWER(TRIM(role))='farmer' ORDER BY full_name");if($r)$farmers=$r->fetch_all(MYSQLI_ASSOC);
 $st=$conn->prepare("SELECT * FROM extension_field_visits WHERE extension_officer_id=? ORDER BY visit_date DESC LIMIT 100");$st->bind_param('i',$uid);$st->execute();$visits=$st->get_result()->fetch_all(MYSQLI_ASSOC);$st->close();
 ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Farm Visits | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
+<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Farm Visits | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">

@@ -9,7 +9,7 @@ if(in_array($role,$allowed,true)){$sql.=' AND sp.role=?';$types.='s';$params[]=$
 $stmt=$conn->prepare($sql); if($types)$stmt->bind_param($types,...$params); $stmt->execute();$rows=$stmt->get_result();
 function h($v){return htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8');}
 ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Stakeholder Directory | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
+<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Stakeholder Directory | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">
