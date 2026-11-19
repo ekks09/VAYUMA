@@ -9,6 +9,8 @@ $nameEnv = getenv('DB_NAME');
 $isLocal = in_array(strtolower($host), ['localhost', '127.0.0.1', '::1'], true);
 $isDevelopment = in_array($environment, ['development', 'test'], true);
 
+// Only fixed stage names are logged; never include exception text or input values.
+$failureStage = 'configuration';
 try {
     if (!in_array($environment, ['development', 'test', 'staging', 'production'], true)) {
         throw new RuntimeException('Invalid application environment');
@@ -32,11 +34,13 @@ try {
     // Staging/production and all non-loopback connections must use a CA and
     // hostname verification; there is no insecure remote opt-out.
     $tls = !$isLocal || !$isDevelopment || getenv('DB_TLS') === '1';
+    $failureStage = 'initialization';
     $conn = mysqli_init();
     if (!$conn) throw new RuntimeException('Database initialization failed');
     $conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, 5);
     $flags = 0;
     if ($tls) {
+        $failureStage = 'tls_setup';
         $ca = (string)(getenv('DB_SSL_CA') ?: '/etc/ssl/certs/ca-certificates.crt');
         if (!is_file($ca) || !is_readable($ca)) throw new RuntimeException('Database CA bundle unavailable');
         if (!defined('MYSQLI_OPT_SSL_VERIFY_SERVER_CERT')) throw new RuntimeException('Database certificate verification unavailable');
@@ -45,18 +49,25 @@ try {
         }
         $flags = MYSQLI_CLIENT_SSL;
     }
+    $failureStage = 'connection';
     if (!$conn->real_connect($host, $user, $password, $database, (int)$portText, null, $flags)) {
         throw new RuntimeException('Database connection failed');
     }
     if ($tls) {
+        $failureStage = 'tls_verification';
         $cipherResult = $conn->query("SHOW STATUS LIKE 'Ssl_cipher'");
         $cipher = $cipherResult ? $cipherResult->fetch_row() : null;
         if (!$cipher || empty($cipher[1])) throw new RuntimeException('Database TLS was not negotiated');
     }
+    $failureStage = 'charset';
     $conn->set_charset('utf8mb4');
 } catch (Throwable $exception) {
     // Avoid logging connection strings, credentials, or server-provided details.
-    error_log('VAYUMA database connection or configuration failed.');
+    error_log('VAYUMA database connection or configuration failed. Stage: ' . $failureStage);
+    // A readiness probe handles its own generic response without exposing details.
+    if (($vayumaDbReadinessProbe ?? false) === true) {
+        return false;
+    }
     http_response_code(503);
     exit('VAYUMA is temporarily unavailable. Please try again later.');
 }

@@ -44,7 +44,7 @@ An initial online visit is required. The service worker provides a simple offlin
 
 ## Staging deployment planning
 
-The Render Blueprint is for staging only and has not been deployed or verified. Use an isolated TiDB database and private environment credentials; verify TLS, schema compatibility, backups and restore before use. The SQL files in `staging/sql/` require review and must not be applied blindly. `/health.php` reports liveness, not database readiness.
+The Render Blueprint is for staging only. Use an isolated TiDB database and private environment credentials; verify TLS, schema compatibility, backups and restore before use. The SQL files in `staging/sql/` require review and must not be applied blindly. `/health.php` reports liveness only; `/health.php?check=db` performs an on-demand connection and query check, returning only a generic status. Keep Render's health-check path at `/health.php`: the database check is not a schema, authorization or transaction test, and a public probe can generate database traffic.
 
 Payment initiation and settlement are hard locked and cannot be enabled with environment variables. Do not point live callbacks here or use real credentials. Safe activation requires authenticated provider reconciliation, idempotent settlement, handling ambiguous transactions, sandbox tests and independent security review. Historical payment setup documents do not describe the current lock.
 
