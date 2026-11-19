@@ -1,3 +1,6 @@
+-- DO NOT RUN ON TiDB: TiDB cannot add STORED generated columns with ALTER
+-- TABLE and does not support NULLIF in generated columns. This is a MariaDB
+-- reference only; a TiDB-specific migration must be designed and tested.
 -- MANUAL ONLY. Backup and run 04_identity_audit_READ_ONLY.sql first.
 -- Resolve all duplicate identity groups with an approved human-reviewed plan.
 -- Treat NULL and empty/whitespace-only email or phone as absent; they are not indexed.

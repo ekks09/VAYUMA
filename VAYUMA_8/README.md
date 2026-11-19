@@ -48,7 +48,7 @@ The Render Blueprint is for staging only and has not been deployed or verified. 
 
 Payment initiation and settlement are hard locked and cannot be enabled with environment variables. Do not point live callbacks here or use real credentials. Safe activation requires authenticated provider reconciliation, idempotent settlement, handling ambiguous transactions, sandbox tests and independent security review. Historical payment setup documents do not describe the current lock.
 
-Avatar uploads remain disabled unless private durable storage is explicitly configured and verified; local Render files and default sessions are ephemeral. Multi-instance object storage and durable sessions are not implemented. Before enabling profile edits or uploads, audit existing identities, review the manual schema migrations and verify storage, permissions and restart recovery. Test real TiDB login and all roles, Android/iOS installation and narrow-screen layouts before deployment.
+Avatar uploads remain disabled unless private durable storage is explicitly configured and verified; local Render files and default sessions are ephemeral. Multi-instance object storage and durable sessions are not implemented. Before enabling profile edits or uploads, audit existing identities, review the manual schema migrations and verify storage, permissions and restart recovery. The MariaDB identity reference in `staging/sql/05_identity_unique_MANUAL.sql` is not TiDB-compatible and must not be applied to TiDB; a TiDB-specific migration and integration test are still required. Test real TiDB login and all roles, Android/iOS installation and narrow-screen layouts before deployment.
 
 ## Protect private data
 
