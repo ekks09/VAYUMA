@@ -6,7 +6,7 @@ VAYUMA is a PHP and MySQL agribusiness platform that connects farmers, buyers, c
 
 - Role-based registration, stakeholder profiles, and dashboards
 - Produce marketplace, orders, and delivery workflows
-- M-Pesa, Paystack, and manual bank-transfer payment flows
+- Historical M-Pesa, Paystack, and bank-transfer integrations (payment processing is currently locked)
 - Subscription management and administration
 - Climate, crop, disease, and farming-advice tools
 - SMS and USSD integrations
@@ -30,7 +30,7 @@ The application source is in the [`vayuma/`](./vayuma/) directory.
 6. Apply any additional database migrations required by the features you want to test. See [`VAYUMA_MASTER_INSTALL.md`](./vayuma/VAYUMA_MASTER_INSTALL.md) and the integration guides below.
 7. Open `http://localhost/vayuma/` in your browser.
 
-Payment and messaging integrations need their own credentials and publicly reachable HTTPS callback URLs. Follow the relevant setup guide and use sandbox/test credentials first:
+Historical integration guides are listed below. Payment processing is currently hard locked; do not use live callbacks or credentials. Messaging integrations require separate configuration and security review:
 
 - [M-Pesa setup](./vayuma/MPESA_SETUP.md)
 - [Paystack setup](./vayuma/PAYSTACK_SETUP.md)
