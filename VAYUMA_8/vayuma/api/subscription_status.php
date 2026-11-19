@@ -7,9 +7,12 @@
 session_start();
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/csrf.php';
+require_once __DIR__ . '/../includes/payment_gate.php';
 require_once __DIR__ . '/../mpesa_lib.php';
 
 header('Content-Type: application/json');
+header('Cache-Control: private, no-store, max-age=0');
+header('X-Content-Type-Options: nosniff');
 
 if (!isset($_SESSION['user_id']) || ($_SESSION['logged_in'] ?? false) !== true) {
     http_response_code(401);
@@ -49,7 +52,7 @@ if (!$payment) {
 
 $status = $payment['status'] ?? 'pending';
 $queriedAt = $_SESSION['mpesa_subscription_query_at'][$paymentId] ?? 0;
-if ($status === 'pending' && (time() - (int)$queriedAt) >= 8) {
+if (vayuma_payment_processing_enabled() && $status === 'pending' && (time() - (int)$queriedAt) >= 8) {
     $_SESSION['mpesa_subscription_query_at'][$paymentId] = time();
     $refreshed = mpesa_refresh_subscription_payment($conn, $paymentId);
     if ($refreshed !== 'missing') {

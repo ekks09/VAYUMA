@@ -295,16 +295,20 @@ if (empty($email)) {
 |--------------------------------------------------------------------------
 */
 
-if (!$stmt->execute()) {
-
-    $_SESSION["register_error"] =
-        "Unable to create your account. Please try again.";
-
+require_once __DIR__ . '/../includes/identity_errors.php';
+try {
+    if (!$stmt->execute()) {
+        $duplicate = $stmt->errno === 1062;
+        $stmt->close();
+        $_SESSION['register_error'] = $duplicate ? 'That phone number or email is already in use.' : 'Unable to create your account. Please try again.';
+        header('Location: ../register.php');
+        exit;
+    }
+} catch (mysqli_sql_exception $e) {
+    $_SESSION['register_error'] = vayuma_is_duplicate_key($e) ? 'That phone number or email is already in use.' : 'Unable to create your account. Please try again.';
     $stmt->close();
-
-    header("Location: ../register.php");
+    header('Location: ../register.php');
     exit;
-
 }
 
 

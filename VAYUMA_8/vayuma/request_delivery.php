@@ -9,7 +9,7 @@ $stmt=$conn->prepare("SELECT o.*,pl.produce_name,pl.location FROM orders o LEFT 
 $stmt=$conn->prepare('SELECT * FROM delivery_requests WHERE order_id=? LIMIT 1');$stmt->bind_param('i',$orderId);$stmt->execute();$delivery=$stmt->get_result()->fetch_assoc();$stmt->close();
 $deliveryNotice=(string)($_SESSION['delivery_notice']??'');$deliveryError=(string)($_SESSION['delivery_error']??'');unset($_SESSION['delivery_notice'],$_SESSION['delivery_error']);
 function h($v){return htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8');}
-?><!doctype html><html lang="<?=h($current_language)?>"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Request Delivery | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
+?><!doctype html><html lang="<?=h($current_language)?>"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Request Delivery | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">

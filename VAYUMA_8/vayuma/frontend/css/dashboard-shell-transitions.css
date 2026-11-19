@@ -1,0 +1,2 @@
+/* Preserve the original transitions for these dashboard templates. */
+.va-dash-sidebar--nav-item, .va-dash-action { transition: color var(--va-transition), background-color var(--va-transition), border-color var(--va-transition); }

@@ -1,0 +1,12 @@
+.vy-profile__header { display:flex; align-items:center; justify-content:space-between; gap:var(--va-space-3); max-width:800px; margin:auto; padding:var(--va-space-4); }
+.vy-profile__header a,.vy-profile a { color:var(--va-primary); }
+.vy-profile { max-width:800px; margin:auto; padding:var(--va-space-4); color:var(--va-text-primary); }
+.vy-profile > p { color:var(--va-text-secondary); margin:var(--va-space-2) 0 var(--va-space-4); }
+.vy-profile__card { background:var(--va-surface); border:1px solid var(--va-border); border-radius:var(--va-radius-lg); padding:var(--va-space-5); margin:var(--va-space-4) 0; box-shadow:var(--va-shadow-sm); }
+.vy-profile__card h2 { font-size:var(--va-font-size-lg); margin-bottom:var(--va-space-3); }
+.vy-profile__card form { display:flex; flex-direction:column; gap:var(--va-space-2); }
+.vy-profile__card label { font-weight:var(--va-font-weight-semibold); margin-top:var(--va-space-2); }
+.vy-profile__card input { width:100%; padding:var(--va-space-3); border:1px solid var(--va-border); border-radius:var(--va-radius); font:inherit; }
+.vy-profile__card small { color:var(--va-text-secondary); }
+.vy-profile__card button { align-self:flex-start; border:0; border-radius:var(--va-radius); background:var(--va-primary); color:var(--va-text-inverse); padding:var(--va-space-3) var(--va-space-5); font:inherit; cursor:pointer; }
+.vy-profile__message { padding:var(--va-space-3); background:var(--va-warning-bg); border-radius:var(--va-radius); }

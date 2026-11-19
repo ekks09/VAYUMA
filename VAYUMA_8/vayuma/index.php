@@ -6,6 +6,7 @@ $platformHomeUrl = vayuma_platform_home_route();
 <!DOCTYPE html>
 <html lang="<?= htmlspecialchars($current_language, ENT_QUOTES, 'UTF-8') ?>">
 <head>
+    <?php require __DIR__ . '/includes/pwa.php'; ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 

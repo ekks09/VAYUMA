@@ -31,7 +31,7 @@ if (!isset($roles_needing_profiles[$role])) {
 ?>
 <!doctype html>
 <html lang="en">
-<head>
+<head><?php require __DIR__ . '/includes/pwa.php'; ?>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo htmlspecialchars($role_name, ENT_QUOTES, "UTF-8"); ?> Profile | VAYUMA</title>

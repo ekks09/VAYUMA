@@ -1,0 +1,12 @@
+/* Install UI only; does not change dashboard or form layouts. */
+.va-install-entry{display:flex;align-items:center;gap:.65rem;width:100%;min-height:44px;padding:.7rem .9rem;margin:.35rem 0;border:1px solid #cfe5d4;border-radius:.65rem;background:#f4faf5;color:#17663a;text-align:left;font:inherit;font-size:.9rem;font-weight:700;cursor:pointer}
+.va-install-entry:hover{background:#e5f5e9}.va-install-entry:focus-visible,.va-install-notice button:focus-visible,.va-install-dialog button:focus-visible{outline:3px solid #d7a918;outline-offset:2px}
+.va-install-entry__icon{display:inline-flex;flex:none;width:1.35rem;justify-content:center;font-size:1.2rem;line-height:1}
+.va-install-notice{position:fixed;z-index:900;right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));left:auto;width:min(360px,calc(100% - 24px));box-sizing:border-box;padding:1rem;border:1px solid #cfe5d4;border-radius:1rem;background:#fff;color:#173d2a;box-shadow:0 8px 30px rgba(15,52,30,.2);font:14px/1.4 system-ui,sans-serif}
+.va-install-notice strong{display:block;font-size:1rem}.va-install-notice p{margin:.3rem 0 .8rem}.va-install-actions{display:flex;gap:.5rem;flex-wrap:wrap}.va-install-actions button,.va-install-dialog button{min-height:44px;padding:.6rem .9rem;border:1px solid #087d42;border-radius:.55rem;background:#087d42;color:white;font:inherit;font-weight:700;cursor:pointer}.va-install-actions .va-install-later,.va-install-dialog .va-install-close{background:#fff;color:#17663a}
+.va-install-backdrop{position:fixed;z-index:1100;inset:0;display:grid;place-items:center;padding:12px;background:rgba(0,0,0,.45);box-sizing:border-box}
+.va-install-dialog{box-sizing:border-box;width:min(100%,420px);max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);overflow:auto;border-radius:1rem;background:white;color:#173d2a;padding:1.25rem;font:16px/1.5 system-ui,sans-serif;box-shadow:0 12px 36px rgba(0,0,0,.25)}
+.va-install-dialog h2{margin:0 0 .65rem;font-size:1.25rem}.va-install-dialog p{margin:0 0 1rem}.va-install-dialog button{width:100%}
+@media(max-width:480px){.va-install-notice{right:max(12px,env(safe-area-inset-right));left:max(12px,env(safe-area-inset-left));width:auto}.va-install-dialog{padding:1rem}}
+.va-install-entry[hidden]{display:none}
+.va-install-entry--top{width:auto;flex:0 0 auto;margin:0;font-size:.8rem}

@@ -41,7 +41,7 @@ $full_name = $_SESSION['full_name'] ?? 'Cooperative User';
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+<head><?php require __DIR__ . '/includes/pwa.php'; ?>
 
 <meta charset="UTF-8">
 

@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/includes/language.php';require_once __DIR__.'/includes/csrf.php';require_once __DIR__.'/config/db.php';if(!isset($_SESSION['user_id'])||($_SESSION['logged_in']??false)!==true){header('Location: login.php');exit;}if(strtolower(trim($_SESSION['role']??''))!=='farmer'){header('Location: dashboard.php');exit;}$userId=(int)$_SESSION['user_id'];$stmt=$conn->prepare("SELECT o.*,pl.produce_name,pl.location,u.full_name AS buyer_name,u.phone AS buyer_phone FROM orders o LEFT JOIN produce_listings pl ON o.produce_listing_id=pl.id LEFT JOIN users u ON o.buyer_id=u.id WHERE o.seller_id=? ORDER BY o.created_at DESC");$stmt->bind_param('i',$userId);$stmt->execute();$orders=$stmt->get_result();$sellerOrderNotice=(string)($_SESSION['seller_order_notice']??'');$sellerOrderNoticeType=(string)($_SESSION['seller_order_notice_type']??'error');unset($_SESSION['seller_order_notice'],$_SESSION['seller_order_notice_type']);?>
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Produce Requests | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
+<!doctype html><html><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Produce Requests | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">

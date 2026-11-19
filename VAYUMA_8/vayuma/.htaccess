@@ -3,7 +3,7 @@
 # permitted inside .htaccess files.
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteRule ^(?:backups|config|lib|database/migrations)(?:/|$) - [F,L,NC]
+  RewriteRule ^(?:backups|config|lib|includes|database)(?:/|$) - [F,L,NC]
 </IfModule>
 
 # Block access to database migration files
@@ -18,7 +18,7 @@
 </FilesMatch>
 
 # Block access to migration runner via web (CLI only)
-<Files "run_migration.php">
+<FilesMatch "^(run_migration|test_db)\.php$">
   <IfModule mod_authz_core.c>
     Require all denied
   </IfModule>
@@ -26,7 +26,20 @@
     Order deny,allow
     Deny from all
   </IfModule>
-</Files>
+</FilesMatch>
 
 # Disable directory listing
 Options -Indexes
+
+# PWA metadata must be served with the correct type and update promptly.
+<IfModule mod_mime.c>
+  AddType application/manifest+json .webmanifest
+  <Files "manifest.json">
+    ForceType application/manifest+json
+  </Files>
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "^(sw\.js|manifest\.(?:webmanifest|json))$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

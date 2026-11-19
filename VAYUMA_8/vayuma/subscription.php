@@ -28,7 +28,8 @@ $paid = $subscription && $subscription['plan_type'] === 'paid';
 $status = $subscription['status'] ?? 'payment_due';
 $billingInterval = $subscription['plan_billing_interval'] ?? $subscription['billing_interval'] ?? 'monthly';
 $role = (string)($_SESSION['role'] ?? '');
-$profileUrl = vayuma_role_route($role, 'profile') ?? 'role.php';
+$profileRoute = vayuma_role_route($role, 'profile');
+$profileUrl = $profileRoute !== null ? $profileRoute . '?from=subscription.php' : 'role.php';
 $dashboardUrl = vayuma_role_route($role, 'dashboard');
 $dashboardAccessible = subscription_is_accessible($subscription);
 $platformHomeUrl = $dashboardAccessible && $dashboardUrl !== null
@@ -113,6 +114,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
       Your plan and price come from the VAYUMA pricing catalogue. Access starts only after payment is verified.
     </p>
 
+    <?php if (vayuma_payment_processing_enabled()): ?>
     <div class="va-mb-4">
       <div class="va-payment-methods">
         <h3 class="va-method-label">Pay with M-Pesa STK Push</h3>
@@ -139,6 +141,9 @@ require_once __DIR__ . '/includes/ui_simple.php';
         A pop-up from M-Pesa will appear on that phone. Enter your PIN there. Access starts only after Safaricom confirms the payment.
       </p>
     </div>
+    <?php else: ?>
+    <p role="status">M-Pesa payment is temporarily unavailable. No payment prompt will be sent.</p>
+    <?php endif; ?>
 
   <?php elseif ($subscription['plan_type'] === 'free'): ?>
     <div class="va-text-center va-py-8">

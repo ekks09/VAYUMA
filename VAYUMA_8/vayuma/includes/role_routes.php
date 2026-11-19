@@ -39,3 +39,33 @@ function vayuma_platform_home_route(): string
 
     return 'welcome.php';
 }
+
+/** Safe destination for links back from shared pages. */
+function vayuma_dashboard_return_route(): string
+{
+    if (!isset($_SESSION['user_id']) || ($_SESSION['logged_in'] ?? false) !== true) {
+        return 'login.php';
+    }
+    return vayuma_role_route((string)($_SESSION['role'] ?? ''), 'dashboard') ?? 'role.php';
+}
+
+/** Only the current role's dashboard or subscription can be a profile return target. */
+function vayuma_profile_return_navigation($from): array
+{
+    if (!isset($_SESSION['user_id']) || ($_SESSION['logged_in'] ?? false) !== true) {
+        return ['login.php', 'Back to login'];
+    }
+    $dashboard = vayuma_role_route((string)($_SESSION['role'] ?? ''), 'dashboard');
+    if ($from === 'subscription.php') return ['subscription.php', 'Back to subscription'];
+    if ($dashboard !== null && $from === $dashboard) return [$dashboard, 'Back to dashboard'];
+    return ['role.php', 'Back to category selection'];
+}
+
+/** Profile hub accepts only subscription or this user's own dashboard. */
+function vayuma_profile_hub_return_route($candidate): string
+{
+    $dashboard = vayuma_dashboard_return_route();
+    if ($dashboard === 'login.php') return $dashboard;
+    if ($candidate === 'subscription.php') return 'subscription.php';
+    return $dashboard;
+}

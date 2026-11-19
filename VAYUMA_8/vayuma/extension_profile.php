@@ -13,7 +13,7 @@ $countyOptions[]='Marsabit';$countyOptions=array_values(array_unique($countyOpti
 $error=$_SESSION['profile_error']??'';unset($_SESSION['profile_error']);
 function eh($v){return htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8');}
 ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Extension Officer Profile | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css?v=20261110">
+<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Extension Officer Profile | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css?v=20261110">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css?v=20261110">
 <link rel="stylesheet" href="frontend/css/layout.css">

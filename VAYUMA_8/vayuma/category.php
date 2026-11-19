@@ -78,7 +78,7 @@ function cat_h($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
 ?>
 <!doctype html>
 <html lang="en">
-<head>
+<head><?php require __DIR__ . '/includes/pwa.php'; ?>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title><?= cat_h($category['name']) ?> | VAYUMA</title>

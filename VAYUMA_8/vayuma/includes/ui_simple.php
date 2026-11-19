@@ -24,6 +24,7 @@ $platformHomeUrl = $platformHomeUrl ?? vayuma_platform_home_route();
 <!DOCTYPE html>
 <html lang="<?= htmlspecialchars($currentLanguage, ENT_QUOTES, 'UTF-8') ?>">
 <head>
+<?php require __DIR__ . '/pwa.php'; ?>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= htmlspecialchars($pageTitle) ?> | VAYUMA</title>
@@ -69,26 +70,7 @@ $platformHomeUrl = $platformHomeUrl ?? vayuma_platform_home_route();
 
   <div class="va-topbar--user">
     <?php if ($currentUserId > 0): ?>
-      <?php
-      $accountProfileUrl = vayuma_role_route((string)$userRole, 'profile') ?? 'profile_setup.php';
-      $accountDashboardUrl = vayuma_platform_home_route();
-      ?>
-      <details class="va-account-menu">
-        <summary aria-label="Open account menu">
-          <span class="va-avatar"><?= htmlspecialchars(strtoupper(substr((string)$userName, 0, 1)), ENT_QUOTES, 'UTF-8') ?></span>
-          <span class="va-account-menu__identity">
-            <strong><?= htmlspecialchars((string)$userName, ENT_QUOTES, 'UTF-8') ?></strong>
-            <small><?= htmlspecialchars(ucfirst(str_replace('_', ' ', (string)$userRole)), ENT_QUOTES, 'UTF-8') ?></small>
-          </span>
-          <span class="va-account-menu__chevron" aria-hidden="true">⌄</span>
-        </summary>
-        <div class="va-account-menu__panel">
-          <a href="<?= htmlspecialchars($accountDashboardUrl, ENT_QUOTES, 'UTF-8') ?>">Dashboard</a>
-          <a href="<?= htmlspecialchars($accountProfileUrl, ENT_QUOTES, 'UTF-8') ?>">My profile</a>
-          <a href="subscription.php">Subscription</a>
-          <a href="auth/logout.php">Log out</a>
-        </div>
-      </details>
+      <?php require __DIR__ . '/header_user_menu.php'; ?>
     <?php else: ?>
       <a href="login.php" class="va-btn va-btn--outline va-btn--sm">Log in</a>
       <a href="register.php" class="va-btn va-btn--primary va-btn--sm">Sign up</a>

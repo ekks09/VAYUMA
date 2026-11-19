@@ -16,7 +16,7 @@ if ($view === "manage") {
     $stmt = $conn->prepare($sql); if ($county !== "" && $provider_filter > 0) { $stmt->bind_param("si", $county, $provider_filter); } elseif ($county !== "") { $stmt->bind_param("s", $county); } elseif ($provider_filter > 0) { $stmt->bind_param("i", $provider_filter); } $stmt->execute(); $offers = $stmt->get_result(); $stmt->close();
 }
 ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VAYUMA Exchange</title><link rel="stylesheet" href="frontend/css/tokens.css">
+<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VAYUMA Exchange</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">

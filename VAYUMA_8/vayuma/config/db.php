@@ -1,21 +1,62 @@
 <?php
-
-$host = "localhost";
-$username = "root";
-$password = "";
-$database = "vayuma_db";
-
+/** MySQL/TiDB connection. Non-loopback connections always verify TLS. */
+$environment = strtolower(trim((string)(getenv('APP_ENV') ?: 'development')));
+$host = trim((string)(getenv('DB_HOST') ?: 'localhost'));
+$portText = (string)(getenv('DB_PORT') ?: '3306');
+$userEnv = getenv('DB_USER');
+$passwordEnv = getenv('DB_PASSWORD');
+$nameEnv = getenv('DB_NAME');
+$isLocal = in_array(strtolower($host), ['localhost', '127.0.0.1', '::1'], true);
+$isDevelopment = in_array($environment, ['development', 'test'], true);
 
 try {
-    $conn = new mysqli($host, $username, $password, $database);
-    if ($conn->connect_errno) {
-        throw new mysqli_sql_exception($conn->connect_error, $conn->connect_errno);
+    if (!in_array($environment, ['development', 'test', 'staging', 'production'], true)) {
+        throw new RuntimeException('Invalid application environment');
     }
-    $conn->set_charset("utf8mb4");
-} catch (mysqli_sql_exception $exception) {
-    error_log('VAYUMA database connection failed: ' . $exception->getMessage());
+    if (!ctype_digit($portText) || (int)$portText < 1 || (int)$portText > 65535 || $host === '') {
+        throw new RuntimeException('Invalid database address');
+    }
+    if (!$isDevelopment && (getenv('DB_HOST') === false || trim((string)getenv('DB_HOST')) === '')) {
+        throw new RuntimeException('Database host must be configured');
+    }
+    if ((!$isDevelopment || !$isLocal) &&
+        ($userEnv === false || $userEnv === '' || $passwordEnv === false || $passwordEnv === '' || $nameEnv === false || $nameEnv === '')) {
+        throw new RuntimeException('Database credentials must be configured');
+    }
+    $user = $userEnv === false ? 'root' : $userEnv;
+    $password = $passwordEnv === false ? '' : $passwordEnv;
+    $database = $nameEnv === false ? 'vayuma_db' : $nameEnv;
+    if ($user === '' || $database === '') {
+        throw new RuntimeException('Invalid database configuration');
+    }
+    // Staging/production and all non-loopback connections must use a CA and
+    // hostname verification; there is no insecure remote opt-out.
+    $tls = !$isLocal || !$isDevelopment || getenv('DB_TLS') === '1';
+    $conn = mysqli_init();
+    if (!$conn) throw new RuntimeException('Database initialization failed');
+    $conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, 5);
+    $flags = 0;
+    if ($tls) {
+        $ca = (string)(getenv('DB_SSL_CA') ?: '/etc/ssl/certs/ca-certificates.crt');
+        if (!is_file($ca) || !is_readable($ca)) throw new RuntimeException('Database CA bundle unavailable');
+        if (!defined('MYSQLI_OPT_SSL_VERIFY_SERVER_CERT')) throw new RuntimeException('Database certificate verification unavailable');
+        if (!$conn->ssl_set(null, null, $ca, null, null) || !$conn->options(MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, true)) {
+            throw new RuntimeException('Database TLS configuration failed');
+        }
+        $flags = MYSQLI_CLIENT_SSL;
+    }
+    if (!$conn->real_connect($host, $user, $password, $database, (int)$portText, null, $flags)) {
+        throw new RuntimeException('Database connection failed');
+    }
+    if ($tls) {
+        $cipherResult = $conn->query("SHOW STATUS LIKE 'Ssl_cipher'");
+        $cipher = $cipherResult ? $cipherResult->fetch_row() : null;
+        if (!$cipher || empty($cipher[1])) throw new RuntimeException('Database TLS was not negotiated');
+    }
+    $conn->set_charset('utf8mb4');
+} catch (Throwable $exception) {
+    // Avoid logging connection strings, credentials, or server-provided details.
+    error_log('VAYUMA database connection or configuration failed.');
     http_response_code(503);
     exit('VAYUMA is temporarily unavailable. Please try again later.');
 }
-
-?>

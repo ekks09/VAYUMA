@@ -7,8 +7,11 @@
 session_start();
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/csrf.php';
+require_once __DIR__ . '/../includes/payment_gate.php';
 
 header('Content-Type: application/json');
+header('Cache-Control: private, no-store, max-age=0');
+header('X-Content-Type-Options: nosniff');
 
 if (!isset($_SESSION['user_id']) || ($_SESSION['logged_in'] ?? false) !== true) {
     http_response_code(401);
@@ -49,7 +52,7 @@ $paymentId = (int)$payment['id'];
 
 // Optional: poll Safaricom for final status if still pending
 $queriedAt = $_SESSION['mpesa_order_query_at'][$paymentId] ?? 0;
-if ($status === 'pending' && (time() - (int)$queriedAt) >= 8) {
+if (vayuma_payment_processing_enabled() && $status === 'pending' && (time() - (int)$queriedAt) >= 8) {
     $_SESSION['mpesa_order_query_at'][$paymentId] = time();
     require_once __DIR__ . '/../mpesa_lib.php';
     $status = mpesa_refresh_order_payment($conn, $paymentId) ?? $status;

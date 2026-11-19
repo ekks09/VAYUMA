@@ -22,7 +22,7 @@ $farmers=[];$r=$conn->query("SELECT id,full_name FROM users WHERE LOWER(TRIM(rol
 $visits=[];$st=$conn->prepare("SELECT id,visit_date,purpose FROM extension_field_visits WHERE extension_officer_id=? ORDER BY visit_date DESC LIMIT 100");$st->bind_param('i',$uid);$st->execute();$visits=$st->get_result()->fetch_all(MYSQLI_ASSOC);$st->close();
 $st=$conn->prepare("SELECT * FROM extension_field_reports WHERE extension_officer_id=? ORDER BY report_date DESC, id DESC LIMIT 100");$st->bind_param('i',$uid);$st->execute();$reports=$st->get_result()->fetch_all(MYSQLI_ASSOC);$st->close();
 ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Farm Reports | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
+<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Farm Reports | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">

@@ -11,6 +11,10 @@ $showNav = false;
 require_once __DIR__ . '/includes/ui_simple.php';
 require_once __DIR__ . '/config/db.php';
 
+function vayuma_market_h($value): string {
+    return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
+}
+
 $currentUserId = (int)($_SESSION['user_id'] ?? 0);
 $currentRole = strtolower(trim($_SESSION['role'] ?? ''));
 $orderError = (string)($_SESSION['order_error'] ?? '');
@@ -97,7 +101,7 @@ $navLinks = [
 <main class="va-page-main" id="va-main-content">
   <div class="va-container">
     <?php if ($orderError !== ''): ?>
-      <div class="va-alert va-alert--error" role="alert"><?= h($orderError) ?></div>
+      <div class="va-alert va-alert--error" role="alert"><?= vayuma_market_h($orderError) ?></div>
     <?php endif; ?>
     <?php if ($currentUserId > 0): ?>
     <div class="va-sidebar-overlay" id="vaSidebarOverlay" onclick="vaCloseSidebar()"></div>
@@ -165,10 +169,10 @@ $navLinks = [
       <div class="va-card va-card--p va-mb-6">
         <h2 class="va-section--title">🔎 Search VAYUMA Market</h2>
         <form method="GET" action="market_connect.php" class="va-d-flex va-gap-2 va-wrap va-mb-4">
-          <input type="text" name="search" placeholder="Search maize, beans, tomatoes, location..." value="<?= h($search) ?>" class="va-input va-w-full" style="max-width:260px;">
-          <input type="text" name="location" placeholder="Location" value="<?= h($location) ?>" class="va-input va-text-sm" style="max-width:140px;">
-          <input type="number" name="min_price" placeholder="Min KSh" value="<?= h($minPrice) ?>" class="va-input va-text-sm" style="max-width:110px;">
-          <input type="number" name="max_price" placeholder="Max KSh" value="<?= h($maxPrice) ?>" class="va-input va-text-sm" style="max-width:110px;">
+          <input type="text" name="search" placeholder="Search maize, beans, tomatoes, location..." value="<?= vayuma_market_h($search) ?>" class="va-input va-w-full" style="max-width:260px;">
+          <input type="text" name="location" placeholder="Location" value="<?= vayuma_market_h($location) ?>" class="va-input va-text-sm" style="max-width:140px;">
+          <input type="number" name="min_price" placeholder="Min KSh" value="<?= vayuma_market_h($minPrice) ?>" class="va-input va-text-sm" style="max-width:110px;">
+          <input type="number" name="max_price" placeholder="Max KSh" value="<?= vayuma_market_h($maxPrice) ?>" class="va-input va-text-sm" style="max-width:110px;">
           <select name="category_id" class="va-input va-text-sm">
             <option value="">All categories</option>
             <?php
@@ -206,7 +210,7 @@ $navLinks = [
             <?php while ($product = $result->fetch_assoc()): ?>
             <article class="va-card va-card--p va-mb-4" style="cursor:pointer;" onclick="window.location.href='produce_details.php?id=<?= (int)$product['id'] ?>'">
               <?php if (!empty($product['image'])): ?>
-                <img src="<?= h($product['image']) ?>" alt="<?= h($product['produce_name']) ?>" style="width:100%;height:200px;object-fit:cover;border-radius:var(--va-radius);margin-bottom:var(--va-space-3);background:#edf4ed;">
+                <img src="<?= vayuma_market_h($product['image']) ?>" alt="<?= vayuma_market_h($product['produce_name']) ?>" style="width:100%;height:200px;object-fit:cover;border-radius:var(--va-radius);margin-bottom:var(--va-space-3);background:#edf4ed;">
               <?php else: ?>
                 <div style="width:100%;height:200px;border-radius:var(--va-radius);background:#edf4ed;display:flex;align-items:center;justify-content:center;font-size:2rem;margin-bottom:var(--va-space-3);">
                   <?php
@@ -223,7 +227,8 @@ $navLinks = [
               $catBadgeLabel = 'Agricultural Produce';
               if (!empty($product['category_id'])) {
                   $catBadgeStmt = $conn->prepare('SELECT name, color_hex FROM produce_categories WHERE id = ? LIMIT 1');
-                  $catBadgeStmt->bind_param('i', (int)$product['category_id']);
+                  $catBadgeId = (int)$product['category_id'];
+                  $catBadgeStmt->bind_param('i', $catBadgeId);
                   $catBadgeStmt->execute();
                   $catBadgeRow = $catBadgeStmt->get_result()->fetch_assoc();
                   $catBadgeStmt->close();
@@ -235,25 +240,25 @@ $navLinks = [
                   $catBadgeLabel = $product['category'];
               }
               ?>
-              <div class="va-text-xs va-font-semibold va-text-uppercase va-text-xs va-mb-1" style="color:<?= $catBadgeColor ?>;"><?= h($catBadgeLabel) ?></div>
-              <h3 class="va-text-lg va-font-bold va-text-primary va-mb-2"><?= h($product['produce_name']) ?></h3>
-              <p class="va-text-sm va-text-secondary va-mb-3" style="line-height:1.5;min-height:45px;"><?= h($product['description'] ?? 'Fresh agricultural produce from a VAYUMA farmer.') ?></p>
+              <div class="va-text-xs va-font-semibold va-text-uppercase va-text-xs va-mb-1" style="color:<?= $catBadgeColor ?>;"><?= vayuma_market_h($catBadgeLabel) ?></div>
+              <h3 class="va-text-lg va-font-bold va-text-primary va-mb-2"><?= vayuma_market_h($product['produce_name']) ?></h3>
+              <p class="va-text-sm va-text-secondary va-mb-3" style="line-height:1.5;min-height:45px;"><?= vayuma_market_h($product['description'] ?? 'Fresh agricultural produce from a VAYUMA farmer.') ?></p>
               <div class="va-d-grid va-gap-2" style="grid-template-columns:1fr 1fr;border-top:1px solid var(--va-border);padding-top:var(--va-space-3);margin-top:var(--va-space-3);">
                 <div>
                   <div class="va-text-xs va-text-muted">Quantity</div>
-                  <div class="va-font-semibold va-text-sm"><?= h($product['quantity']) ?> <?= h($product['unit']) ?></div>
+                  <div class="va-font-semibold va-text-sm"><?= vayuma_market_h($product['quantity']) ?> <?= vayuma_market_h($product['unit']) ?></div>
                 </div>
                 <div>
                   <div class="va-text-xs va-text-muted">Price</div>
-                  <div class="va-font-semibold va-text-sm va-text-primary">KSh <?= number_format((float)$product['price_per_unit'], 2) ?>/<?= h($product['unit']) ?></div>
+                  <div class="va-font-semibold va-text-sm va-text-primary">KSh <?= number_format((float)$product['price_per_unit'], 2) ?>/<?= vayuma_market_h($product['unit']) ?></div>
                 </div>
                 <div style="grid-column:1/-1;">
                   <div class="va-text-xs va-text-muted">Location</div>
-                  <div class="va-font-semibold va-text-sm"><?= h($product['location'] ?? 'Location not specified') ?></div>
+                  <div class="va-font-semibold va-text-sm"><?= vayuma_market_h($product['location'] ?? 'Location not specified') ?></div>
                 </div>
                 <div style="grid-column:1/-1;">
                   <div class="va-text-xs va-text-muted">Farmer</div>
-                  <div class="va-font-semibold va-text-sm"><?= h($product['farmer_name'] ?? 'VAYUMA Farmer') ?></div>
+                  <div class="va-font-semibold va-text-sm"><?= vayuma_market_h($product['farmer_name'] ?? 'VAYUMA Farmer') ?></div>
                 </div>
               </div>
               <a href="produce_details.php?id=<?= (int)$product['id'] ?>" class="va-btn va-btn--primary va-btn--sm va-w-full va-mt-3">View Produce</a>

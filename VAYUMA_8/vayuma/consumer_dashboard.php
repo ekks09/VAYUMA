@@ -30,7 +30,7 @@ $navLinks = [
     'Marketplace' => 'market_connect.php',
     'My Orders' => 'my_orders.php',
     'VAYUMA AI' => 'ai_advisor.php',
-    'My Profile' => 'consumer_profile.php',
+    'My Profile' => 'consumer_profile.php?from=consumer_dashboard.php',
 ];
 
 require_once __DIR__ . '/includes/ui_simple.php';
@@ -157,7 +157,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
       <div class="va-d-grid va-gap-3 va-mb-6" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));">
         <a href="market_connect.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-marketplace"/></svg> Browse Marketplace</a>
         <a href="my_orders.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-orders"/></svg> My Orders</a>
-        <a href="consumer_profile.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-profile"/></svg> My Profile</a>
+        <a href="consumer_profile.php?from=consumer_dashboard.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-profile"/></svg> My Profile</a>
         <a href="ai_advisor.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg> Ask VAYUMA AI</a>
       </div>
 

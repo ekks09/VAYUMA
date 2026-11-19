@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/includes/payment_gate.php';
+vayuma_require_payment_processing();
 session_start();
 require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/lib/paystack.php';
@@ -66,7 +68,7 @@ if ($reference === '') {
 ?>
 <!doctype html>
 <html lang="en">
-<head>
+<head><?php require __DIR__ . '/includes/pwa.php'; ?>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Subscription payment | VAYUMA</title>

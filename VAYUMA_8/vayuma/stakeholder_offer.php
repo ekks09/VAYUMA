@@ -5,7 +5,7 @@ if (!isset($_SESSION["user_id"]) || ($_SESSION["logged_in"] ?? false) !== true) 
 $id = (int) ($_GET["id"] ?? 0); if ($id < 1) { header("Location: stakeholder_offers.php"); exit; }
 $stmt = $conn->prepare("SELECT o.*, u.full_name, u.phone, sp.organization_name FROM stakeholder_offers o INNER JOIN users u ON u.id = o.provider_id LEFT JOIN stakeholder_profiles sp ON sp.user_id = o.provider_id WHERE o.id = ? AND o.status = 'active' LIMIT 1"); $stmt->bind_param("i", $id); $stmt->execute(); $offer = $stmt->get_result()->fetch_assoc(); $stmt->close(); if (!$offer) { header("Location: stakeholder_offers.php"); exit; }
 $requester_id = (int) $_SESSION["user_id"]; $request_error = $_SESSION["request_error"] ?? ""; unset($_SESSION["request_error"]);
-?><!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title><?= htmlspecialchars($offer["title"], ENT_QUOTES, "UTF-8") ?> | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
+?><!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title><?= htmlspecialchars($offer["title"], ENT_QUOTES, "UTF-8") ?> | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">

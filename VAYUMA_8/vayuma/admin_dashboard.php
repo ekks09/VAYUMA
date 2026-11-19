@@ -14,7 +14,7 @@ if($res) $counts['government']=(int)$res->fetch_assoc()['total'];
 $adminName = 'Administrator';
 $stmt=$conn->prepare('SELECT full_name FROM users WHERE id=? LIMIT 1');
 $adminId=(int)$_SESSION['user_id']; $stmt->bind_param('i',$adminId); $stmt->execute(); $adminName=$stmt->get_result()->fetch_assoc()['full_name'] ?? $adminName; $stmt->close();
-?><!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VAYUMA Administrator Dashboard</title><link rel="stylesheet" href="frontend/css/tokens.css">
+?><!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VAYUMA Administrator Dashboard</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">

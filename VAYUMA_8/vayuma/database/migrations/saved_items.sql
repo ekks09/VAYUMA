@@ -4,8 +4,8 @@
 
 CREATE TABLE IF NOT EXISTS saved_items (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  user_id INT UNSIGNED NOT NULL,
-  produce_listing_id INT UNSIGNED NOT NULL,
+  user_id INT NOT NULL,
+  produce_listing_id INT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   UNIQUE KEY uq_saved_item_user_listing (user_id, produce_listing_id),
