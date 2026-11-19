@@ -207,6 +207,7 @@ body {
 
     display: flex;
     align-items: center;
+    align-items: safe center;
     justify-content: center;
 
     padding: 30px;
@@ -240,6 +241,7 @@ body {
     flex-direction: column;
 
     justify-content: center;
+    justify-content: safe center;
     align-items: center;
 
     padding: 50px;
@@ -291,7 +293,13 @@ body {
     right: -100px;
 }
 
+.welcome-left .auth-brand-link {
+    flex-shrink: 0;
+    line-height: 0;
+}
+
 .welcome-logo {
+    display: block;
     position: relative;
     z-index: 2;
 
@@ -345,6 +353,7 @@ body {
     flex-direction: column;
 
     justify-content: center;
+    justify-content: safe center;
 
     padding: 60px;
 }
@@ -426,13 +435,29 @@ body {
         0 10px 25px rgba(30, 100, 55, 0.08);
 }
 
-.feature-icon {
-    font-size: 23px;
-
+.welcome-features .feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #e8f5ee;
+    color: #166534;
     margin-bottom: 8px;
 }
 
-.feature strong {
+.welcome-features .feature-icon svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.welcome-features .feature h3 {
     display: block;
 
     color: #1c4632;
