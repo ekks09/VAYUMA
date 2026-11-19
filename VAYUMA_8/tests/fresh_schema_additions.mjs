@@ -29,6 +29,23 @@ try {
   assert.equal(subs.length, 3);
   db.execMulti(readFileSync(new URL('02_catalog_seeds.sql', root), 'utf8'));
   assert.equal(Number(db.query('SELECT COUNT(*) AS n FROM subscription_plans')[0].n), 19);
+  const expected = {
+    farmer: 299, consumer: 199, buyer: 499, transport_provider: 399,
+    input_supplier: 999, manufacturer: 999, warehouse_provider: 799,
+    retailer: 499, agribusiness: 699, cooperative: 999, researcher: 999,
+    extension_officer: null, veterinary_officer: 499, financial_institution: 2999,
+    insurance_provider: 1999, government_officer: null, ngo_partner: 1499,
+    agricultural_service_provider: 799, strategic_partner: null
+  };
+  for (const plan of db.query('SELECT role_key,monthly_price,plan_type,billing_interval,currency FROM subscription_plans')) {
+    assert.ok(Object.hasOwn(expected, plan.role_key));
+    assert.equal(plan.monthly_price === null ? null : Number(plan.monthly_price), expected[plan.role_key]);
+    const type = plan.role_key === 'strategic_partner' ? 'negotiated' : (expected[plan.role_key] === null ? 'free' : 'paid');
+    assert.equal(plan.plan_type, type);
+    assert.equal(plan.billing_interval, 'monthly');
+    assert.equal(plan.currency, 'KES');
+  }
+
   assert.equal(Number(db.query("SELECT COUNT(*) AS n FROM administrative_units WHERE unit_type='county'")[0].n), 47);
   assert.equal(Number(db.query('SELECT COUNT(*) AS n FROM produce_categories')[0].n), 9);
   db.exec("INSERT INTO user_subscriptions (user_id,plan_id,status,billing_interval,negotiated_approved) VALUES (1,1,'payment_due','monthly',0)");
