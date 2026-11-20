@@ -19,23 +19,16 @@ function vayuma_db_log_environment(): void
     error_log('VAYUMA staging DB environment: ' . implode(' ', $presence));
 }
 
-function vayuma_db_log_driver_error(int $code, string $sqlstate, string $message): void
+// Never log driver text: it may contain passwords, connection strings or SQL.
+function vayuma_db_connection_stage(int $code): string
 {
-    // Driver messages can include identity or connection information. Redact all
-    // configured DB values and common encodings before logging; keep logs private.
-    $values = [];
-    foreach (['DB_PASSWORD', 'DB_USER', 'DB_HOST', 'DB_NAME', 'DB_SSL_CA'] as $key) {
-        $value = getenv($key);
-        if ($value !== false && $value !== '') {
-            $values[] = $value;
-            $values[] = rawurlencode($value);
-            $values[] = urlencode($value);
-        }
-    }
-    usort($values, static function ($a, $b) { return strlen($b) <=> strlen($a); });
-    $message = str_ireplace($values, '[redacted]', $message);
-    $message = preg_replace('/[\x00-\x1f\x7f]+/', ' ', $message);
-    $message = substr($message, 0, 1000);
+    if (in_array($code, [1044, 1045, 1698], true)) return 'authentication_or_database_access';
+    if ($code === 2026) return 'tls_handshake';
+    if (in_array($code, [2002, 2003, 2005, 2006, 2013], true)) return 'tcp_or_connection';
+    return 'connection_or_handshake';
+}
+function vayuma_db_log_driver_error(int $code, string $sqlstate, string $message = ''): void
+{
     $sqlstate = preg_match('/^[A-Z0-9]{5}$/', $sqlstate) ? $sqlstate : 'unknown';
-    error_log('VAYUMA staging DB driver error: code=' . $code . ' SQLSTATE=' . $sqlstate . ' message=' . $message);
+    error_log('VAYUMA staging DB driver error: code=' . $code . ' SQLSTATE=' . $sqlstate);
 }

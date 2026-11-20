@@ -24,12 +24,18 @@ test('diagnostics are disabled outside staging and without opt-in', () => {
     assert.doesNotMatch(r.stderr, /staging DB environment|driver error/);
   }
 });
-test('driver diagnostics include code and message while redacting configured values and newlines', () => {
+test('connection error codes identify likely failure stages without driver text', () => {
+  const helper = path.join(root, 'config/db_diagnostics.php');
+  const r = run(`require ${JSON.stringify(helper)}; echo json_encode(array_map('vayuma_db_connection_stage', [1045,2026,2003,9999]));`, base);
+  assert.equal(r.status, 0, r.stderr);
+  assert.deepEqual(JSON.parse(r.stdout), ['authentication_or_database_access','tls_handshake','tcp_or_connection','connection_or_handshake']);
+});
+test('driver diagnostics exclude driver messages and credentials', () => {
   const helper = path.join(root, 'config/db_diagnostics.php');
   const code = `require ${JSON.stringify(helper)}; vayuma_db_log_driver_error(1045, '28000', "Access denied for synthetic-user on synthetic-host using synthetic-secret at /synthetic/ca\\nnext line");`;
   const r = run(code, {...base, APP_ENV:'staging'});
   assert.equal(r.status, 0, r.stderr);
-  assert.match(r.stderr, /code=1045 SQLSTATE=28000 message=Access denied/);
-  assert.doesNotMatch(r.stderr, /synthetic-user|synthetic-host|synthetic-secret|\/synthetic\/ca/);
+  assert.match(r.stderr, /code=1045 SQLSTATE=28000/);
+  assert.doesNotMatch(r.stderr, /Access denied|synthetic-user|synthetic-host|synthetic-secret|\/synthetic\/ca/);
   assert.equal(r.stderr.trim().split('\n').length, 1);
 });

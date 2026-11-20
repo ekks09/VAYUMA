@@ -40,7 +40,7 @@ $navLinks = [
     'My Orders' => 'my_orders.php',
     'Produce Requests' => 'seller_orders.php',
     'VAYUMA AI' => 'ai_advisor.php',
-    'Settings' => 'service_placeholder.php?service=Settings',
+    'Profile & Settings' => 'profile.php?return_to=farmer_dashboard.php',
 ];
 
 // ── Category stats for farmer tabs ──
@@ -130,9 +130,9 @@ require_once __DIR__ . '/includes/ui_simple.php';
       </div>
 
       <div class="va-section va-mb-6">
-        <div class="va-section--title">Manage your farm business</h2>
+        <h2 class="va-section--title">Manage your farm business</h2>
       </div>
-      <div class="va-feature-grid va-mb-6">
+      <div class="va-feature-grid va-feature-grid--farmer va-mb-6">
         <div class="va-feature-card">
           <div class="va-feature-card--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-money"/></svg></div>
           <div class="va-feature-card--content">
@@ -177,7 +177,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
       <!-- Produce Category Tabs -->
       <?php if (!empty($categoryStats)): ?>
       <div class="va-section va-mb-6">
-        <div class="va-section--title">Your Produce by Category</h2>
+        <h2 class="va-section--title">Your Produce by Category</h2>
         <p class="va-text-muted va-text-sm">Click a category to view listings in that category.</p>
       </div>
       <div class="va-d-grid va-gap-3 va-mb-6" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr));">

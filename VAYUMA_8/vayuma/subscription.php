@@ -3,6 +3,8 @@
  * VAYUMA — My Subscription (clean design).
  */
 session_start();
+header('Cache-Control: private, no-store, max-age=0');
+header('Pragma: no-cache');
 require_once __DIR__ . '/includes/language.php';
 require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/includes/csrf.php';
@@ -17,6 +19,22 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['logged_in'] ?? false) !== true) 
 
 $requestedRole = (string)($_SESSION['role'] ?? '');
 $subscription = ensure_user_subscription($conn, (int)$_SESSION['user_id'], $requestedRole);
+$receipts = []; $receiptsUnavailable = false;
+try {
+    // Read only this member's confirmed payment history; receipt endpoint rechecks ownership.
+    $history = $conn->prepare("SELECT id, amount, paid_at FROM subscription_payments WHERE user_id=? AND status='paid' ORDER BY paid_at DESC, id DESC LIMIT 10");
+    if (!$history) throw new RuntimeException('Receipt history unavailable');
+    $historyUserId = (int)$_SESSION['user_id'];
+    $history->bind_param('i', $historyUserId);
+    $history->execute();
+    $historyResult = $history->get_result();
+    if (!$historyResult) throw new RuntimeException('Receipt history unavailable');
+    while ($receipt = $historyResult->fetch_assoc()) $receipts[] = $receipt;
+    $history->close();
+} catch (Throwable $e) {
+    $receiptsUnavailable = true;
+    error_log('VAYUMA subscription receipt history unavailable.');
+}
 $subscriptionError = (string)($_SESSION['subscription_error'] ?? $_SESSION['paystack_subscription_error'] ?? '');
 unset($_SESSION['subscription_error'], $_SESSION['paystack_subscription_error']);
 
@@ -94,7 +112,14 @@ require_once __DIR__ . '/includes/ui_simple.php';
   </div>
 <?php else: ?>
 <div class="va-card va-card--p va-mb-6">
-  <?php if ($paid): ?>
+  <?php if ($paid && $status === 'active' && $dashboardAccessible && $dashboardUrl !== null): ?>
+    <div class="va-text-center va-py-8">
+      <div class="va-text-2xl va-font-bold va-text-success">Subscription active</div>
+      <p class="va-text-muted va-text-sm va-mt-2">Your access is active. Continue to your stakeholder dashboard.</p>
+      <?php if (!empty($subscription['expires_at'])): ?><p class="va-text-muted va-text-sm">Expires <?= h(date('d M Y', strtotime($subscription['expires_at']))) ?></p><?php endif; ?>
+      <a href="<?= h($dashboardUrl) ?>" class="va-btn va-btn--primary va-btn--sm va-mt-4">Continue to Dashboard</a>
+    </div>
+  <?php elseif ($paid): ?>
     <div class="va-d-flex va-justify-between va-items-center va-mb-4">
       <div>
         <div class="va-text-2xl va-font-bold va-text-primary">KSh <?= number_format((float)($subscription['monthly_price'] ?? 0), 2) ?></div>
@@ -148,23 +173,46 @@ require_once __DIR__ . '/includes/ui_simple.php';
   <?php elseif ($subscription['plan_type'] === 'free'): ?>
     <div class="va-text-center va-py-8">
       <div class="va-text-3xl va-font-bold va-text-success">Free</div>
-      <div class="va-text-muted va-text-sm va-mt-2">This account does not require payment. Your access is active.</div>
-      <a href="dashboard.php" class="va-btn va-btn--primary va-btn--sm va-mt-4">Continue to Dashboard</a>
+      <?php if ($dashboardAccessible && $dashboardUrl !== null): ?>
+        <div class="va-text-muted va-text-sm va-mt-2">This account does not require payment. Your access is active.</div>
+        <a href="<?= h($dashboardUrl) ?>" class="va-btn va-btn--primary va-btn--sm va-mt-4">Continue to Dashboard</a>
+      <?php else: ?>
+        <div class="va-text-muted va-text-sm va-mt-2">This free plan is not currently active. Please contact VAYUMA support.</div>
+      <?php endif; ?>
     </div>
   <?php else: ?>
     <div class="va-text-center va-py-8">
       <div class="va-text-3xl va-font-bold va-text-warning">Custom</div>
       <div class="va-text-muted va-text-sm va-mt-2">Your account uses a negotiated plan.</div>
-      <?php if ((int)($subscription['negotiated_approved'] ?? 0) === 1): ?>
+      <?php if ($dashboardAccessible && $dashboardUrl !== null): ?>
         <p class="va-text-muted va-text-sm va-mt-4">Your negotiated plan has been approved.</p>
-        <a href="dashboard.php" class="va-btn va-btn--primary va-btn--sm va-mt-4">Continue to Dashboard</a>
-      <?php else: ?>
+        <a href="<?= h($dashboardUrl) ?>" class="va-btn va-btn--primary va-btn--sm va-mt-4">Continue to Dashboard</a>
+      <?php elseif ($status === 'negotiated_plan'): ?>
         <p class="va-text-muted va-text-sm va-mt-4">Your account is awaiting manual VAYUMA approval. No payment is due until your plan is approved.</p>
+      <?php else: ?>
+        <p class="va-text-muted va-text-sm va-mt-4">This negotiated plan is not currently active. Please contact VAYUMA support.</p>
       <?php endif; ?>
     </div>
   <?php endif; ?>
 </div>
 <?php endif; ?>
+
+<section class="va-card va-card--p va-mb-6" aria-labelledby="subscription-receipts-title">
+  <h2 id="subscription-receipts-title">Subscription receipts</h2>
+  <?php if ($receiptsUnavailable): ?>
+    <p class="va-text-muted va-text-sm">Receipts are temporarily unavailable. Please try again later.</p>
+  <?php elseif (!$receipts): ?>
+    <p class="va-text-muted va-text-sm">No confirmed subscription payments yet.</p>
+  <?php else: ?>
+    <ul>
+      <?php foreach ($receipts as $receipt): ?>
+        <li><a href="subscription_receipt.php?payment_id=<?= (int)$receipt['id'] ?>">Receipt #<?= (int)$receipt['id'] ?></a>
+          · KSh <?= number_format((float)$receipt['amount'], 2) ?>
+          <?php if (!empty($receipt['paid_at'])): ?> · <?= h($receipt['paid_at']) ?><?php endif; ?></li>
+      <?php endforeach; ?>
+    </ul>
+  <?php endif; ?>
+</section>
 
 <!-- Toast container for payment notifications -->
 <div id="vaToastContainer" style="position:fixed;top:var(--va-space-4);right:var(--va-space-4);z-index:60;"></div>
@@ -214,7 +262,8 @@ function vaPollSubscriptionStatus(paymentId, maxPolls = 30) {
                 if (data.saved) {
                     clearInterval(interval);
                     vaShowToast('Subscription activated successfully!', 'success');
-                    setTimeout(() => window.location.href = 'subscription_receipt.php?payment_id=' + paymentId, 1500);
+                    // The server-side dashboard guard still verifies the user's entitlement.
+                    setTimeout(() => window.location.href = 'dashboard.php', 1500);
                 } else if (data.status === 'failed') {
                     clearInterval(interval);
                     vaShowToast('Payment failed. Please try again.', 'error');

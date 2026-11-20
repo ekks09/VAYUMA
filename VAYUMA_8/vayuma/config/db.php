@@ -42,9 +42,10 @@ try {
     $conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, 5);
     $flags = 0;
     if ($tls) {
-        $failureStage = 'tls_setup';
+        $failureStage = 'ca_file_check';
         $ca = (string)(getenv('DB_SSL_CA') ?: '/etc/ssl/certs/ca-certificates.crt');
         if (!is_file($ca) || !is_readable($ca)) throw new RuntimeException('Database CA bundle unavailable');
+        $failureStage = 'tls_setup';
         if (!defined('MYSQLI_OPT_SSL_VERIFY_SERVER_CERT')) throw new RuntimeException('Database certificate verification unavailable');
         if (!$conn->ssl_set(null, null, $ca, null, null) || !$conn->options(MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, true)) {
             throw new RuntimeException('Database TLS configuration failed');
@@ -53,8 +54,9 @@ try {
     }
     $failureStage = 'connection';
     if (!$conn->real_connect($host, $user, $password, $database, (int)$portText, null, $flags)) {
+        $failureStage = vayuma_db_connection_stage((int)mysqli_connect_errno());
         if ($diagnosticsEnabled) {
-            vayuma_db_log_driver_error(mysqli_connect_errno(), '', (string) mysqli_connect_error());
+            vayuma_db_log_driver_error(mysqli_connect_errno(), '', '');
             $driverErrorLogged = true;
         }
         throw new RuntimeException('Database connection failed');
@@ -68,6 +70,9 @@ try {
     $failureStage = 'charset';
     $conn->set_charset('utf8mb4');
 } catch (Throwable $exception) {
+    if ($failureStage === 'connection' && $exception instanceof mysqli_sql_exception) {
+        $failureStage = vayuma_db_connection_stage((int)$exception->getCode());
+    }
     error_log('VAYUMA database connection or configuration failed. Stage: ' . $failureStage);
     if ($diagnosticsEnabled) {
         vayuma_db_log_environment();

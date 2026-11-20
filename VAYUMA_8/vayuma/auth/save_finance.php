@@ -1,5 +1,10 @@
 <?php
 session_start();
+require_once __DIR__ . '/../includes/csrf.php';
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && !vayuma_csrf_valid()) {
+    http_response_code(403);
+    exit('Your session expired. Refresh the profile form and try again.');
+}
 require_once __DIR__ . '/../config/db.php';
 
 if (!isset($_SESSION['user_id']) || ($_SESSION['logged_in'] ?? false) !== true) {
@@ -36,9 +41,10 @@ if ($institution_name === '' || $institution_type === '' || $location === '' || 
  * The form fields are mapped to columns that already exist in financial_profiles.
  * Existing records are updated; no profile data is deleted.
  */
+try {
 $check = $conn->prepare('SELECT id FROM financial_profiles WHERE user_id = ? LIMIT 1');
 if (!$check) {
-    error_log('VAYUMA finance profile lookup failed: ' . $conn->error);
+    error_log('VAYUMA finance profile lookup failed.');
     http_response_code(500);
     exit('The financial profile could not be loaded. Please contact VAYUMA support.');
 }
@@ -56,7 +62,7 @@ if ($existing) {
          WHERE id = ? AND user_id = ?'
     );
     if (!$stmt) {
-        error_log('VAYUMA finance profile update prepare failed: ' . $conn->error);
+        error_log('VAYUMA finance profile update prepare failed.');
         http_response_code(500);
         exit('The financial profile could not be prepared for updating.');
     }
@@ -80,7 +86,7 @@ if ($existing) {
          VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
     );
     if (!$stmt) {
-        error_log('VAYUMA finance profile insert prepare failed: ' . $conn->error);
+        error_log('VAYUMA finance profile insert prepare failed.');
         http_response_code(500);
         exit('The financial profile could not be prepared for saving.');
     }
@@ -98,12 +104,18 @@ if ($existing) {
 }
 
 if (!$stmt->execute()) {
-    error_log('VAYUMA finance profile save failed: ' . $stmt->error);
+    error_log('VAYUMA finance profile save failed.');
     $stmt->close();
     http_response_code(500);
     exit('Unable to save the financial institution profile. Please try again.');
 }
 $stmt->close();
+
+} catch (Throwable $e) {
+    error_log('VAYUMA finance profile save failed. code=' . (int)$e->getCode());
+    http_response_code(500);
+    exit('Unable to save the financial institution profile. Please try again.');
+}
 
 $_SESSION['profile_completed'] = true;
 header('Location: ../finance_dashboard.php');

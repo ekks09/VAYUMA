@@ -17,5 +17,13 @@
 /vayuma/node_modules/
 *.log
 *.cache
+
+# Local generated reports and review notes (not source documentation).
+/verification_checklist.txt
+/reports/
+/test-results/
+/playwright-report/
+*.generated.md
+*.generated.txt
 Thumbs.db
 .DS_Store

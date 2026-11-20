@@ -46,6 +46,26 @@ try {
     assert.equal(plan.currency, 'KES');
   }
 
+  // All role memberships use the catalogue's plan, type, price and currency.
+  // These are disposable rows, not production users or payments.
+  for (const [role, price] of Object.entries(expected)) {
+    db.exec(`INSERT INTO users (full_name,role) VALUES ('Example','${role}')`);
+    const user = db.query('SELECT LAST_INSERT_ID() AS id')[0];
+    const id = Number(user.id);
+    db.exec(`INSERT INTO user_subscriptions (user_id,plan_id,status,billing_interval,negotiated_approved) SELECT ${id},id,CASE WHEN plan_type='free' THEN 'free_account' WHEN plan_type='negotiated' THEN 'negotiated_plan' ELSE 'payment_due' END,'monthly',0 FROM subscription_plans WHERE role_key='${role}'`);
+    const rows = db.query(`SELECT s.status,s.negotiated_approved,p.role_key,p.plan_type,p.monthly_price,p.billing_interval,p.currency FROM user_subscriptions s JOIN subscription_plans p ON p.id=s.plan_id WHERE s.user_id=${id}`);
+    assert.equal(rows.length, 1, role);
+    const row = rows[0];
+    assert.equal(row.role_key, role);
+    assert.equal(row.monthly_price === null ? null : Number(row.monthly_price), price);
+    assert.equal(row.status, role === 'strategic_partner' ? 'negotiated_plan' : price === null ? 'free_account' : 'payment_due');
+    assert.equal(row.billing_interval, 'monthly'); assert.equal(row.currency, 'KES');
+  }
+  db.exec("UPDATE subscription_plans SET monthly_price=345.50 WHERE role_key='farmer'");
+  const changed = db.query("SELECT p.monthly_price FROM user_subscriptions s JOIN subscription_plans p ON p.id=s.plan_id JOIN users u ON u.id=s.user_id WHERE u.role='farmer' AND u.id<>1");
+  assert.equal(Number(changed[0].monthly_price), 345.5);
+  db.exec("UPDATE subscription_plans SET monthly_price=299 WHERE role_key='farmer'");
+
   assert.equal(Number(db.query("SELECT COUNT(*) AS n FROM administrative_units WHERE unit_type='county'")[0].n), 47);
   assert.equal(Number(db.query('SELECT COUNT(*) AS n FROM produce_categories')[0].n), 9);
   db.exec("INSERT INTO user_subscriptions (user_id,plan_id,status,billing_interval,negotiated_approved) VALUES (1,1,'payment_due','monthly',0)");

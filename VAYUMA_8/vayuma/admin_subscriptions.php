@@ -11,6 +11,7 @@ $showNav = false;
 require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/config/admin.php';
 require_once __DIR__ . '/includes/csrf.php';
+require_once __DIR__ . '/lib/plan_reconciliation.php';
 
 if (!isset($_SESSION['user_id']) || ($_SESSION['logged_in'] ?? false) !== true) {
     header('Location: login.php');
@@ -100,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header('Location: admin_subscriptions.php');
                 exit;
             } catch (mysqli_sql_exception $exception) {
-                error_log('Stakeholder plan creation failed: ' . $exception->getMessage());
+                error_log('Stakeholder plan creation failed. code=' . (int)$exception->getCode());
                 $error = 'That stakeholder plan already exists or could not be saved.';
             }
         }
@@ -160,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($approvalTransactionOpen) {
                     $conn->rollback();
                 }
-                error_log('Negotiated membership approval failed: ' . $exception->getMessage());
+                error_log('Negotiated membership approval failed. code=' . (int)$exception->getCode());
                 $error = 'The negotiated membership could not be updated.';
             }
         }
@@ -189,13 +190,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'The Paystack plan code must be 100 characters or fewer.';
         } else {
             try {
-                $exists = $conn->prepare('SELECT id FROM subscription_plans WHERE id = ? LIMIT 1');
+                $conn->begin_transaction();
+                $exists = $conn->prepare('SELECT id, plan_type FROM subscription_plans WHERE id = ? LIMIT 1 FOR UPDATE');
                 if (!$exists) {
                     throw new mysqli_sql_exception('Unable to prepare plan lookup.');
                 }
                 $exists->bind_param('i', $planId);
                 $exists->execute();
-                $planExists = $exists->get_result()->num_rows === 1;
+                $oldPlan = $exists->get_result()->fetch_assoc();
+                $planExists = (bool)$oldPlan;
                 $exists->close();
 
                 if (!$planExists) {
@@ -211,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         throw new mysqli_sql_exception('Unable to prepare plan update.');
                     }
                     $update->bind_param('sssssii', $stakeholderName, $planType, $priceInput, $billingInterval, $paystackPlanCode, $activeInput, $planId);
-                    $update->execute();
+                    if (!$update->execute()) throw new RuntimeException('Plan update failed');
                     $update->close();
                 } else {
                     $update = $conn->prepare(
@@ -224,17 +227,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         throw new mysqli_sql_exception('Unable to prepare plan update.');
                     }
                     $update->bind_param('sssii', $stakeholderName, $planType, $billingInterval, $activeInput, $planId);
-                    $update->execute();
+                    if (!$update->execute()) throw new RuntimeException('Plan update failed');
                     $update->close();
                 }
 
                 if ($error === '') {
+                    vayuma_reconcile_plan_memberships($conn, (int)$planId, (string)$oldPlan['plan_type'], $planType, $billingInterval, $userId);
+                    if (!$conn->commit()) throw new RuntimeException('Plan transaction commit failed');
                     $_SESSION['subscription_plan_message'] = 'Subscription plan saved.';
                     header('Location: admin_subscriptions.php');
                     exit;
                 }
-            } catch (mysqli_sql_exception $exception) {
-                error_log('Subscription plan update failed: ' . $exception->getMessage());
+                $conn->rollback();
+            } catch (DomainException $exception) {
+                $conn->rollback();
+                $error = $exception->getMessage();
+            } catch (Throwable $exception) {
+                try { $conn->rollback(); } catch (Throwable $ignored) {}
+                error_log('Subscription plan update or reconciliation failed.');
                 $error = 'The subscription plan could not be saved. Please try again.';
             }
         }
@@ -305,11 +315,12 @@ require_once __DIR__ . '/includes/ui_simple.php';
       <div class="va-section va-mb-6">
         <div>
           <h1 class="va-section--title">Subscription &amp; Pricing</h1>
-          <p class="va-section--sub">Manage stakeholder prices, billing intervals, and negotiated approvals. Paystack recurring plans are created automatically when the first member checks out.</p>
+          <p class="va-section--sub">Manage stakeholder prices, billing intervals, and negotiated approvals. Payment processing is currently unavailable.</p>
+          <p class="va-text-muted va-text-sm">Changing plan type updates existing memberships: free grants free access; paid makes payment due with no automatic grace period; negotiated requires a new approval. Active paid memberships must finish before changing to negotiated. Existing payment records are retained.</p>
         </div>
       </div>
 
-      <?php if (isset($error)): ?>
+      <?php if ($error !== ''): ?>
         <div class="va-toast va-toast--error" role="alert" aria-live="polite">
           <div class="va-toast--title">Error</div>
           <div class="va-toast--msg"><?= h($error) ?></div>

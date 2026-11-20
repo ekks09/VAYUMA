@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/includes/csrf.php';
 require_once __DIR__ . '/includes/language.php';
 
 /*
@@ -29,6 +30,16 @@ if (
 ) {
     header("Location: role.php");
     exit;
+}
+
+require_once __DIR__ . '/config/db.php';
+require_once __DIR__ . '/includes/profile_prefill.php';
+try {
+    $profile = vayuma_existing_profile($conn, 'researcher_profiles', (int)$_SESSION['user_id']);
+} catch (Throwable $e) {
+    error_log('VAYUMA researcher profile lookup failed.');
+    http_response_code(503);
+    exit('Your profile could not be loaded. Please try again or contact support.');
 }
 
 $full_name = $_SESSION['full_name'] ?? 'Researcher';
@@ -141,7 +152,7 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
         <form
             action="auth/save_researcher.php"
             method="POST"
-        >
+        ><?= vayuma_csrf_field() ?>
 
             <div class="va-profile-form-grid">
 
@@ -160,7 +171,7 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
                         name="institution"
                         placeholder="e.g. University of Nairobi"
                         required
-                    >
+                     value="<?= vayuma_profile_value($profile['institution'] ?? '') ?>">
 
                 </div>
 
@@ -179,7 +190,7 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
                         name="research_area"
                         placeholder="e.g. Crop Science"
                         required
-                    >
+                     value="<?= vayuma_profile_value($profile['research_area'] ?? '') ?>">
 
                 </div>
 
@@ -198,7 +209,7 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
                         name="qualification"
                         placeholder="e.g. MSc Agricultural Science"
                         required
-                    >
+                     value="<?= vayuma_profile_value($profile['qualification'] ?? '') ?>">
 
                 </div>
 
@@ -217,7 +228,7 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
                         name="location"
                         placeholder="e.g. Nairobi, Kenya"
                         required
-                    >
+                     value="<?= vayuma_profile_value($profile['location'] ?? '') ?>">
 
                 </div>
 
@@ -233,7 +244,7 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
                     <textarea
                         name="bio"
                         placeholder="Briefly describe your research interests, experience and areas of expertise..."
-                    ></textarea>
+                    ><?= vayuma_profile_value($profile['bio'] ?? '') ?></textarea>
 
                     <span class="va-profile-hint">
                         This information can help personalize VAYUMA's research tools.

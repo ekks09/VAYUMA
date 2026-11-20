@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+require_once __DIR__ . '/includes/csrf.php';
 require_once __DIR__ . '/includes/language.php';
 
 if (
@@ -17,6 +18,16 @@ $role = strtolower(trim($_SESSION['role'] ?? ''));
 if ($role !== 'financial_institution') {
     header("Location: role.php");
     exit;
+}
+
+require_once __DIR__ . '/config/db.php';
+require_once __DIR__ . '/includes/profile_prefill.php';
+try {
+    $profile = vayuma_existing_profile($conn, 'financial_profiles', (int)$_SESSION['user_id']);
+} catch (Throwable $e) {
+    error_log('VAYUMA finance profile lookup failed.');
+    http_response_code(503);
+    exit('Your profile could not be loaded. Please try again or contact support.');
 }
 
 $full_name = $_SESSION['full_name'] ?? 'Financial Institution User';
@@ -131,7 +142,7 @@ $full_name = $_SESSION['full_name'] ?? 'Financial Institution User';
         <form
             action="auth/save_finance.php"
             method="POST"
-        >
+        ><?= vayuma_csrf_field() ?>
 
             <div class="va-profile-form-grid">
 
@@ -148,7 +159,7 @@ $full_name = $_SESSION['full_name'] ?? 'Financial Institution User';
                         name="institution_name"
                         placeholder="e.g. VAYUMA Agricultural Finance"
                         required
-                    >
+                     value="<?= vayuma_profile_value($profile['institution_name'] ?? '') ?>">
 
                 </div>
 
@@ -164,36 +175,39 @@ $full_name = $_SESSION['full_name'] ?? 'Financial Institution User';
                         name="institution_type"
                         required
                     >
+                        <?php if (!empty($profile['institution_type']) && !in_array((string)$profile['institution_type'], ['Bank', 'Microfinance', 'SACCO', 'Insurance', 'Fintech', 'Development Finance', 'Other'], true)): ?>
+                        <option value="<?= vayuma_profile_value($profile['institution_type']) ?>" selected><?= vayuma_profile_value($profile['institution_type']) ?></option>
+                        <?php endif; ?>
 
                         <option value="">
                             Select institution type
                         </option>
 
-                        <option value="Bank">
+                        <option value="Bank" <?= ($profile['institution_type'] ?? '') === 'Bank' ? 'selected' : '' ?>>
                             Bank
                         </option>
 
-                        <option value="Microfinance">
+                        <option value="Microfinance" <?= ($profile['institution_type'] ?? '') === 'Microfinance' ? 'selected' : '' ?>>
                             Microfinance Institution
                         </option>
 
-                        <option value="SACCO">
+                        <option value="SACCO" <?= ($profile['institution_type'] ?? '') === 'SACCO' ? 'selected' : '' ?>>
                             SACCO
                         </option>
 
-                        <option value="Insurance">
+                        <option value="Insurance" <?= ($profile['institution_type'] ?? '') === 'Insurance' ? 'selected' : '' ?>>
                             Insurance Company
                         </option>
 
-                        <option value="Fintech">
+                        <option value="Fintech" <?= ($profile['institution_type'] ?? '') === 'Fintech' ? 'selected' : '' ?>>
                             Fintech
                         </option>
 
-                        <option value="Development Finance">
+                        <option value="Development Finance" <?= ($profile['institution_type'] ?? '') === 'Development Finance' ? 'selected' : '' ?>>
                             Development Finance Institution
                         </option>
 
-                        <option value="Other">
+                        <option value="Other" <?= ($profile['institution_type'] ?? '') === 'Other' ? 'selected' : '' ?>>
                             Other
                         </option>
 
@@ -212,7 +226,7 @@ $full_name = $_SESSION['full_name'] ?? 'Financial Institution User';
                         type="text"
                         name="registration_number"
                         placeholder="Institution registration number"
-                    >
+                     value="<?= vayuma_profile_value($profile['registration_number'] ?? '') ?>">
 
                 </div>
 
@@ -229,7 +243,7 @@ $full_name = $_SESSION['full_name'] ?? 'Financial Institution User';
                         name="location"
                         placeholder="e.g. Nairobi, Kenya"
                         required
-                    >
+                     value="<?= vayuma_profile_value($profile['location'] ?? '') ?>">
 
                 </div>
 
@@ -246,7 +260,7 @@ $full_name = $_SESSION['full_name'] ?? 'Financial Institution User';
                         name="contact_person"
                         placeholder="Manager or representative"
                         required
-                    >
+                     value="<?= vayuma_profile_value($profile['contact_person'] ?? '') ?>">
 
                 </div>
 
@@ -261,7 +275,7 @@ $full_name = $_SESSION['full_name'] ?? 'Financial Institution User';
                         type="text"
                         name="services"
                         placeholder="e.g. Agricultural loans, insurance"
-                    >
+                     value="<?= vayuma_profile_value($profile['services'] ?? '') ?>">
 
                 </div>
 
@@ -275,7 +289,7 @@ $full_name = $_SESSION['full_name'] ?? 'Financial Institution User';
                     <textarea
                         name="description"
                         placeholder="Describe the financial services your institution provides to farmers and agricultural businesses..."
-                    ></textarea>
+                    ><?= vayuma_profile_value($profile['description'] ?? '') ?></textarea>
 
                     <span class="va-profile-hint">
                         This helps VAYUMA understand the services available within its agricultural finance ecosystem.

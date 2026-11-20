@@ -105,7 +105,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
       </div>
 
       <div class="va-section va-mb-6">
-        <div class="va-section--title">Discover Fresh Produce</h2>
+        <h2 class="va-section--title">Discover Fresh Produce</h2>
       </div>
       <div class="va-d-grid va-gap-4 va-mb-6" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr));">
         <?php
@@ -152,7 +152,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
       </div>
 
       <div class="va-section va-mb-6">
-        <div class="va-section--title">Quick Actions</h2>
+        <h2 class="va-section--title">Quick Actions</h2>
       </div>
       <div class="va-d-grid va-gap-3 va-mb-6" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));">
         <a href="market_connect.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-marketplace"/></svg> Browse Marketplace</a>

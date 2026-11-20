@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/includes/csrf.php';
 require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/includes/language.php';
 if (!isset($_SESSION['user_id']) || ($_SESSION['logged_in'] ?? false) !== true) { header('Location: login.php'); exit; }
@@ -49,7 +50,7 @@ function eh($v){return htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8');}
   .va-profile-full { grid-column: auto; }
 }
 </style></head><body class="va-profile-document">
-<?php vayuma_language_selector(); require __DIR__ . '/includes/profile_navigation.php'; ?><main class="va-profile-page"><div class="va-profile-brand">VAYUMA<small>SMART ECOSYSTEM</small></div><section class="hero"><h1>Agricultural Extension Officer</h1><p>Share your professional background, technical focus and the areas where you can support farmers.</p></section><section class="va-profile-card"><?php if($error):?><div class="va-profile-error"><?=eh($error)?></div><?php endif;?><form method="post" action="auth/save_extension.php"><div class="va-profile-form-grid">
+<?php vayuma_language_selector(); require __DIR__ . '/includes/profile_navigation.php'; ?><main class="va-profile-page"><div class="va-profile-brand">VAYUMA<small>SMART ECOSYSTEM</small></div><section class="hero"><h1>Agricultural Extension Officer</h1><p>Share your professional background, technical focus and the areas where you can support farmers.</p></section><section class="va-profile-card"><?php if($error):?><div class="va-profile-error"><?=eh($error)?></div><?php endif;?><form method="post" action="auth/save_extension.php"><?= vayuma_csrf_field() ?><div class="va-profile-form-grid">
 <div><label class="va-profile-label-field">Organisation / employer *</label><input class="va-profile-input" name="organization" required maxlength="200" value="<?=eh($profile['organization']??'')?>" placeholder="County Department of Agriculture"></div>
 <div><label class="va-profile-label-field">County of work base *</label><select class="va-profile-input" name="county" required><option value="">Select county</option><?php foreach($countyOptions as $c):?><option value="<?=eh($c)?>" <?=strcasecmp((string)($profile['county']??''),$c)===0?'selected':''?>><?=eh($c)?></option><?php endforeach;?></select></div>
 <div><label class="va-profile-label-field">Sub-county / local office</label><input class="va-profile-input" name="sub_county" maxlength="100" value="<?=eh($profile['sub_county']??'')?>" placeholder="Optional"></div>
