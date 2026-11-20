@@ -6,6 +6,8 @@ function prepare(){const dir=fs.mkdtempSync(path.join(os.tmpdir(),'vayuma-agri-'
 function run(code,env={}){return spawnSync(php,['-d','display_errors=0','-r',code],{encoding:'utf8',env:{...process.env,...env}});}
 test('AI requires CSRF, defaults to free local guidance and keeps external service gated',()=>{
  const dir=prepare(); try {
+  fs.writeFileSync(path.join(dir,'includes/feature_access_policy.php'), `<?php function vayuma_feature_access_decision($c,$s){return 'allow';}`);
+  fs.writeFileSync(path.join(dir,'config/db.php'), `<?php $conn=new stdClass();`);
   const file=path.join(dir,'ai_chat_api.php'); let s=fs.readFileSync(file,'utf8'); s=s.replace("$raw = file_get_contents('php://input');", "$raw = getenv('TEST_JSON');"); fs.writeFileSync(file,s);
   function ask(payload,csrf='ok',session=true){ const code=`session_start(); $_SESSION=${session?"['user_id'=>1,'logged_in'=>true,'vayuma_csrf_token'=>'ok']":"[]"}; $_SERVER['REQUEST_METHOD']='POST'; $_SERVER['HTTP_X_CSRF_TOKEN']=${JSON.stringify(csrf)}; require ${JSON.stringify(file)};`;const out=run(code,{TEST_JSON:JSON.stringify(payload),VAYUMA_AI_EXTERNAL_ENABLED:'0',OPENAI_API_KEY:''});assert.equal(out.status,0,out.stderr);return JSON.parse(out.stdout); }
   assert.match(ask({question:'soil'},'wrong').error,/session expired/i);

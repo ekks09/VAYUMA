@@ -1,7 +1,7 @@
 <?php // Shared stakeholder/admin shell. Callers supply only their authorised navigation links. ?>
 <div class="va-sidebar-overlay" id="vaSidebarOverlay"></div>
 <aside class="va-dash-sidebar" id="vaDashSidebar" aria-label="Dashboard navigation">
-  <div class="va-dash-sidebar--logo"><h1>VAYUMA</h1><p>SMART ECOSYSTEM</p></div>
+  <?php require __DIR__ . '/dashboard_brand.php'; ?>
   <nav aria-label="Workspace">
     <?php foreach ($dashboardLinks as $label => $href): ?>
       <a class="va-dash-sidebar--nav-item" href="<?= htmlspecialchars($href, ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?></a>

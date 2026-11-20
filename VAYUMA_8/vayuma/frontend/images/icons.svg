@@ -8,13 +8,13 @@
   <symbol id="va-icon-diseases" viewBox="0 0 48 48">
     <circle cx="24" cy="24" r="22" fill="#fde7e8"/>
     <path d="M24 12a8 8 0 0 1 8 8v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-4a8 8 0 0 1 8-8" fill="#a32121"/>
-    <path d="M14 16l4 4 8-8" fill="#a32121" fill="none" stroke="#a32121" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M14 16l4 4 8-8" fill="none" stroke="#a32121" stroke-width="2.5" stroke-linecap="round"/>
   </symbol>
 
   <symbol id="va-icon-weather" viewBox="0 0 48 48">
     <circle cx="24" cy="24" r="22" fill="#fff4d6"/>
     <path d="M24 12a8 8 0 0 1 8 8v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-4a8 8 0 0 1 8-8" fill="#e8a33d"/>
-    <path d="M18 24l-4-4 4-4" fill="#e8a33d" fill="none" stroke="#e8a33d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 24l-4-4 4-4" fill="none" stroke="#e8a33d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
   </symbol>
 
   <symbol id="va-icon-ai" viewBox="0 0 48 48">
@@ -26,7 +26,7 @@
   <symbol id="va-icon-orders" viewBox="0 0 48 48">
     <circle cx="24" cy="24" r="22" fill="#fffbeb"/>
     <path d="M24 12a8 8 0 0 1 8 8v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-4a8 8 0 0 1 8-8" fill="#e8a33d"/>
-    <path d="M16 22l4 4 8-8" fill="#e8a33d" fill="none" stroke="#e8a33d" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M16 22l4 4 8-8" fill="none" stroke="#e8a33d" stroke-width="2.5" stroke-linecap="round"/>
   </symbol>
 
   <symbol id="va-icon-livestock" viewBox="0 0 48 48">
@@ -202,7 +202,7 @@
   <symbol id="va-icon-banana" viewBox="0 0 48 48">
     <circle cx="24" cy="24" r="22" fill="#fffbeb"/>
     <path d="M24 12a8 8 0 0 1 8 8v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-4a8 8 0 0 1 8-8" fill="#e8a33d"/>
-    <path d="M18 24l-4-4 4-4" fill="#e8a33d" fill="none" stroke="#e8a33d" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M18 24l-4-4 4-4" fill="none" stroke="#e8a33d" stroke-width="2.5" stroke-linecap="round"/>
   </symbol>
 
   <symbol id="va-icon-apple" viewBox="0 0 48 48">
@@ -232,100 +232,7 @@
   <symbol id="va-icon-tag" viewBox="0 0 48 48">
     <circle cx="24" cy="24" r="22" fill="#e4f6e9"/>
     <path d="M24 12a8 8 0 0 1 8 8v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-4a8 8 0 0 1 8-8" fill="#087d42"/>
-    <path d="M14 20l4-4 4 4-4 4z" fill="#16803c" fill="none" stroke="#16803c" stroke-width="2"/>
-  </symbol>
-
-  <symbol id="va-icon-rabbit" viewBox="0 0 48 48">
-    <circle cx="24" cy="24" r="22" fill="#e8f5e9"/>
-    <path d="M24 12a8 8 0 0 1 8 8v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-4a8 8 0 0 1 8-8" fill="#087d42"/>
-    <path d="M20 18a2 2 0 1 0 0 4a2 2 0 0 0 0-4z" fill="#16803c"/>
-  </symbol>
-
-  <symbol id="va-icon-goat" viewBox="0 0 48 48">
-    <circle cx="24" cy="24" r="22" fill="#e8f5e9"/>
-    <path d="M24 12a8 8 0 0 1 8 8v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-4a8 8 0 0 1 8-8" fill="#087d42"/>
-    <path d="M24 16a2 2 0 1 0 0 4a2 2 0 0 0 0-4z" fill="#16803c"/>
-  </symbol>
-
-  <symbol id="va-icon-sheep" viewBox="0 0 48 48">
-    <circle cx="24" cy="24" r="22" fill="#e8f5e9"/>
-    <path d="M24 12a8 8 0 0 1 8 8v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-4a8 8 0 0 1 8-8" fill="#087d42"/>
-    <path d="M24 18a2 2 0 1 0 0 4a2 2 0 0 0 0-4z" fill="#16803c"/>
-  </symbol>
-
-  <symbol id="va-icon-chicken" viewBox="0 0 48 48">
-    <circle cx="24" cy="24" r="22" fill="#fffbeb"/>
-    <path d="M24 12a8 8 0 0 1 8 8v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-4a8 8 0 0 1 8-8" fill="#e8a33d"/>
-    <path d="M20 16a2 2 0 1 0 0 4a2 2 0 0 0 0-4z" fill="#c08a00"/>
-  </symbol>
-
-  <symbol id="va-icon-pig" viewBox="0 0 48 48">
-    <circle cx="24" cy="24" r="22" fill="#fde7e8"/>
-    <path d="M24 12a8 8 0 0 1 8 8v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-4a8 8 0 0 1 8-8" fill="#cf4b4b"/>
-    <path d="M24 16a2 2 0 1 0 0 4a2 2 0 0 0 0-4z" fill="#a32121"/>
-  </symbol>
-
-  <symbol id="va-icon-dog" viewBox="0 0 48 48">
-    <circle cx="24" cy="24" r="22" fill="#e4f6e9"/>
-    <path d="M24 12a8 8 0 0 1 8 8v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-4a8 8 0 0 1 8-8" fill="#087d42"/>
-    <path d="M20 18a2 2 0 1 0 0 4a2 2 0 0 0 0-4z" fill="#16803c"/>
-  </symbol>
-</svg>
-
-
-  <symbol id="va-icon-globe" viewBox="0 0 48 48">
-    <circle cx="24" cy="24" r="20" fill="#e4f6e9" stroke="#087d42" stroke-width="2"/>
-    <circle cx="24" cy="24" r="8" fill="#087d42"/>
-    <path d="M24 4a20 20 0 1 0 0 40a20 20 0 0 0 0-40z" fill="none" stroke="#087d42" stroke-width="1"/>
-  </symbol>
-
-  <symbol id="va-icon-herbs" viewBox="0 0 48 48">
-    <circle cx="24" cy="24" r="22" fill="#e4f6e9"/>
-    <path d="M24 12a8 8 0 0 1 8 8v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-4a8 8 0 0 1 8-8" fill="#087d42"/>
-    <path d="M14 18a4 4 0 0 0-4 4v2a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-2a4 4 0 0 1 4-4z" fill="#16803c"/>
-    <path d="M30 18a4 4 0 0 1 4 4v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a4 4 0 0 0-4-4z" fill="#16803c"/>
-  </symbol>
-
-  <symbol id="va-icon-tomato" viewBox="0 0 48 48">
-    <circle cx="24" cy="24" r="22" fill="#fde7e8"/>
-    <path d="M24 12a8 8 0 0 1 8 8v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-4a8 8 0 0 1 8-8" fill="#cf4b4b"/>
-    <path d="M24 16a4 4 0 0 0-4 4v2a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-2a4 4 0 0 1 4-4z" fill="#a32121"/>
-  </symbol>
-
-  <symbol id="va-icon-banana" viewBox="0 0 48 48">
-    <circle cx="24" cy="24" r="22" fill="#fffbeb"/>
-    <path d="M24 12a8 8 0 0 1 8 8v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-4a8 8 0 0 1 8-8" fill="#e8a33d"/>
-    <path d="M18 24l-4-4 4-4" fill="#e8a33d" fill="none" stroke="#e8a33d" stroke-width="2.5" stroke-linecap="round"/>
-  </symbol>
-
-  <symbol id="va-icon-apple" viewBox="0 0 48 48">
-    <circle cx="24" cy="24" r="22" fill="#e4f6e9"/>
-    <path d="M24 12a8 8 0 0 1 8 8v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-4a8 8 0 0 1 8-8" fill="#cf4b4b"/>
-    <path d="M20 16a4 4 0 0 0-4 4v2a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-2a4 4 0 0 1 4-4z" fill="#a32121"/>
-  </symbol>
-
-  <symbol id="va-icon-education" viewBox="0 0 48 48">
-    <circle cx="24" cy="24" r="22" fill="#e5f5e9"/>
-    <path d="M24 12a8 8 0 0 1 8 8v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-4a8 8 0 0 1 8-8" fill="#087d42"/>
-    <path d="M16 16a4 4 0 0 0-4 4v2a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-2a4 4 0 0 1 4-4z" fill="#16803c"/>
-  </symbol>
-
-  <symbol id="va-icon-target" viewBox="0 0 48 48">
-    <circle cx="24" cy="24" r="22" fill="#fffbeb"/>
-    <path d="M24 12a8 8 0 0 1 8 8v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-4a8 8 0 0 1 8-8" fill="#e8a33d"/>
-    <path d="M24 16a2 2 0 1 0 0 4a2 2 0 0 0 0-4z" fill="#c08a00"/>
-  </symbol>
-
-  <symbol id="va-icon-school" viewBox="0 0 48 48">
-    <circle cx="24" cy="24" r="22" fill="#e5f5e9"/>
-    <path d="M24 12a8 8 0 0 1 8 8v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-4a8 8 0 0 1 8-8" fill="#087d42"/>
-    <path d="M16 16a4 4 0 0 0-4 4v2a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-2a4 4 0 0 1 4-4z" fill="#16803c"/>
-  </symbol>
-
-  <symbol id="va-icon-tag" viewBox="0 0 48 48">
-    <circle cx="24" cy="24" r="22" fill="#e4f6e9"/>
-    <path d="M24 12a8 8 0 0 1 8 8v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-4a8 8 0 0 1 8-8" fill="#087d42"/>
-    <path d="M14 20l4-4 4 4-4 4z" fill="#16803c" fill="none" stroke="#16803c" stroke-width="2"/>
+    <path d="M14 20l4-4 4 4-4 4z" fill="none" stroke="#16803c" stroke-width="2"/>
   </symbol>
 
   <symbol id="va-icon-rabbit" viewBox="0 0 48 48">

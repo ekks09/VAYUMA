@@ -1,1 +1,4 @@
-<span class="va-nav-icon"><?= $label === 'Dashboard' ? '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-dashboard"/></svg>' : ($label === 'Marketplace' ? '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-marketplace"/></svg>' : ($label === 'My Orders' ? '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-orders"/></svg>' : '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-profile"/></svg>')) ?></span>
+<?php
+$icons = ['Dashboard'=>'dashboard', 'Marketplace'=>'marketplace', 'My Orders'=>'orders', 'Deliveries'=>'transport', 'Agricultural Products'=>'crops', 'Recommended'=>'crops', 'VAYUMA AI'=>'ai', 'My Profile'=>'profile', 'Profile & Settings'=>'profile'];
+$icon = $icons[$label] ?? 'checkmark';
+?><span class="va-nav-icon"><svg class="va-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-<?= htmlspecialchars($icon, ENT_QUOTES, 'UTF-8') ?>"/></svg></span>

@@ -4,6 +4,7 @@ session_start();
 require_once __DIR__ . '/includes/language.php';
 require_once __DIR__ . "/config/db.php";
 require_once __DIR__ . '/subscription_guard.php';
+require_once __DIR__ . '/includes/role_routes.php';
 
 if (!isset($_SESSION["user_id"]) || ($_SESSION["logged_in"] ?? false) !== true) {
     header("Location: login.php");
@@ -11,6 +12,9 @@ if (!isset($_SESSION["user_id"]) || ($_SESSION["logged_in"] ?? false) !== true) 
 }
 
 $role = strtolower(trim($_SESSION["role"] ?? ""));
+// This route is the strategic-partner dashboard; other roles have dedicated routes.
+if ($role !== 'strategic_partner') { header('Location: dashboard.php'); exit; }
+
 $dashboards = [
     "input_supplier" => ["Input Supplier", "🌾", "Manage farm inputs and support farmers.", [["📦", "Inventory", "Manage seeds, fertiliser, equipment and stock."], ["🛒", "Farmer Requests", "Respond to input requests from farmers."], ["🚚", "Delivery", "Plan deliveries to your customers."]]],
     "manufacturer" => ["Manufacturer", "🏭", "Source agricultural raw materials and manage production.", [["🌽", "Raw Material Marketplace", "Find produce supplied through VAYUMA."], ["🏭", "Production", "Plan production requirements and capacity."], ["📦", "Warehousing", "Coordinate storage of raw materials and products."]]],
@@ -62,7 +66,7 @@ $full_name = $_SESSION["full_name"] ?? "Member";
 <link rel="stylesheet" href="frontend/css/dashboard-shell.css">
 <style>
 </style>
-<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=2">
+<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-4">
 </head>
 <body>
 <div class="va-dash-layout"><?php
@@ -74,23 +78,9 @@ require __DIR__ . '/includes/dashboard_generic_sidebar.php'; ?>
         <section class="profile"><div><h2><?php echo htmlspecialchars($profile["organization_name"], ENT_QUOTES, "UTF-8"); ?></h2><p><?php echo htmlspecialchars($profile["county"], ENT_QUOTES, "UTF-8"); ?><?php echo $profile["service_focus"] ? " · " . htmlspecialchars($profile["service_focus"], ENT_QUOTES, "UTF-8") : ""; ?></p></div><a class="va-dash-sidebar--nav-item button" href="stakeholder_profile.php?from=stakeholder_dashboard.php">Edit Profile</a></section>
         <h2 class="section-title">Your workspace</h2>
         <section class="grid">
-            <?php foreach ($cards as [$card_icon, $title, $description]): ?>
-                <?php
-                $request_words = ["Request", "Application", "Claim", "Booking", "Appointment"];
-                $is_request_module = false;
-                foreach ($request_words as $word) {
-                    if (strpos($title, $word) !== false) {
-                        $is_request_module = true;
-                        break;
-                    }
-                }
-                $is_browse_module = strpos($title, "Marketplace") !== false || strpos($title, "Network") !== false;
-                $module_link = $is_request_module
-                    ? "stakeholder_requests.php"
-                    : ($is_browse_module ? "stakeholder_offers.php" : "stakeholder_offers.php?view=manage");
-                ?>
-                <article class="card"><div class="icon"><?php echo $card_icon; ?></div><h3><?php echo htmlspecialchars($title, ENT_QUOTES, "UTF-8"); ?></h3><p><?php echo htmlspecialchars($description, ENT_QUOTES, "UTF-8"); ?></p><a class="va-dash-sidebar--nav-item" href="<?php echo htmlspecialchars($module_link, ENT_QUOTES, "UTF-8"); ?>">Open →</a></article>
-            <?php endforeach; ?>
+            <article class="card"><h3>Partnership activities</h3><p>Dedicated partnership coordination tools are not available yet.</p><span aria-disabled="true">Planned</span></article>
+            <article class="card"><h3>Impact reporting</h3><p>Partnership impact tracking is not available yet.</p><span aria-disabled="true">Planned</span></article>
+            <article class="card"><h3>Stakeholder directory</h3><p>Browse stakeholder profiles and their verification status.</p><a class="va-dash-sidebar--nav-item" href="stakeholder_directory.php">Browse directory →</a></article>
         </section>
     </main>
 </div>

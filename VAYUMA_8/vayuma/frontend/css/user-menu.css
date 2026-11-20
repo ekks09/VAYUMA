@@ -12,7 +12,7 @@
 .vy-user-menu__contact,.vy-user-menu__plan small { color:var(--va-text-muted); font-size:var(--va-font-size-xs); }
 .vy-user-menu__plan { border-top:1px solid var(--va-border); border-bottom:1px solid var(--va-border); margin:var(--va-space-2) 0; }
 .vy-user-menu__plan a,.vy-user-menu__link { color:var(--va-primary); text-decoration:none; font-size:var(--va-font-size-sm); }
-.vy-user-menu__link { display:block; padding:var(--va-space-2); border-radius:var(--va-radius-sm); }
+.vy-user-menu__link { display:flex; align-items:center; min-height:44px; padding:var(--va-space-2); border-radius:var(--va-radius-sm); }
 .vy-user-menu__link:hover,.vy-user-menu__link:focus-visible { background:var(--va-primary-light); }
 
 .vy-user-menu__dashboard-header { gap:var(--va-space-3); }

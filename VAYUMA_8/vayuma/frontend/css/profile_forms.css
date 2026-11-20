@@ -30,7 +30,7 @@
   gap: 16px;
 }
 
-.va-profile-navigation a {
+.va-profile-navigation > a {
   display: inline-flex;
   min-height: 44px;
   align-items: center;
@@ -46,13 +46,13 @@
   transition: border-color var(--va-transition), background var(--va-transition), transform var(--va-transition);
 }
 
-.va-profile-navigation a:hover {
+.va-profile-navigation > a:hover {
   border-color: var(--va-primary);
   background: var(--va-primary-light);
   transform: translateX(-2px);
 }
 
-.va-profile-navigation span {
+.va-profile-navigation > span {
   color: var(--va-text-muted);
   font-size: 0.8rem;
 }
@@ -192,7 +192,7 @@
 
 .va-profile-document form button[type="submit"]:focus-visible,
 .va-profile-document form input[type="submit"]:focus-visible,
-.va-profile-navigation a:focus-visible {
+.va-profile-navigation > a:focus-visible {
   outline: 3px solid rgb(8 125 66 / 0.28);
   outline-offset: 3px;
 }
@@ -224,7 +224,7 @@
     text-align: left;
   }
 
-  .va-profile-navigation a {
+  .va-profile-navigation > a {
     max-width: 100%;
   }
 
@@ -235,9 +235,30 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .va-profile-navigation a,
+  .va-profile-navigation > a,
   .va-profile-document :is(input, select, textarea),
   .va-profile-document form button[type="submit"] {
     transition: none;
   }
 }
+
+/* Compact branding on the farmer profile; keep the real mark inside the page. */
+.va-profile-document > .header .logo-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: min(calc(100% - 32px), 950px);
+  margin: 20px auto 0;
+}
+.va-profile-document > .header .logo-area img {
+  display: block;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.va-profile-document > .header .logo-area h2 { margin: 0; font-size: 1.1rem; line-height: 1.2; color: var(--va-primary); }
+.va-profile-document > .header .logo-area small { display: block; font-size: .65rem; letter-spacing: .06em; color: var(--va-text-muted); }
+
+.va-profile-navigation > .vy-user-menu { margin-left:auto; }

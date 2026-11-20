@@ -70,9 +70,9 @@ if ($phonePrefill === '') {
     }
 }
 
-$navLinks = $dashboardAccessible && $dashboardUrl !== null
-    ? ['Dashboard' => $dashboardUrl]
-    : ['Back to profile' => $profileUrl, 'Choose stakeholder type' => 'role.php'];
+// All subscription navigation is provided below the heading, for every access
+// state. Avoid repeating it in the header, where it collides on small screens.
+$showNav = false;
 
 require_once __DIR__ . '/includes/ui_simple.php';
 ?>

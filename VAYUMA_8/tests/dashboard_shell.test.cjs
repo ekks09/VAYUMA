@@ -40,3 +40,15 @@ test('service worker allows the public dashboard stylesheet but not avatar or PH
   assert.doesNotMatch(worker, /\['avatar\.php'/);
   assert.match(worker, /request\.mode === 'navigate'[\s\S]*?fetch\(request\)/);
 });
+
+test('dashboard insights, buyer order layout and the existing icon sprite stay usable', () => {
+  const farmer=read('farmer_dashboard.php'), buyer=read('buyer_dashboard.php'), consumer=read('consumer_dashboard.php');
+  for (const href of ['climate.php','farming_score.php','crop_opportunities.php']) assert.match(farmer,new RegExp(`href="${href.replace('.','\\.')}"`));
+  assert.match(farmer,/profile, not a field measurement/);
+  for(const source of [buyer,consumer]) { assert.match(source,/dashboard-quick-links/);assert.match(source,/profile\.php\?return_to=/);assert.match(source,/feature_access\.php\?feature=ai/); }
+  assert.match(buyer,/id="buyer-recent-orders"/);assert.match(buyer,/Online payment processing is paused/);assert.match(buyer,/Recent saved listings shown \(up to 6\)/);
+  const sprite=read('frontend/images/icons.svg');assert.equal((sprite.match(/<\/svg>/g)||[]).length,1);
+  const ids=[...sprite.matchAll(/<symbol id="([^"]+)"/g)].map(m=>m[1]);assert.equal(new Set(ids).size,ids.length);
+  for(const id of ['va-icon-weather','va-icon-soil','va-icon-ai']) assert.ok(ids.includes(id));
+  for(const tag of sprite.match(/<[^>]+>/g)) assert.ok((tag.match(/\sfill=/g)||[]).length<=1,'invalid repeated fill attribute');
+});

@@ -30,12 +30,12 @@ $platformHomeUrl = $platformHomeUrl ?? vayuma_platform_home_route();
 <title><?= htmlspecialchars($pageTitle) ?> | VAYUMA</title>
 <link rel="stylesheet" href="frontend/css/tokens.css?v=20261110">
 <link rel="stylesheet" href="frontend/css/components.css">
-<link rel="stylesheet" href="frontend/css/components_addition.css?v=20261110-account-nav">
-<link rel="stylesheet" href="frontend/css/layout.css">
+<link rel="stylesheet" href="frontend/css/components_addition.css?v=20261120-subscription-nav">
+<link rel="stylesheet" href="frontend/css/layout.css?v=mobile-header-2">
 <link rel="stylesheet" href="frontend/css/pages.css">
-<?php if (!empty($dashboardShell)): ?><link rel="stylesheet" href="assets/css/dashboard-layout.css?v=2"><?php endif; ?>
+<?php if (!empty($dashboardShell)): ?><link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-4"><?php endif; ?>
 </head>
-<body class="va-page">
+<body class="va-page<?= !empty($dashboardShell) ? ' va-simple-dashboard' : '' ?>">
   <!-- Skip to content link for keyboard users -->
   <a href="#va-main-content" class="va-skip-link">Skip to main content</a>
 <?php require_once __DIR__ . '/language.php'; ?>

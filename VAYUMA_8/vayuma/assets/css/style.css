@@ -3061,3 +3061,8 @@ body {
 /* The welcome feature tiles are real keyboard-accessible links. */
 .welcome-features .feature-link { display:block; text-decoration:none; color:inherit; }
 .welcome-features .feature-link:focus-visible { outline:3px solid #087d42; outline-offset:3px; }
+
+/* Registration confirmation on the sign-in screen. */
+.login-success { margin: 0 0 1rem; padding: .85rem 1rem; border: 1px solid #b7ddc1; border-radius: .6rem; background: #edf8f0; color: #185b32; line-height: 1.5; }
+/* Claim access sits within the auth card instead of crowding the header. */
+.auth-claim-link { display:inline-flex; align-items:center; min-height:44px; padding:8px 0; font-size:1rem; }

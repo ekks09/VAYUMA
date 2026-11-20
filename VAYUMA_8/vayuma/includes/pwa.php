@@ -8,7 +8,7 @@
 <link rel="apple-touch-icon" href="frontend/images/pwa/apple-touch-icon.png">
 <link rel="stylesheet" href="frontend/css/pwa-install.css?v=install-1">
 <script src="frontend/js/pwa.js?v=install-2" defer></script>
-<link rel="stylesheet" href="frontend/css/user-menu.css?v=1">
+<link rel="stylesheet" href="frontend/css/user-menu.css?v=2">
 <script src="frontend/js/user-menu.js?v=1" defer></script>
 <?php
 // Only show the shortcut in signed-in workspaces, not authentication, admin or the assistant itself.

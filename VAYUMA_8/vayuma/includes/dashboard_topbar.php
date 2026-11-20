@@ -1,6 +1,6 @@
 <header class="va-topbar">
   <a class="va-topbar--brand" href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA home">
-    <img src="frontend/images/vayuma-logo.jpg" alt="VAYUMA">
+    <img src="frontend/images/pwa/icon-192.png" alt="VAYUMA">
     <strong>VAYUMA</strong>
   </a>
 

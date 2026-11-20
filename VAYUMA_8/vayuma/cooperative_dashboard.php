@@ -84,7 +84,7 @@ try {
 <link rel="stylesheet" href="frontend/css/dashboard-shell-transitions.css">
 <style>
 </style>
-<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=2">
+<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-4">
 
 </head>
 
@@ -101,13 +101,7 @@ try {
 <aside class="va-dash-sidebar" id="vaDashSidebar">
 
 
-    <div class="va-dash-sidebar--logo">
-
-        <h1>VAYUMA</h1><p>Smart Ecosystem</p>
-
-        <p>SMART ECOSYSTEM</p>
-
-    </div>
+    <?php require __DIR__ . '/includes/dashboard_brand.php'; ?>
 
 
     <div class="va-dash-sidebar--section">
@@ -170,7 +164,7 @@ try {
     </a>
 
 
-    <a class="va-dash-sidebar--nav-item" href="ai_advisor.php">
+    <a class="va-dash-sidebar--nav-item" href="feature_access.php?feature=ai">
         <span class="va-dash-sidebar--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg></span>
         VAYUMA AI
     </a>
@@ -499,7 +493,7 @@ try {
             </span>
 
 
-            <a class="va-dash-action" href="ai_advisor.php">
+            <a class="va-dash-action" href="feature_access.php?feature=ai">
                 <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg> &nbsp; Ask VAYUMA AI
             </a>
 

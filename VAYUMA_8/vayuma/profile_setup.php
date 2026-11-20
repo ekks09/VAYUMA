@@ -18,6 +18,14 @@ try {
     error_log('VAYUMA farm profile lookup failed.');
     http_response_code(503); exit('Farm profile is temporarily unavailable. Please try again.');
 }
+// A verified, claimed record can prefill missing fields; it is never shown before ownership verification.
+if (!$farmProfile && !$profileDuplicate && getenv('VAYUMA_ONBOARDING_ENABLED') === '1' && getenv('VAYUMA_CLAIM_ENABLED') === '1') {
+    try {
+        $claim = $conn->prepare("SELECT county,activity,farm_size,farm_size_unit FROM onboarding_records WHERE claimed_by_user_id=? AND stakeholder_role='farmer' LIMIT 1");
+        $claim->bind_param('i', $user_id); $claim->execute(); $claimed = $claim->get_result()->fetch_assoc(); $claim->close();
+        if ($claimed) $farmProfile = ['county'=>$claimed['county'], 'main_crops'=>$claimed['activity'], 'farm_size'=>$claimed['farm_size'], 'farm_size_unit'=>$claimed['farm_size_unit']];
+    } catch (Throwable $e) { error_log('VAYUMA claim prefill unavailable.'); http_response_code(503); exit('Farm profile is temporarily unavailable. Please try again.'); }
+}
 $profileError = (string)($_SESSION['farm_profile_error'] ?? ''); unset($_SESSION['farm_profile_error']);
 $old = $_SESSION['farm_profile_old'] ?? []; unset($_SESSION['farm_profile_old']);
 if (is_array($old)) foreach ($old as $key => $value) if (is_string($value)) $farmProfile[$key] = $value;
@@ -45,7 +53,7 @@ $email = $_SESSION['email'] ?? '';
 <link rel="stylesheet" href="frontend/css/components_addition.css?v=20261110">
 <link rel="stylesheet" href="frontend/css/layout.css">
 <link rel="stylesheet" href="frontend/css/pages.css">
-<link rel="stylesheet" href="frontend/css/profile_forms.css?v=20261120-1">
+<link rel="stylesheet" href="frontend/css/profile_forms.css?v=20261120-2">
 <style>
 .va-profile-page { max-width: 950px; margin: 0 auto; padding: var(--va-space-6); }
 .va-profile-brand { text-align: center; margin-bottom: var(--va-space-6); }
@@ -88,9 +96,8 @@ $email = $_SESSION['email'] ?? '';
 
     <div class="logo-area">
 
-        <!-- Change this path if your logo is stored elsewhere -->
-        <img src="images/vayuma-logo.jpg"
-             alt="VAYUMA Logo">
+        <img src="frontend/images/pwa/icon-192.png"
+             alt="" width="48" height="48">
 
         <div>
             <h2>VAYUMA</h2>

@@ -33,8 +33,9 @@ $navLinks = [
     'Deliveries' => 'deliveries.php',
     'Agricultural Products' => 'market_connect.php',
     'Recommended' => 'recommended.php',
-    'VAYUMA AI' => 'ai_advisor.php',
+    'VAYUMA AI' => 'feature_access.php?feature=ai',
     'My Profile' => 'buyer_profile.php?from=buyer_dashboard.php',
+    'Profile & Settings' => 'profile.php?return_to=buyer_dashboard.php',
 ];
 
 // ── Saved items ──
@@ -102,6 +103,17 @@ require_once __DIR__ . '/includes/ui_simple.php';
       echo render_subscription_banner($conn, $user_id);
       ?>
 
+      <section class="dashboard-quick-links va-mb-6" aria-labelledby="buyer-quick-title">
+        <div><h2 id="buyer-quick-title">Quick access</h2><p>Open the tools you use most.</p></div>
+        <nav aria-label="Buyer quick access">
+          <a href="market_connect.php"><svg class="va-icon" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-marketplace"/></svg> Marketplace</a>
+          <a href="my_orders.php"><svg class="va-icon" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-orders"/></svg> My Orders</a>
+          <a href="deliveries.php"><svg class="va-icon" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-transport"/></svg> Deliveries</a>
+          <a href="feature_access.php?feature=ai"><svg class="va-icon" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-ai"/></svg> VAYUMA AI</a>
+          <a href="profile.php?return_to=buyer_dashboard.php"><svg class="va-icon" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-profile"/></svg> Profile &amp; settings</a>
+        </nav>
+      </section>
+
       <div class="va-dashboard-grid va-mb-6">
         <div class="va-stat-card">
           <div class="va-stat-card--header">
@@ -132,8 +144,8 @@ require_once __DIR__ . '/includes/ui_simple.php';
             <div><div class="va-stat-card--label">Payments</div></div>
             <div class="va-stat-card--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg></div>
           </div>
-          <div class="va-stat-card--value">Manage</div>
-          <div class="va-stat-card--sub">Your payments</div>
+          <div class="va-stat-card--value">Unavailable</div>
+          <div class="va-stat-card--sub">Online payment processing is paused</div>
         </div>
         <div class="va-stat-card">
           <div class="va-stat-card--header">
@@ -141,7 +153,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
             <div class="va-stat-card--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg></div>
           </div>
           <div class="va-stat-card--value"><?= $savedCount ?></div>
-          <div class="va-stat-card--sub">Saved listings</div>
+          <div class="va-stat-card--sub">Recent saved listings shown (up to 6)</div>
         </div>
       </div>
 
@@ -228,14 +240,12 @@ require_once __DIR__ . '/includes/ui_simple.php';
         <a href="my_orders.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-orders"/></svg> My Orders</a>
         <a href="deliveries.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-transport"/></svg> Track Delivery</a>
         <a href="buyer_profile.php?from=buyer_dashboard.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-profile"/></svg> My Profile</a>
-        <a href="ai_advisor.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg> Ask VAYUMA AI</a>
+        <a href="feature_access.php?feature=ai" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg> Ask VAYUMA AI</a>
       </div>
 
-    </div>
-  </div>
       <!-- Recent Orders Timeline -->
-      <div class="va-section va-mb-6">
-        <h2 class="va-section--title">Recent Orders</h2>
+      <div class="va-mb-6">
+        <h2 class="va-section--title" id="buyer-recent-orders">Recent Orders</h2>
         <p class="va-text-muted va-text-sm">Your order history and status timeline.</p>
       </div>
       <div class="va-card va-card--p va-mb-6">
@@ -265,20 +275,21 @@ require_once __DIR__ . '/includes/ui_simple.php';
               <?= h($order['created_at']) ?>
             </div>
             <?php if ($order['status'] === 'accepted'): ?>
-            <a href="payment.php?order_id=<?= (int)$order['id'] ?>" class="va-btn va-btn--primary va-btn--sm va-w-full va-mt-3">Pay Now</a>
+            <a href="payment.php?order_id=<?= (int)$order['id'] ?>" class="va-btn va-btn--primary va-btn--sm va-w-full va-mt-3">Review order payment</a>
             <?php elseif ($order['status'] === 'paid'): ?>
             <span class="va-btn va-btn--outline va-btn--sm va-w-full va-mt-3" style="cursor:default;">✓ Paid</span>
             <?php elseif ($order['status'] === 'completed'): ?>
             <span class="va-btn va-btn--outline va-btn--sm va-w-full va-mt-3" style="cursor:default;">✓ Completed</span>
             <?php else: ?>
-            <span class="va-btn va-btn--outline va-btn--sm va-w-full va-mt-3" style="cursor:default;">⏳ Pending</span>
+            <span class="va-btn va-btn--outline va-btn--sm va-w-full va-mt-3" style="cursor:default;"><?= h(ucfirst((string)$order['status'])) ?></span>
             <?php endif; ?>
           </div>
           <?php endforeach; ?>
         </div>
         <?php endif; ?>
       </div>
-
+    </div>
+  </div>
 </main>
 
 <?php require_once __DIR__ . '/includes/ui_simple_close.php'; ?>

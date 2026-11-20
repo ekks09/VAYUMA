@@ -2,8 +2,10 @@
 
 session_start();
 
-require_once "../config/db.php";
+require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/csrf.php';
+require_once __DIR__ . '/../includes/onboarding_policy.php';
+require_once __DIR__ . '/../includes/login_identity.php';
 
 
 /*
@@ -32,12 +34,13 @@ if (!vayuma_csrf_valid()) {
 |--------------------------------------------------------------------------
 */
 
-$full_name = trim($_POST["full_name"] ?? "");
-$phone = trim($_POST["phone"] ?? "");
-$email = trim($_POST["email"] ?? "");
-$password = $_POST["password"] ?? "";
-$confirm_password = $_POST["confirm_password"] ?? "";
-$terms = $_POST["terms"] ?? "";
+$full_name = is_string($_POST["full_name"] ?? null) ? trim($_POST["full_name"]) : "";
+$phone = is_string($_POST["phone"] ?? null) ? trim($_POST["phone"]) : "";
+$email = is_string($_POST["email"] ?? null) ? strtolower(trim($_POST["email"])) : "";
+$password = is_string($_POST["password"] ?? null) ? $_POST["password"] : "";
+$confirm_password = is_string($_POST["confirm_password"] ?? null) ? $_POST["confirm_password"] : "";
+$terms = is_string($_POST["terms"] ?? null) ? $_POST["terms"] : "";
+$_SESSION["register_phone"] = $phone;
 
 
 /*
@@ -68,7 +71,7 @@ if (
 |--------------------------------------------------------------------------
 */
 
-if (strlen($full_name) < 2) {
+if (strlen($full_name) < 2 || mb_strlen($full_name, "UTF-8") > 100) {
 
     $_SESSION["register_error"] =
         "Please enter a valid full name.";
@@ -85,9 +88,9 @@ if (strlen($full_name) < 2) {
 |--------------------------------------------------------------------------
 */
 
-$phone_clean = preg_replace("/[\s\-\(\)]/", "", $phone);
+$phone_clean = vayuma_onboarding_phone($phone);
 
-if (!preg_match("/^\+?[0-9]{9,15}$/", $phone_clean)) {
+if ($phone_clean === null) {
 
     $_SESSION["register_error"] =
         "Please enter a valid phone number.";
@@ -104,7 +107,7 @@ if (!preg_match("/^\+?[0-9]{9,15}$/", $phone_clean)) {
 |--------------------------------------------------------------------------
 */
 
-if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+if (!empty($email) && (strlen($email) > 100 || !filter_var($email, FILTER_VALIDATE_EMAIL))) {
 
     $_SESSION["register_error"] =
         "Please enter a valid email address.";
@@ -121,10 +124,10 @@ if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
 |--------------------------------------------------------------------------
 */
 
-if (strlen($password) < 8) {
+if (strlen($password) < 8 || strlen($password) > 72 || str_contains($password, "\0")) {
 
     $_SESSION["register_error"] =
-        "Password must contain at least 8 characters.";
+        "Password must be between 8 and 72 bytes.";
 
     header("Location: ../register.php");
     exit;
@@ -173,10 +176,11 @@ if ($terms !== "accepted") {
 */
 
 $phone_check = $conn->prepare(
-    "SELECT id FROM users WHERE phone = ? LIMIT 1"
+    "SELECT id FROM users WHERE phone_identity = ? OR REPLACE(phone_identity, '.', '') IN (?, ?, ?) LIMIT 1"
 );
 
-$phone_check->bind_param("s", $phone_clean);
+[$phone1, $phone2, $phone3] = vayuma_login_phone_variants($phone_clean);
+$phone_check->bind_param("ssss", $phone_clean, $phone1, $phone2, $phone3);
 
 $phone_check->execute();
 
@@ -187,7 +191,7 @@ if ($phone_result->num_rows > 0) {
     $phone_check->close();
 
     $_SESSION["register_error"] =
-        "An account with this phone number already exists.";
+        "Unable to create your account. Please sign in or try again later.";
 
     header("Location: ../register.php");
     exit;
@@ -206,7 +210,7 @@ $phone_check->close();
 if (!empty($email)) {
 
     $email_check = $conn->prepare(
-        "SELECT id FROM users WHERE email = ? LIMIT 1"
+        "SELECT id FROM users WHERE email_identity = ? LIMIT 1"
     );
 
     $email_check->bind_param("s", $email);
@@ -220,7 +224,7 @@ if (!empty($email)) {
         $email_check->close();
 
         $_SESSION["register_error"] =
-            "An account with this email already exists.";
+            "Unable to create your account. Please sign in or try again later.";
 
         header("Location: ../register.php");
         exit;
@@ -296,59 +300,53 @@ if (empty($email)) {
 */
 
 require_once __DIR__ . '/../includes/identity_errors.php';
+$onboardingTx = false;
 try {
+    if (getenv('VAYUMA_ONBOARDING_ENABLED') === '1') {
+        require_once __DIR__ . '/../includes/onboarding_lock.php';
+        if (!$conn->begin_transaction()) throw new RuntimeException('Transaction unavailable');
+        $onboardingTx = true;
+        vayuma_onboarding_lock_phone($conn, $phone_clean);
+        // A staff record reserves its phone regardless of stakeholder type or claim flag.
+        $claimCheck = $conn->prepare('SELECT id FROM onboarding_records WHERE phone_identity=? LIMIT 1 FOR UPDATE');
+        if (!$claimCheck) throw new RuntimeException('Onboarding check unavailable');
+        $claimCheck->bind_param('s', $phone_clean);
+        if (!$claimCheck->execute()) throw new RuntimeException('Onboarding check unavailable');
+        $reserved = $claimCheck->get_result()->fetch_assoc(); $claimCheck->close();
+        if ($reserved) {
+            $conn->rollback(); $onboardingTx = false; $stmt->close();
+            $_SESSION['register_error'] = 'Unable to create your account. Please sign in or try again later.';
+            $_SESSION['register_phone'] = $phone;
+            header('Location: ../register.php'); exit;
+        }
+    }
     if (!$stmt->execute()) {
-        $duplicate = $stmt->errno === 1062;
+        if ($onboardingTx) $conn->rollback();
         $stmt->close();
-        $_SESSION['register_error'] = $duplicate ? 'That phone number or email is already in use.' : 'Unable to create your account. Please try again.';
+        $_SESSION['register_error'] = 'Unable to create your account. Please sign in or try again later.';
         header('Location: ../register.php');
         exit;
     }
-} catch (mysqli_sql_exception $e) {
-    $_SESSION['register_error'] = vayuma_is_duplicate_key($e) ? 'That phone number or email is already in use.' : 'Unable to create your account. Please try again.';
+    if ($onboardingTx && !$conn->commit()) throw new RuntimeException('Transaction commit unavailable');
+    $onboardingTx = false;
+} catch (Throwable $e) {
+    if ($onboardingTx) { try { $conn->rollback(); } catch (Throwable $ignored) {} }
+    $_SESSION['register_error'] = 'Unable to create your account. Please sign in or try again later.';
     $stmt->close();
     header('Location: ../register.php');
     exit;
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| Save newly created user ID
-|--------------------------------------------------------------------------
-*/
-
-$user_id = $stmt->insert_id;
-
+/* Account creation is not authentication: ask the user to sign in before
+ * choosing a role. Keep language and any allowlisted feature intent only. */
 $stmt->close();
-
-
-/*
-|--------------------------------------------------------------------------
-| Save user information in session
-|--------------------------------------------------------------------------
-*/
-
+$language = $_SESSION['vayuma_language'] ?? 'en';
+$pending = $_SESSION['pending_feature'] ?? '';
+$_SESSION = [];
+if (in_array($language, ['en', 'sw'], true)) $_SESSION['vayuma_language'] = $language;
+if (is_string($pending) && in_array($pending, ['climate', 'soil', 'ai'], true)) $_SESSION['pending_feature'] = $pending;
 session_regenerate_id(true);
-$_SESSION["user_id"] = $user_id;
-$_SESSION["logged_in"] = true;
-$_SESSION["role"] = '';
-
-$_SESSION["full_name"] = $full_name;
-
-$_SESSION["phone"] = $phone_clean;
-
-$_SESSION["email"] = $email;
-
-
-/*
-|--------------------------------------------------------------------------
-| Redirect to role selection
-|--------------------------------------------------------------------------
-*/
-
-header("Location: ../role.php");
-
+$_SESSION['registration_success'] = true;
+header('Location: ../login.php');
 exit;
-
-?>

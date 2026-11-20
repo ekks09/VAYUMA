@@ -15,9 +15,25 @@ const roles = {farmer:'farmer_dashboard.php',buyer:'buyer_dashboard.php',consume
         await page.setViewport({width:320,height:844});
         await page.goto(`${base}/${role}.html`,{waitUntil:'load',timeout:10000});
         assert.ok(await page.$('.va-install-entry'), 'missing install entry');
+        if (role==='farmer') {
+          const sprite=await page.evaluate(async()=>{const r=await fetch('frontend/images/icons.svg');const d=new DOMParser().parseFromString(await r.text(),'image/svg+xml');return {error:!!d.querySelector('parsererror'),weather:!!d.getElementById('va-icon-weather'),soil:!!d.getElementById('va-icon-soil'),ai:!!d.getElementById('va-icon-ai')}});
+          assert.deepEqual(sprite,{error:false,weather:true,soil:true,ai:true},'broken shared icon sprite');
+        }
         assert.ok(await page.$('.vy-user-menu__trigger'), 'missing account menu');
         assert.equal(await page.$eval('.vy-user-menu a[href="subscription.php"]',e=>e.getAttribute('href')), 'subscription.php');
         assert.ok(await page.$('.vy-user-menu a[href="role.php"]'), 'missing category link');
+        assert.ok(await page.$('.vy-user-menu a[href="onboarding.php"]'), 'missing staff access');
+        assert.ok(await page.$('.vy-user-menu a[href="feature_access.php?feature=ai"]'), 'missing AI access');
+        assert.match(await page.$eval('.vy-user-menu a[href^="profile.php"]',e=>e.textContent), /Profile & Settings/);
+        const logo=await page.$eval('aside img[src="frontend/images/pwa/icon-192.png"]', e=>({width:e.getBoundingClientRect().width,natural:e.naturalWidth}));
+        assert.ok(logo.natural>0 && logo.width<=48, 'sidebar brand missing or oversized');
+        if (role==='buyer' || role==='consumer') {
+          assert.ok(await page.$('.dashboard-quick-links a[href^="profile.php"]'), 'missing profile shortcut');
+          assert.ok(await page.$('.dashboard-quick-links a[href="feature_access.php?feature=ai"]'), 'missing AI shortcut');
+          assert.ok(await page.$('aside a[href="feature_access.php?feature=ai"] use[href$="va-icon-ai"]'), 'incorrect AI icon');
+        }
+        if (role==='buyer') assert.ok(await page.$('.va-main--content h2#buyer-recent-orders'), 'recent orders outside content');
+        if (role==='farmer') for(const href of ['climate.php','farming_score.php','crop_opportunities.php']) assert.ok(await page.$(`section[aria-labelledby="farm-insights-title"] a[href="${href}"]`),`missing ${href} insight`);
         assert.ok(await page.$('aside .va-language-selector'), 'language selector is not in the sidebar');
         assert.equal(await page.$eval('.vy-user-menu a[href^="profile.php"]',e=>e.getAttribute('href')), `profile.php?return_to=${dashboard}`);
         await page.click('.vy-user-menu__trigger');
@@ -56,6 +72,11 @@ const roles = {farmer:'farmer_dashboard.php',buyer:'buyer_dashboard.php',consume
               toggleVisible:getComputedStyle(toggle).display !== 'none'};
           });
           assert.ok(layout.document <= layout.viewport + 1, `horizontal overflow ${JSON.stringify(layout)}`);
+          if (['farmer','buyer','consumer'].includes(role) && viewport < 768) {
+            const bad=await page.$$eval('.va-main--content a.va-btn, .va-main--content button.va-btn, .farmer-quick-links nav a, .dashboard-quick-links nav a',links=>links.filter(e=>e.getBoundingClientRect().height>0&&e.getBoundingClientRect().height<43.5).map(e=>e.textContent.trim()));
+            assert.deepEqual(bad,[],`small dashboard tap targets: ${bad.join(', ')}`);
+            assert.equal(await page.$eval('.va-ai-shortcut',e=>getComputedStyle(e).display),'none','floating AI obscures dashboard content');
+          }
           if (viewport < 768) { const target=await page.$eval('.va-mobile-menu-btn',e=>{const r=e.getBoundingClientRect();return {width:r.width,height:r.height};}); assert.ok(target.width >= 44 && target.height >= 44, `menu touch target ${JSON.stringify(target)}`); }
           assert.equal(layout.toggleVisible, viewport < 768, `incorrect menu breakpoint ${JSON.stringify(layout)}`);
           if (viewport >= 768) assert.ok(layout.sidebarRight <= layout.mainLeft + 1, `sidebar overlaps content ${JSON.stringify(layout)}`);
