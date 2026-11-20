@@ -6,13 +6,17 @@ require_once __DIR__ . '/includes/onboarding_policy.php';
 require_once __DIR__ . '/includes/login_identity.php';
 if (($_SESSION['logged_in'] ?? false) !== true || !isset($_SESSION['user_id'])) { header('Location: login.php'); exit; }
 $staffId = (int)$_SESSION['user_id'];
-if (getenv('VAYUMA_ONBOARDING_ENABLED') !== '1' || !vayuma_onboarding_authorized($staffId, (string)(getenv('VAYUMA_ONBOARDING_USER_IDS') ?: ''))) {
+if (getenv('VAYUMA_ONBOARDING_ENABLED') !== '1') {
+    http_response_code(403); exit('Onboarding access is not enabled for this account.');
+}
+require_once __DIR__ . '/config/db.php';
+if (!vayuma_onboarding_authorized($conn ?? null, $staffId, (string)(getenv('VAYUMA_ONBOARDING_PHONES') ?: ''))) {
+    unset($_SESSION['onboarding_unlocked_user_id']);
     http_response_code(403); exit('Onboarding access is not enabled for this account.');
 }
 require_once __DIR__ . '/includes/csrf.php';
 require_once __DIR__ . '/includes/language.php';
 require_once __DIR__ . '/includes/onboarding_lock.php';
-require_once __DIR__ . '/config/db.php';
 // The passphrase supplements, never replaces, the account allowlist above.
 if (($_SESSION['onboarding_unlocked_user_id'] ?? null) !== $staffId) {
     $unlockError = '';

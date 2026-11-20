@@ -10,7 +10,7 @@ function run(code) {
   return JSON.parse(r.stdout);
 }
 test('onboarding privileges are a separate explicit staff allowlist', () => {
-  assert.deepEqual(run("echo json_encode([vayuma_onboarding_authorized(7,'2, 7,9'),vayuma_onboarding_authorized(8,'2,7,9'),vayuma_onboarding_authorized(0,'0'),vayuma_onboarding_authorized(7,'7foo')]);"), [true,false,false,false]);
+  assert.deepEqual(run("echo json_encode([vayuma_onboarding_phone_allowed('+254 712 345 678','0712345678, 0733333333'),vayuma_onboarding_phone_allowed('0712345679','0712345678'),vayuma_onboarding_phone_allowed('',''),vayuma_onboarding_phone_allowed('0712345678','0712345678abc')]);"), [true,false,false,false]);
 });
 test('Kenyan phone formats normalize to a shared identity; invalid phones fail', () => {
   assert.deepEqual(run("echo json_encode([vayuma_onboarding_phone('0712 345 678'),vayuma_onboarding_phone('+254-712-345-678'),vayuma_onboarding_phone('254712345678'),vayuma_onboarding_phone('abc')]);"), ['0712345678','0712345678','0712345678',null]);

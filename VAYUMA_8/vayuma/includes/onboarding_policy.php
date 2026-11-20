@@ -2,14 +2,48 @@
 /** Policy helpers for a future, separately authorized onboarding workspace.
  * A record is not an account, and a phone number is not proof of ownership.
  */
-function vayuma_onboarding_authorized(int $userId, string $allowedIds): bool
+// A phone is an allowlist identifier, not proof of phone ownership. The account
+// must also sign in and unlock with the separate staff passphrase.
+function vayuma_onboarding_phone_allowed(string $phone, string $allowedPhones): bool
 {
-    if ($userId <= 0) return false;
-    foreach (explode(',', $allowedIds) as $candidate) {
-        $candidate = trim($candidate);
-        if ($candidate !== '' && ctype_digit($candidate) && (int)$candidate === $userId) return true;
+    $normalized = vayuma_onboarding_phone($phone);
+    if ($normalized === null) return false;
+    foreach (explode(',', $allowedPhones) as $candidate) {
+        $allowed = vayuma_onboarding_phone(trim($candidate));
+        if ($allowed !== null && hash_equals($allowed, $normalized)) return true;
     }
     return false;
+}
+
+/** Always look up the current account in the database; never trust a session phone. */
+function vayuma_onboarding_authorized($conn, int $userId, string $allowedPhones): bool
+{
+    if ($userId <= 0 || $allowedPhones === '' || !$conn) return false;
+    try {
+        $stmt = $conn->prepare('SELECT phone FROM users WHERE id=? LIMIT 1');
+        if (!$stmt) return false;
+        $stmt->bind_param('i', $userId);
+        if (!$stmt->execute()) { $stmt->close(); return false; }
+        $result = $stmt->get_result();
+        if (!$result) { $stmt->close(); return false; }
+        $row = $result->fetch_assoc(); $stmt->close();
+        $phone = is_string($row['phone'] ?? null) ? $row['phone'] : '';
+        if (!vayuma_onboarding_phone_allowed($phone, $allowedPhones)) return false;
+        // Fail closed if a legacy equivalent phone belongs to another account.
+        require_once __DIR__ . '/login_identity.php';
+        [$phone1, $phone2, $phone3] = vayuma_login_phone_variants($phone);
+        $stmt = $conn->prepare("SELECT id FROM users WHERE phone_identity=? OR REPLACE(phone_identity, '.', '') IN (?, ?, ?) LIMIT 2");
+        if (!$stmt) return false;
+        $stmt->bind_param('ssss', $phone1, $phone1, $phone2, $phone3);
+        if (!$stmt->execute()) { $stmt->close(); return false; }
+        $result = $stmt->get_result();
+        if (!$result) { $stmt->close(); return false; }
+        $owner = $result->fetch_assoc(); $second = $result->fetch_assoc(); $stmt->close();
+        return $owner && (int)$owner['id'] === $userId && !$second;
+    } catch (Throwable $ignored) {
+        error_log('VAYUMA staff authorization unavailable.');
+        return false;
+    }
 }
 
 /** Normalize phone numbers in the same way as the users.phone_identity index. */
