@@ -31,17 +31,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($duplicate) throw new VayumaProfileError('That phone number or email is already in use.');
         $avatarBytes = null; $dir = null;
         if (($_FILES['avatar']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
-            $dir = vayuma_avatar_directory();
-            if (!$dir) throw new VayumaProfileError('Photo uploads are disabled until durable storage is configured.');
-            $avatarBytes = vayuma_avatar_compress($_FILES['avatar']);
-            $avatarTarget = $dir . '/avatar_' . $id . '.jpg';
-            $avatarLock = fopen($dir . '/.avatar_' . $id . '.lock', 'c');
-            if (!$avatarLock || !flock($avatarLock, LOCK_EX)) throw new VayumaProfileError('Photo storage is unavailable.');
-            if (is_link($avatarTarget)) throw new VayumaProfileError('Photo storage is unavailable.');
-            if (is_file($avatarTarget)) {
-                $avatarBackup = file_get_contents($avatarTarget);
-                if ($avatarBackup === false) throw new VayumaProfileError('Photo storage is unavailable.');
+            if (vayuma_avatar_uses_tidb()) {
+                if (!vayuma_avatar_tidb_ready($conn)) throw new VayumaProfileError('Photo storage is unavailable.');
+            } else {
+                $dir = vayuma_avatar_directory();
+                if (!$dir) throw new VayumaProfileError('Photo uploads are disabled until durable storage is configured.');
+                $avatarTarget = $dir . '/avatar_' . $id . '.jpg';
+                $avatarLock = fopen($dir . '/.avatar_' . $id . '.lock', 'c');
+                if (!$avatarLock || !flock($avatarLock, LOCK_EX)) throw new VayumaProfileError('Photo storage is unavailable.');
+                if (is_link($avatarTarget)) throw new VayumaProfileError('Photo storage is unavailable.');
+                if (is_file($avatarTarget)) {
+                    $avatarBackup = file_get_contents($avatarTarget);
+                    if ($avatarBackup === false) throw new VayumaProfileError('Photo storage is unavailable.');
+                }
             }
+            $avatarBytes = vayuma_avatar_compress($_FILES['avatar']);
         }
         $conn->begin_transaction(); $transactionStarted = true;
         $emailDb = $email !== '' ? $email : null;
@@ -58,7 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new RuntimeException('Database update failed');
         }
         $stmt->close();
-        if ($avatarBytes !== null) {
+        if ($avatarBytes !== null && vayuma_avatar_uses_tidb()) {
+            vayuma_avatar_tidb_put($conn, $id, $avatarBytes);
+        } elseif ($avatarBytes !== null) {
             $temporary = tempnam($dir, '.avatar-');
             if (!$temporary || file_put_contents($temporary, $avatarBytes, LOCK_EX) !== strlen($avatarBytes) || !@rename($temporary, $dir . '/' . $key)) {
                 if ($temporary && is_file($temporary)) unlink($temporary);
@@ -86,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 [$user, $plan] = vayuma_menu_data($conn);
 [$status, $statusClass, $date] = vayuma_menu_plan($plan);
 $h = static fn($v) => htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
-$storageReady = vayuma_avatar_directory() !== null && function_exists('imagecreatefromstring') && function_exists('imagejpeg');
+$storageReady = (vayuma_avatar_uses_tidb() ? vayuma_avatar_tidb_ready($conn) : vayuma_avatar_directory() !== null) && function_exists('imagecreatefromstring') && function_exists('imagejpeg');
 ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My profile | VAYUMA</title>
 <link rel="stylesheet" href="frontend/css/tokens.css"><link rel="stylesheet" href="frontend/css/components.css"><link rel="stylesheet" href="frontend/css/profile-hub.css"><?php require __DIR__ . '/includes/pwa.php'; ?></head><body>

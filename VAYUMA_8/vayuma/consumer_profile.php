@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/includes/csrf.php';
 require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/includes/language.php';
 if(!isset($_SESSION['user_id'])){header("Location: login.php");exit;}
@@ -49,7 +50,7 @@ function oldv($profile,$key,$fallback=''){return htmlspecialchars((string)($prof
 }
 </style></head><body class="va-profile-document"><?php vayuma_language_selector(); require __DIR__ . '/includes/profile_navigation.php'; ?>
 <div class="va-profile-page"><div class="header"><h1>Consumer Profile</h1><p>Set your food shopping interests and delivery preferences.</p></div>
-<div class="va-profile-card"><form action="auth/save_consumer.php" method="POST">
+<div class="va-profile-card"><form action="auth/save_consumer.php" method="POST"><?= vayuma_csrf_field() ?>
 <div class="profile-extra"><h3>Your details</h3><div class="va-profile-form-grid">
 <div class="va-profile-form-group"><label class="va-profile-label-field">Full name</label><input class="va-profile-input" name="full_name" maxlength="150" value="<?= oldv($profile,'full_name',$fullName) ?>" required></div>
 <div class="va-profile-form-group"><label class="va-profile-label-field">County</label><select class="va-profile-input" name="county_id" id="county_id" data-selected="<?= $countyId ?>" required><option value="">Loading counties...</option></select></div>

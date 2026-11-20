@@ -1,8 +1,8 @@
 <?php
 
-function subscription_plan_for_role(mysqli $conn, string $role): ?array
+function subscription_plan_for_role(mysqli $conn, string $role, bool $lock = false): ?array
 {
-    $stmt = $conn->prepare('SELECT * FROM subscription_plans WHERE role_key=? AND is_active=1 LIMIT 1');
+    $stmt = $conn->prepare('SELECT * FROM subscription_plans WHERE role_key=? AND is_active=1 LIMIT 1' . ($lock ? ' FOR UPDATE' : ''));
     $stmt->bind_param('s', $role);
     $stmt->execute();
     $plan = $stmt->get_result()->fetch_assoc();
@@ -24,44 +24,44 @@ function subscription_for_user(mysqli $conn, int $userId): ?array
     $row = $stmt->get_result()->fetch_assoc();
     $stmt->close();
 
-    if ($row && $row['status'] === 'active' && !empty($row['expires_at']) && strtotime($row['expires_at']) < time()) {
+    // Expiration and its history are one atomic transition. Re-check the
+    // observed deadline after taking the lock so a renewal cannot be undone.
+    $deadlineField = $row && $row['status'] === 'active' ? 'expires_at'
+        : ($row && $row['status'] === 'payment_due' ? 'grace_period_ends_at' : null);
+    if ($deadlineField !== null && !empty($row[$deadlineField]) && strtotime($row[$deadlineField]) < time()) {
+        $observedStatus = $row['status'];
+        $observedDeadline = $row[$deadlineField];
         $id = (int)$row['id'];
-        $stmt = $conn->prepare("UPDATE user_subscriptions SET status='expired', updated_at=NOW() WHERE id=? AND status='active'");
-        $stmt->bind_param('i', $id);
-        $stmt->execute();
-        $changed = $stmt->affected_rows === 1;
-        $stmt->close();
-        if ($changed) {
-            $stmt = $conn->prepare(
-                'INSERT INTO subscription_status_history
-                 (user_membership_id, old_status, new_status, reason, source)
-                 VALUES (?, \'active\', \'expired\', \'Subscription period ended.\', \'subscription_check\')'
-            );
-            $stmt->bind_param('i', $id);
-            $stmt->execute();
-            $stmt->close();
+        if (!$conn->begin_transaction()) throw new RuntimeException('Subscription expiry transaction failed');
+        try {
+            $lock = $conn->prepare('SELECT status, expires_at, grace_period_ends_at FROM user_subscriptions WHERE id=? FOR UPDATE');
+            $lock->bind_param('i', $id);
+            $lock->execute();
+            $current = $lock->get_result()->fetch_assoc();
+            $lock->close();
+            if (!$current) {
+                $conn->commit();
+                return null;
+            }
+            if ($current['status'] === $observedStatus && ($current[$deadlineField] ?? null) === $observedDeadline
+                && !empty($current[$deadlineField]) && strtotime($current[$deadlineField]) < time()) {
+                $update = $conn->prepare("UPDATE user_subscriptions SET status='expired', updated_at=NOW() WHERE id=? AND status=?");
+                $update->bind_param('is', $id, $observedStatus);
+                if (!$update->execute() || $update->affected_rows !== 1) throw new RuntimeException('Subscription expiry update failed');
+                $update->close();
+                $reason = $observedStatus === 'active' ? 'Subscription period ended.' : 'Subscription grace period ended unpaid.';
+                $history = $conn->prepare("INSERT INTO subscription_status_history (user_membership_id, old_status, new_status, reason, source) VALUES (?, ?, 'expired', ?, 'subscription_check')");
+                $history->bind_param('iss', $id, $observedStatus, $reason);
+                if (!$history->execute()) throw new RuntimeException('Subscription expiry history failed');
+                $history->close();
+                $current['status'] = 'expired';
+            }
+            if (!$conn->commit()) throw new RuntimeException('Subscription expiry commit failed');
+            $row = array_replace($row, $current);
+        } catch (Throwable $e) {
+            $conn->rollback();
+            throw $e;
         }
-        $row['status'] = 'expired';
-    }
-    if ($row && $row['status'] === 'payment_due' && !empty($row['grace_period_ends_at'])
-        && strtotime($row['grace_period_ends_at']) < time()) {
-        $id = (int)$row['id'];
-        $stmt = $conn->prepare("UPDATE user_subscriptions SET status='expired', updated_at=NOW() WHERE id=? AND status='payment_due'");
-        $stmt->bind_param('i', $id);
-        $stmt->execute();
-        $changed = $stmt->affected_rows === 1;
-        $stmt->close();
-        if ($changed) {
-            $stmt = $conn->prepare(
-                'INSERT INTO subscription_status_history
-                 (user_membership_id, old_status, new_status, reason, source)
-                 VALUES (?, \'payment_due\', \'expired\', \'Subscription grace period ended unpaid.\', \'subscription_check\')'
-            );
-            $stmt->bind_param('i', $id);
-            $stmt->execute();
-            $stmt->close();
-        }
-        $row['status'] = 'expired';
     }
 
     if ($row && empty($row['billing_interval'])) {
@@ -74,6 +74,12 @@ function ensure_user_subscription(mysqli $conn, int $userId, string $role): ?arr
 {
     $conn->begin_transaction();
     try {
+        // Lock the plan first, in the same order as admin reconciliation.
+        $plan = subscription_plan_for_role($conn, $role, true);
+        if (!$plan) {
+            $conn->rollback();
+            return null;
+        }
         $stmt = $conn->prepare(
             'SELECT s.*, p.role_key
              FROM user_subscriptions s
@@ -85,11 +91,6 @@ function ensure_user_subscription(mysqli $conn, int $userId, string $role): ?arr
         $current = $stmt->get_result()->fetch_assoc();
         $stmt->close();
 
-        $plan = subscription_plan_for_role($conn, $role);
-        if (!$plan) {
-            $conn->rollback();
-            return null;
-        }
 
         if ($current && ($current['role_key'] ?? '') === $role) {
             $conn->commit();

@@ -166,7 +166,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
       </div>
 
       <div class="va-section va-mb-6">
-        <div class="va-section--title">Agricultural Marketplace</h2>
+        <h2 class="va-section--title">Agricultural Marketplace</h2>
         <a href="market_connect.php" class="va-text-sm va-font-semibold va-text-primary va-mb-2" style="display:inline-block;">View all →</a>
       </div>
       <div class="va-d-grid va-gap-4 va-mb-6" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr));">
@@ -215,7 +215,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
 
       <?php if ($savedCount > 0): ?>
       <div class="va-section va-mb-6">
-        <div class="va-section--title">Saved Items</h2>
+        <h2 class="va-section--title">Saved Items</h2>
         <p class="va-text-muted va-text-sm">Your saved produce listings. Click any item to view details.</p>
       </div>
       <div class="va-d-grid va-gap-4 va-mb-6" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr));">
@@ -241,7 +241,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
       <?php endif; ?>
 
       <div class="va-section va-mb-6">
-        <div class="va-section--title">Quick Actions</h2>
+        <h2 class="va-section--title">Quick Actions</h2>
       </div>
       <div class="va-d-grid va-gap-3 va-mb-6" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));">
         <a href="market_connect.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-marketplace"/></svg> Browse Marketplace</a>
@@ -255,7 +255,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
   </div>
       <!-- Recent Orders Timeline -->
       <div class="va-section va-mb-6">
-        <div class="va-section--title">Recent Orders</h2>
+        <h2 class="va-section--title">Recent Orders</h2>
         <p class="va-text-muted va-text-sm">Your order history and status timeline.</p>
       </div>
       <div class="va-card va-card--p va-mb-6">

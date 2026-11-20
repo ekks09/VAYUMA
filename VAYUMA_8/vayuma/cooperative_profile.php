@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+require_once __DIR__ . '/includes/csrf.php';
 require_once __DIR__ . '/includes/language.php';
 
 
@@ -33,6 +34,16 @@ if ($role !== 'cooperative') {
     exit;
 }
 
+
+require_once __DIR__ . '/config/db.php';
+require_once __DIR__ . '/includes/profile_prefill.php';
+try {
+    $profile = vayuma_existing_profile($conn, 'cooperative_profiles', (int)$_SESSION['user_id']);
+} catch (Throwable $e) {
+    error_log('VAYUMA cooperative profile lookup failed.');
+    http_response_code(503);
+    exit('Your profile could not be loaded. Please try again or contact support.');
+}
 
 $full_name = $_SESSION['full_name'] ?? 'Cooperative User';
 
@@ -150,7 +161,7 @@ $full_name = $_SESSION['full_name'] ?? 'Cooperative User';
         <form
             action="auth/save_cooperative.php"
             method="POST"
-        >
+        ><?= vayuma_csrf_field() ?>
 
 
             <div class="va-profile-form-grid">
@@ -170,7 +181,7 @@ $full_name = $_SESSION['full_name'] ?? 'Cooperative User';
                         name="cooperative_name"
                         placeholder="e.g. Green Harvest Farmers Cooperative"
                         required
-                    >
+                     value="<?= vayuma_profile_value($profile['cooperative_name'] ?? '') ?>">
 
                 </div>
 
@@ -187,7 +198,7 @@ $full_name = $_SESSION['full_name'] ?? 'Cooperative User';
                         type="text"
                         name="registration_number"
                         placeholder="e.g. COOP/12345"
-                    >
+                     value="<?= vayuma_profile_value($profile['registration_number'] ?? '') ?>">
 
                 </div>
 
@@ -205,40 +216,43 @@ $full_name = $_SESSION['full_name'] ?? 'Cooperative User';
                         name="cooperative_type"
                         required
                     >
+                        <?php if (!empty($profile['cooperative_type']) && !in_array((string)$profile['cooperative_type'], ['Agricultural', 'Dairy', 'Coffee', 'Tea', 'Horticulture', 'Livestock', 'Multi-purpose', 'Other'], true)): ?>
+                        <option value="<?= vayuma_profile_value($profile['cooperative_type']) ?>" selected><?= vayuma_profile_value($profile['cooperative_type']) ?></option>
+                        <?php endif; ?>
 
                         <option value="">
                             Select cooperative type
                         </option>
 
-                        <option value="Agricultural">
+                        <option value="Agricultural" <?= ($profile['cooperative_type'] ?? '') === 'Agricultural' ? 'selected' : '' ?>>
                             Agricultural Cooperative
                         </option>
 
-                        <option value="Dairy">
+                        <option value="Dairy" <?= ($profile['cooperative_type'] ?? '') === 'Dairy' ? 'selected' : '' ?>>
                             Dairy Cooperative
                         </option>
 
-                        <option value="Coffee">
+                        <option value="Coffee" <?= ($profile['cooperative_type'] ?? '') === 'Coffee' ? 'selected' : '' ?>>
                             Coffee Cooperative
                         </option>
 
-                        <option value="Tea">
+                        <option value="Tea" <?= ($profile['cooperative_type'] ?? '') === 'Tea' ? 'selected' : '' ?>>
                             Tea Cooperative
                         </option>
 
-                        <option value="Horticulture">
+                        <option value="Horticulture" <?= ($profile['cooperative_type'] ?? '') === 'Horticulture' ? 'selected' : '' ?>>
                             Horticulture Cooperative
                         </option>
 
-                        <option value="Livestock">
+                        <option value="Livestock" <?= ($profile['cooperative_type'] ?? '') === 'Livestock' ? 'selected' : '' ?>>
                             Livestock Cooperative
                         </option>
 
-                        <option value="Multi-purpose">
+                        <option value="Multi-purpose" <?= ($profile['cooperative_type'] ?? '') === 'Multi-purpose' ? 'selected' : '' ?>>
                             Multi-purpose Cooperative
                         </option>
 
-                        <option value="Other">
+                        <option value="Other" <?= ($profile['cooperative_type'] ?? '') === 'Other' ? 'selected' : '' ?>>
                             Other
                         </option>
 
@@ -261,7 +275,7 @@ $full_name = $_SESSION['full_name'] ?? 'Cooperative User';
                         name="location"
                         placeholder="e.g. Nakuru, Kenya"
                         required
-                    >
+                     value="<?= vayuma_profile_value($profile['location'] ?? '') ?>">
 
                 </div>
 
@@ -278,8 +292,7 @@ $full_name = $_SESSION['full_name'] ?? 'Cooperative User';
                         type="number"
                         name="member_count"
                         min="0"
-                        value="0"
-                    >
+                     value="<?= vayuma_profile_value($profile['member_count'] ?? '0') ?>">
 
                 </div>
 
@@ -298,7 +311,7 @@ $full_name = $_SESSION['full_name'] ?? 'Cooperative User';
                         name="contact_person"
                         placeholder="Cooperative manager/chairperson"
                         required
-                    >
+                     value="<?= vayuma_profile_value($profile['contact_person'] ?? '') ?>">
 
                 </div>
 
@@ -314,7 +327,7 @@ $full_name = $_SESSION['full_name'] ?? 'Cooperative User';
                     <textarea
                         name="description"
                         placeholder="Describe your cooperative, the farmers you represent, crops produced and the services you provide..."
-                    ></textarea>
+                    ><?= vayuma_profile_value($profile['description'] ?? '') ?></textarea>
 
                     <span class="va-profile-hint">
                         This information will help VAYUMA connect your cooperative with relevant opportunities.

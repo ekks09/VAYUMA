@@ -57,7 +57,7 @@ function vayuma_profile_return_navigation($from): array
     }
     $dashboard = vayuma_role_route((string)($_SESSION['role'] ?? ''), 'dashboard');
     if ($from === 'subscription.php') return ['subscription.php', 'Back to subscription'];
-    if ($dashboard !== null && $from === $dashboard) return [$dashboard, 'Back to dashboard'];
+    if ($dashboard !== null) return [$dashboard, 'Back to dashboard'];
     return ['role.php', 'Back to category selection'];
 }
 

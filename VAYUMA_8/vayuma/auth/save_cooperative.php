@@ -1,6 +1,11 @@
 <?php
 
 session_start();
+require_once __DIR__ . '/../includes/csrf.php';
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && !vayuma_csrf_valid()) {
+    http_response_code(403);
+    exit('Your session expired. Refresh the profile form and try again.');
+}
 
 require_once __DIR__ . "/../config/db.php";
 
@@ -111,6 +116,7 @@ if ($member_count < 0) {
 |--------------------------------------------------------------------------
 */
 
+try {
 $check = $conn->prepare(
     "SELECT id
      FROM cooperative_profiles
@@ -149,12 +155,12 @@ if ($result->num_rows > 0) {
              member_count = ?,
              contact_person = ?,
              description = ?
-         WHERE id = ?"
+         WHERE id = ? AND user_id = ?"
     );
 
 
     $update->bind_param(
-        "ssssissi",
+        "ssssissii",
         $cooperative_name,
         $registration_number,
         $cooperative_type,
@@ -162,16 +168,14 @@ if ($result->num_rows > 0) {
         $member_count,
         $contact_person,
         $description,
-        $profile_id
+        $profile_id,
+        $user_id
     );
 
 
     if (!$update->execute()) {
 
-        die(
-            "Failed to update cooperative profile: "
-            . $update->error
-        );
+        throw new RuntimeException('Profile write failed');
 
     }
 
@@ -220,10 +224,7 @@ else {
 
     if (!$insert->execute()) {
 
-        die(
-            "Failed to save cooperative profile: "
-            . $insert->error
-        );
+        throw new RuntimeException('Profile write failed');
 
     }
 
@@ -238,6 +239,13 @@ else {
 | REDIRECT TO DASHBOARD
 |--------------------------------------------------------------------------
 */
+
+ } catch (Throwable $e) {
+    // Driver messages can contain private values. Keep only safe class/code context.
+    error_log('VAYUMA cooperative profile save failed. code=' . (int)$e->getCode());
+    http_response_code(500);
+    exit('Unable to save your profile. Please try again or contact support.');
+}
 
 header("Location: ../cooperative_dashboard.php");
 

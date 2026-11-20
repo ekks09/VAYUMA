@@ -1,9 +1,14 @@
 <?php
 session_start();
+require_once __DIR__ . '/../includes/csrf.php';
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && !vayuma_csrf_valid()) {
+    http_response_code(403);
+    exit('Your session expired. Refresh the profile form and try again.');
+}
+if (!isset($_SESSION['user_id']) || ($_SESSION['logged_in'] ?? false) !== true) { header('Location: ../login.php'); exit; }
+if (($_SESSION['role'] ?? '') !== 'consumer') { header('Location: ../role.php'); exit; }
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') { header('Location: ../consumer_profile.php'); exit; }
 require_once __DIR__ . '/../config/db.php';
-if(!isset($_SESSION['user_id'])){header('Location: ../login.php');exit;}
-if(($_SESSION['role']??'')!=='consumer'){header('Location: ../role.php');exit;}
-if($_SERVER['REQUEST_METHOD']!=='POST'){header('Location: ../consumer_profile.php');exit;}
 $userId=(int)$_SESSION['user_id'];
 $fullName=trim($_POST['full_name']??'');$location=trim($_POST['location']??'');
 $countyId=(int)($_POST['county_id']??0);$preferred=trim($_POST['preferred_product']??'');

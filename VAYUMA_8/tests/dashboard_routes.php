@@ -13,9 +13,9 @@ foreach ($roles as $role) {
     expect(vayuma_profile_return_navigation($dashboard), [$dashboard,'Back to dashboard'], "$role profile dashboard");
     expect(vayuma_profile_return_navigation('subscription.php'), ['subscription.php','Back to subscription'], "$role profile subscription");
     foreach (['https://evil.example','//evil.example','buyer_dashboard.php?x=1','../subscription.php','role.php',null, ['subscription.php']] as $invalid) {
-        expect(vayuma_profile_return_navigation($invalid), ['role.php','Back to category selection'], "$role untrusted profile origin");
+        expect(vayuma_profile_return_navigation($invalid), [$dashboard,'Back to dashboard'], "$role untrusted profile origin");
     }
-    if ($role !== 'buyer') expect(vayuma_profile_return_navigation('buyer_dashboard.php'), ['role.php','Back to category selection'], "$role cross-role origin");
+    if ($role !== 'buyer') expect(vayuma_profile_return_navigation('buyer_dashboard.php'), [$dashboard,'Back to dashboard'], "$role cross-role origin");
 }
 $_SESSION=['user_id'=>1,'logged_in'=>true,'role'=>'unknown'];
 expect(vayuma_dashboard_return_route(),'role.php','unknown role');

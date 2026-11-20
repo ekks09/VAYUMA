@@ -1,5 +1,52 @@
 <?php
 class VayumaProfileError extends RuntimeException {}
+/** Compressed thumbnails can be stored atomically alongside profile data in TiDB. */
+function vayuma_avatar_uses_tidb(): bool {
+    return getenv('VAYUMA_AVATAR_STORAGE') === 'tidb';
+}
+function vayuma_avatar_tidb_ready($conn): bool {
+    if (!vayuma_avatar_uses_tidb() || !$conn) return false;
+    try {
+        $result = $conn->query('SELECT user_id FROM user_avatars LIMIT 0');
+        if (!$result) return false;
+        $result->free();
+        return true;
+    } catch (Throwable $e) { return false; }
+}
+function vayuma_avatar_tidb_put($conn, int $userId, string $bytes): void {
+    if ($userId < 1 || strlen($bytes) < 1 || strlen($bytes) > 81920) throw new VayumaProfileError('Photo could not be saved.');
+    $stmt = $conn->prepare('INSERT INTO user_avatars (user_id, jpeg_bytes) VALUES (?, ?) ON DUPLICATE KEY UPDATE jpeg_bytes=VALUES(jpeg_bytes)');
+    if (!$stmt) throw new VayumaProfileError('Photo storage is unavailable.');
+    try {
+        $stmt->bind_param('is', $userId, $bytes);
+        if (!$stmt->execute()) throw new VayumaProfileError('Photo could not be saved.');
+    } finally { $stmt->close(); }
+}
+function vayuma_avatar_tidb_exists($conn, int $userId): bool {
+    if ($userId < 1 || !vayuma_avatar_uses_tidb() || !$conn) return false;
+    try {
+        $stmt = $conn->prepare('SELECT 1 FROM user_avatars WHERE user_id=? AND OCTET_LENGTH(jpeg_bytes) BETWEEN 1 AND 81920 LIMIT 1');
+        if (!$stmt) return false;
+        try {
+            $stmt->bind_param('i', $userId);
+            return $stmt->execute() && (bool) $stmt->get_result()->fetch_row();
+        } finally { $stmt->close(); }
+    } catch (Throwable $e) { return false; }
+}
+function vayuma_avatar_tidb_get($conn, int $userId): ?string {
+    if ($userId < 1 || !vayuma_avatar_uses_tidb()) return null;
+    try {
+        $stmt = $conn->prepare('SELECT jpeg_bytes FROM user_avatars WHERE user_id=? AND OCTET_LENGTH(jpeg_bytes) BETWEEN 1 AND 81920 LIMIT 1');
+        if (!$stmt) return null;
+        try {
+            $stmt->bind_param('i', $userId);
+            if (!$stmt->execute()) return null;
+            $row = $stmt->get_result()->fetch_assoc();
+        } finally { $stmt->close(); }
+        $bytes = $row['jpeg_bytes'] ?? null;
+        return is_string($bytes) && strlen($bytes) > 0 && strlen($bytes) <= 81920 ? $bytes : null;
+    } catch (Throwable $e) { return null; }
+}
 /** Returns a private configured directory only when an operator explicitly confirms durability. */
 function vayuma_avatar_directory(): ?string {
     if (getenv('VAYUMA_AVATAR_STORAGE_PERSISTENT') !== '1') return null;

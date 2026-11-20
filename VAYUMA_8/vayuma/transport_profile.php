@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/includes/csrf.php';
 require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/includes/language.php';
 
@@ -88,7 +89,7 @@ function transport_h($value) { return htmlspecialchars((string)$value, ENT_QUOTE
 <h1><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-transport"/></svg> Transport Provider Profile</h1>
 <p class="intro">Welcome, <?=transport_h($full_name)?>. Tell farmers, buyers and other stakeholders where your transport business is based, what vehicles you operate and the areas you serve.</p>
 <?php if ($error): ?><div class="alert"><?=transport_h($error)?></div><?php endif; ?>
-<form action="auth/save_transport.php" method="post">
+<form action="auth/save_transport.php" method="post"><?= vayuma_csrf_field() ?>
 <div class="va-form-grid">
 <div class="field"><label for="business_name">Business / transport name *</label><input class="va-form-input" id="business_name" name="business_name" required maxlength="150" value="<?=transport_h($profile['business_name'] ?? '')?>" placeholder="e.g. Green Valley Transport"></div>
 <div class="field"><label for="phone">Contact phone *</label><input class="va-form-input" id="phone" name="phone" required maxlength="30" value="<?=transport_h($profile['phone'] ?? '')?>" placeholder="07XXXXXXXX"></div>

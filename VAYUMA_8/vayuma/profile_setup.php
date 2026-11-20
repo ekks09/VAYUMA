@@ -1,14 +1,28 @@
 <?php
 session_start();
+require_once __DIR__ . '/includes/csrf.php';
 require_once __DIR__ . '/includes/language.php';
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
+if (!isset($_SESSION['user_id']) || ($_SESSION['logged_in'] ?? false) !== true) {
+    header('Location: login.php'); exit;
 }
-
-$user_id = $_SESSION['user_id'];
-
+if (($_SESSION['role'] ?? '') !== 'farmer') { http_response_code(403); exit('Access denied.'); }
+require_once __DIR__ . '/config/db.php';
+$user_id = (int)$_SESSION['user_id'];
+$farmProfile = []; $profileDuplicate = false;
+try {
+    $stmt = $conn->prepare('SELECT farm_name,county,sub_county,farm_location,farm_size,farm_size_unit,farming_experience,main_crops,soil_type,irrigation,secondary_crop FROM farmer_profiles WHERE user_id=? ORDER BY id LIMIT 2');
+    $stmt->bind_param('i', $user_id); $stmt->execute(); $result = $stmt->get_result();
+    $farmProfile = $result->fetch_assoc() ?: []; $profileDuplicate = (bool)$result->fetch_assoc(); $stmt->close();
+} catch (Throwable $e) {
+    error_log('VAYUMA farm profile lookup failed.');
+    http_response_code(503); exit('Farm profile is temporarily unavailable. Please try again.');
+}
+$profileError = (string)($_SESSION['farm_profile_error'] ?? ''); unset($_SESSION['farm_profile_error']);
+$old = $_SESSION['farm_profile_old'] ?? []; unset($_SESSION['farm_profile_old']);
+if (is_array($old)) foreach ($old as $key => $value) if (is_string($value)) $farmProfile[$key] = $value;
+$farmValue = static fn($key) => htmlspecialchars((string)($farmProfile[$key] ?? ''), ENT_QUOTES, 'UTF-8');
+$farmSelected = static fn($key, $value) => (string)($farmProfile[$key] ?? '') === $value ? ' selected' : '';
 $full_name = $_SESSION['full_name'] ?? '';
 $phone = $_SESSION['phone'] ?? '';
 $email = $_SESSION['email'] ?? '';
@@ -106,8 +120,9 @@ $email = $_SESSION['email'] ?? '';
     </div>
 
 
+    <?php if ($profileDuplicate): ?><p role="alert">Multiple farm profiles were found. Please contact support before editing.</p><?php elseif ($profileError !== ''): ?><p role="alert"><?= htmlspecialchars($profileError, ENT_QUOTES, 'UTF-8') ?></p><?php endif; ?>
     <form action="auth/save_farmer.php"
-          method="POST">
+          method="POST"><?= vayuma_csrf_field() ?>
 
 
         <!-- PERSONAL INFORMATION -->
@@ -199,6 +214,7 @@ $email = $_SESSION['email'] ?? '';
                     <input
                         type="text"
                         name="farm_name"
+                        value="<?= $farmValue('farm_name') ?>"
                         placeholder="e.g. Green Valley Farm"
                         required
                     >
@@ -217,58 +233,60 @@ $email = $_SESSION['email'] ?? '';
                         name="county"
                         required
                     >
+<?php if (!empty($farmProfile['county']) && !in_array($farmProfile['county'], ['Baringo', 'Bomet', 'Bungoma', 'Busia', 'Elgeyo-Marakwet', 'Embu', 'Garissa', 'Homa Bay', 'Isiolo', 'Kajiado', 'Kakamega', 'Kericho', 'Kiambu', 'Kilifi', 'Kirinyaga', 'Kisii', 'Kisumu', 'Kitui', 'Kwale', 'Laikipia', 'Lamu', 'Machakos', 'Makueni', 'Mandera', 'Marsabit', 'Meru', 'Migori', 'Mombasa', 'Murang\'a', 'Nairobi', 'Nakuru', 'Nandi', 'Narok', 'Nyamira', 'Nyandarua', 'Nyeri', 'Samburu', 'Siaya', 'Taita-Taveta', 'Tana River', 'Tharaka-Nithi', 'Trans Nzoia', 'Turkana', 'Uasin Gishu', 'Vihiga', 'Wajir', 'West Pokot'], true)): ?><option value="<?= $farmValue('county') ?>" selected><?= $farmValue('county') ?> (existing)</option><?php endif; ?>
+
 
                         <option value="">
                             Select County
                         </option>
 
-                        <option>Baringo</option>
-                        <option>Bomet</option>
-                        <option>Bungoma</option>
-                        <option>Busia</option>
-                        <option>Elgeyo-Marakwet</option>
-                        <option>Embu</option>
-                        <option>Garissa</option>
-                        <option>Homa Bay</option>
-                        <option>Isiolo</option>
-                        <option>Kajiado</option>
-                        <option>Kakamega</option>
-                        <option>Kericho</option>
-                        <option>Kiambu</option>
-                        <option>Kilifi</option>
-                        <option>Kirinyaga</option>
-                        <option>Kisii</option>
-                        <option>Kisumu</option>
-                        <option>Kitui</option>
-                        <option>Kwale</option>
-                        <option>Laikipia</option>
-                        <option>Lamu</option>
-                        <option>Machakos</option>
-                        <option>Makueni</option>
-                        <option>Mandera</option>
-                        <option>Marsabit</option>
-                        <option>Meru</option>
-                        <option>Migori</option>
-                        <option>Mombasa</option>
-                        <option>Murang'a</option>
-                        <option>Nairobi</option>
-                        <option>Nakuru</option>
-                        <option>Nandi</option>
-                        <option>Narok</option>
-                        <option>Nyamira</option>
-                        <option>Nyandarua</option>
-                        <option>Nyeri</option>
-                        <option>Samburu</option>
-                        <option>Siaya</option>
-                        <option>Taita-Taveta</option>
-                        <option>Tana River</option>
-                        <option>Tharaka-Nithi</option>
-                        <option>Trans Nzoia</option>
-                        <option>Turkana</option>
-                        <option>Uasin Gishu</option>
-                        <option>Vihiga</option>
-                        <option>Wajir</option>
-                        <option>West Pokot</option>
+                        <option<?= $farmSelected('county', 'Baringo') ?>>Baringo</option>
+                        <option<?= $farmSelected('county', 'Bomet') ?>>Bomet</option>
+                        <option<?= $farmSelected('county', 'Bungoma') ?>>Bungoma</option>
+                        <option<?= $farmSelected('county', 'Busia') ?>>Busia</option>
+                        <option<?= $farmSelected('county', 'Elgeyo-Marakwet') ?>>Elgeyo-Marakwet</option>
+                        <option<?= $farmSelected('county', 'Embu') ?>>Embu</option>
+                        <option<?= $farmSelected('county', 'Garissa') ?>>Garissa</option>
+                        <option<?= $farmSelected('county', 'Homa Bay') ?>>Homa Bay</option>
+                        <option<?= $farmSelected('county', 'Isiolo') ?>>Isiolo</option>
+                        <option<?= $farmSelected('county', 'Kajiado') ?>>Kajiado</option>
+                        <option<?= $farmSelected('county', 'Kakamega') ?>>Kakamega</option>
+                        <option<?= $farmSelected('county', 'Kericho') ?>>Kericho</option>
+                        <option<?= $farmSelected('county', 'Kiambu') ?>>Kiambu</option>
+                        <option<?= $farmSelected('county', 'Kilifi') ?>>Kilifi</option>
+                        <option<?= $farmSelected('county', 'Kirinyaga') ?>>Kirinyaga</option>
+                        <option<?= $farmSelected('county', 'Kisii') ?>>Kisii</option>
+                        <option<?= $farmSelected('county', 'Kisumu') ?>>Kisumu</option>
+                        <option<?= $farmSelected('county', 'Kitui') ?>>Kitui</option>
+                        <option<?= $farmSelected('county', 'Kwale') ?>>Kwale</option>
+                        <option<?= $farmSelected('county', 'Laikipia') ?>>Laikipia</option>
+                        <option<?= $farmSelected('county', 'Lamu') ?>>Lamu</option>
+                        <option<?= $farmSelected('county', 'Machakos') ?>>Machakos</option>
+                        <option<?= $farmSelected('county', 'Makueni') ?>>Makueni</option>
+                        <option<?= $farmSelected('county', 'Mandera') ?>>Mandera</option>
+                        <option<?= $farmSelected('county', 'Marsabit') ?>>Marsabit</option>
+                        <option<?= $farmSelected('county', 'Meru') ?>>Meru</option>
+                        <option<?= $farmSelected('county', 'Migori') ?>>Migori</option>
+                        <option<?= $farmSelected('county', 'Mombasa') ?>>Mombasa</option>
+                        <option<?= $farmSelected('county', 'Murang\'a') ?>>Murang'a</option>
+                        <option<?= $farmSelected('county', 'Nairobi') ?>>Nairobi</option>
+                        <option<?= $farmSelected('county', 'Nakuru') ?>>Nakuru</option>
+                        <option<?= $farmSelected('county', 'Nandi') ?>>Nandi</option>
+                        <option<?= $farmSelected('county', 'Narok') ?>>Narok</option>
+                        <option<?= $farmSelected('county', 'Nyamira') ?>>Nyamira</option>
+                        <option<?= $farmSelected('county', 'Nyandarua') ?>>Nyandarua</option>
+                        <option<?= $farmSelected('county', 'Nyeri') ?>>Nyeri</option>
+                        <option<?= $farmSelected('county', 'Samburu') ?>>Samburu</option>
+                        <option<?= $farmSelected('county', 'Siaya') ?>>Siaya</option>
+                        <option<?= $farmSelected('county', 'Taita-Taveta') ?>>Taita-Taveta</option>
+                        <option<?= $farmSelected('county', 'Tana River') ?>>Tana River</option>
+                        <option<?= $farmSelected('county', 'Tharaka-Nithi') ?>>Tharaka-Nithi</option>
+                        <option<?= $farmSelected('county', 'Trans Nzoia') ?>>Trans Nzoia</option>
+                        <option<?= $farmSelected('county', 'Turkana') ?>>Turkana</option>
+                        <option<?= $farmSelected('county', 'Uasin Gishu') ?>>Uasin Gishu</option>
+                        <option<?= $farmSelected('county', 'Vihiga') ?>>Vihiga</option>
+                        <option<?= $farmSelected('county', 'Wajir') ?>>Wajir</option>
+                        <option<?= $farmSelected('county', 'West Pokot') ?>>West Pokot</option>
 
                     </select>
 
@@ -285,6 +303,7 @@ $email = $_SESSION['email'] ?? '';
                     <input
                         type="text"
                         name="sub_county"
+                        value="<?= $farmValue('sub_county') ?>"
                         placeholder="e.g. Githunguri"
                         required
                     >
@@ -302,6 +321,7 @@ $email = $_SESSION['email'] ?? '';
                     <input
                         type="text"
                         name="farm_location"
+                        value="<?= $farmValue('farm_location') ?>"
                         placeholder="e.g. Limuru"
                         required
                     >
@@ -321,17 +341,20 @@ $email = $_SESSION['email'] ?? '';
                         <input
                             type="text"
                             name="farm_size"
+                        value="<?= $farmValue('farm_size') ?>"
                             placeholder="e.g. 5"
                             required
                         >
 
                         <select class="va-profile-input" name="farm_size_unit">
+<?php if (!empty($farmProfile['farm_size_unit']) && !in_array($farmProfile['farm_size_unit'], ['acres', 'hectares'], true)): ?><option value="<?= $farmValue('farm_size_unit') ?>" selected><?= $farmValue('farm_size_unit') ?> (existing)</option><?php endif; ?>
 
-                            <option value="acres">
+
+                            <option value="acres"<?= $farmSelected('farm_size_unit', 'acres') ?>>
                                 Acres
                             </option>
 
-                            <option value="hectares">
+                            <option value="hectares"<?= $farmSelected('farm_size_unit', 'hectares') ?>>
                                 Hectares
                             </option>
 
@@ -352,6 +375,7 @@ $email = $_SESSION['email'] ?? '';
                     <input
                         type="text"
                         name="farming_experience"
+                        value="<?= $farmValue('farming_experience') ?>"
                         placeholder="e.g. 10 years"
                         required
                     >
@@ -394,6 +418,7 @@ $email = $_SESSION['email'] ?? '';
                     <input
                         type="text"
                         name="main_crops"
+                        value="<?= $farmValue('main_crops') ?>"
                         placeholder="e.g. Maize"
                         required
                     >
@@ -410,6 +435,7 @@ $email = $_SESSION['email'] ?? '';
                     <input
                         type="text"
                         name="secondary_crop"
+                        value="<?= $farmValue('secondary_crop') ?>"
                         placeholder="e.g. Beans"
                     >
 
@@ -427,19 +453,21 @@ $email = $_SESSION['email'] ?? '';
                         name="soil_type"
                         required
                     >
+<?php if (!empty($farmProfile['soil_type']) && !in_array($farmProfile['soil_type'], ['Loamy', 'Clay', 'Sandy', 'Silty', 'Black Cotton', 'Volcanic', 'Red Soil', 'Unknown'], true)): ?><option value="<?= $farmValue('soil_type') ?>" selected><?= $farmValue('soil_type') ?> (existing)</option><?php endif; ?>
+
 
                         <option value="">
                             Select Soil Type
                         </option>
 
-                        <option>Loamy</option>
-                        <option>Clay</option>
-                        <option>Sandy</option>
-                        <option>Silty</option>
-                        <option>Black Cotton</option>
-                        <option>Volcanic</option>
-                        <option>Red Soil</option>
-                        <option>Unknown</option>
+                        <option<?= $farmSelected('soil_type', 'Loamy') ?>>Loamy</option>
+                        <option<?= $farmSelected('soil_type', 'Clay') ?>>Clay</option>
+                        <option<?= $farmSelected('soil_type', 'Sandy') ?>>Sandy</option>
+                        <option<?= $farmSelected('soil_type', 'Silty') ?>>Silty</option>
+                        <option<?= $farmSelected('soil_type', 'Black Cotton') ?>>Black Cotton</option>
+                        <option<?= $farmSelected('soil_type', 'Volcanic') ?>>Volcanic</option>
+                        <option<?= $farmSelected('soil_type', 'Red Soil') ?>>Red Soil</option>
+                        <option<?= $farmSelected('soil_type', 'Unknown') ?>>Unknown</option>
 
                     </select>
 
@@ -457,14 +485,16 @@ $email = $_SESSION['email'] ?? '';
                         name="irrigation"
                         required
                     >
+<?php if (!empty($farmProfile['irrigation']) && !in_array($farmProfile['irrigation'], ['Rain-fed', 'Irrigated', 'Both'], true)): ?><option value="<?= $farmValue('irrigation') ?>" selected><?= $farmValue('irrigation') ?> (existing)</option><?php endif; ?>
+
 
                         <option value="">
                             Select irrigation type
                         </option>
 
-                        <option>Rain-fed</option>
-                        <option>Irrigated</option>
-                        <option>Both</option>
+                        <option<?= $farmSelected('irrigation', 'Rain-fed') ?>>Rain-fed</option>
+                        <option<?= $farmSelected('irrigation', 'Irrigated') ?>>Irrigated</option>
+                        <option<?= $farmSelected('irrigation', 'Both') ?>>Both</option>
 
                     </select>
 
@@ -490,7 +520,7 @@ $email = $_SESSION['email'] ?? '';
 
             <button
                 type="submit"
-                class="save"
+                class="save" <?= $profileDuplicate ? 'disabled' : '' ?>
             >
                 Save Farm Profile →
             </button>

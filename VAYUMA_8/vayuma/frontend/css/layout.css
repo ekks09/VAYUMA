@@ -313,6 +313,12 @@
   gap: var(--va-space-4);
 }
 
+.va-feature-grid--farmer {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+}
+.va-feature-grid--farmer .va-feature-card--content { min-width: 0; }
+.va-feature-grid--farmer .va-feature-card--content .va-d-flex { flex-wrap: wrap; }
+
 .va-feature-card {
   display: flex;
   gap: var(--va-space-4);

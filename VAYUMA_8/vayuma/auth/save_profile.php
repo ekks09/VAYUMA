@@ -1,8 +1,12 @@
 <?php
 
 session_start();
-
-require_once "../config/db.php";
+require_once __DIR__ . '/../includes/csrf.php';
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && !vayuma_csrf_valid()) {
+    http_response_code(403);
+    exit('Your session expired. Refresh the profile form and try again.');
+}
+require_once __DIR__ . '/../config/db.php';
 
 
 /*
@@ -11,7 +15,7 @@ require_once "../config/db.php";
 |--------------------------------------------------------------------------
 */
 
-if (!isset($_SESSION["user_id"])) {
+if (!isset($_SESSION["user_id"]) || ($_SESSION['logged_in'] ?? false) !== true) {
 
     header("Location: ../register.php");
     exit;
@@ -56,10 +60,16 @@ $allowed_roles = [
 ];
 
 
-if (!in_array($role, $allowed_roles, true)) {
-
-    die("Invalid VAYUMA role.");
-
+if (!is_string($role) || !in_array($role, $allowed_roles, true)) {
+    http_response_code(400); exit('Invalid VAYUMA role.');
+}
+$sessionRole = (string)($_SESSION['role'] ?? '');
+if (($role === 'transport' ? 'transport_provider' : $role) !== $sessionRole) {
+    http_response_code(403); exit('Access denied.');
+}
+// The legacy farmer insert cannot update existing profiles and can create duplicates.
+if ($role === 'farmer') {
+    http_response_code(410); exit('Please use the current farmer profile form.');
 }
 
 

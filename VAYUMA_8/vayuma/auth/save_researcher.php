@@ -1,6 +1,11 @@
 <?php
 
 session_start();
+require_once __DIR__ . '/../includes/csrf.php';
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && !vayuma_csrf_valid()) {
+    http_response_code(403);
+    exit('Your session expired. Refresh the profile form and try again.');
+}
 
 require_once __DIR__ . "/../config/db.php";
 
@@ -93,6 +98,7 @@ if (
 |--------------------------------------------------------------------------
 */
 
+try {
 $check = $conn->prepare(
     "SELECT id FROM researcher_profiles WHERE user_id = ?"
 );
@@ -123,21 +129,22 @@ if ($result->num_rows > 0) {
              qualification = ?,
              location = ?,
              bio = ?
-         WHERE id = ?"
+         WHERE id = ? AND user_id = ?"
     );
 
     $update->bind_param(
-        "sssssi",
+        "sssssii",
         $institution,
         $research_area,
         $qualification,
         $location,
         $bio,
-        $profile_id
+        $profile_id,
+        $user_id
     );
 
     if (!$update->execute()) {
-        die("Failed to update researcher profile: " . $update->error);
+        throw new RuntimeException('Profile write failed');
     }
 
     $update->close();
@@ -177,7 +184,7 @@ else {
     );
 
     if (!$insert->execute()) {
-        die("Failed to save researcher profile: " . $insert->error);
+        throw new RuntimeException('Profile write failed');
     }
 
     $insert->close();
@@ -189,6 +196,13 @@ else {
 | REDIRECT TO RESEARCHER DASHBOARD
 |--------------------------------------------------------------------------
 */
+
+ } catch (Throwable $e) {
+    // Driver messages can contain private values. Keep only safe class/code context.
+    error_log('VAYUMA researcher profile save failed. code=' . (int)$e->getCode());
+    http_response_code(500);
+    exit('Unable to save your profile. Please try again or contact support.');
+}
 
 header("Location: ../researcher_dashboard.php");
 exit;
