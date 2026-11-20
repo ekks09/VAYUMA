@@ -10,6 +10,7 @@ $isLocal = in_array(strtolower($host), ['localhost', '127.0.0.1', '::1'], true);
 $isDevelopment = in_array($environment, ['development', 'test'], true);
 
 require_once __DIR__ . '/db_diagnostics.php';
+require_once __DIR__ . '/db_tls.php';
 $diagnosticsEnabled = vayuma_db_diagnostics_enabled($environment);
 $driverErrorLogged = false;
 $failureStage = 'configuration';
@@ -45,12 +46,12 @@ try {
         $failureStage = 'ca_file_check';
         $ca = (string)(getenv('DB_SSL_CA') ?: '/etc/ssl/certs/ca-certificates.crt');
         if (!is_file($ca) || !is_readable($ca)) throw new RuntimeException('Database CA bundle unavailable');
+        $failureStage = 'tls_driver_check';
+        $flags = vayuma_verified_mysqlnd_flags(mysqli_get_client_info(), PHP_VERSION_ID, extension_loaded('openssl'));
         $failureStage = 'tls_setup';
-        if (!defined('MYSQLI_OPT_SSL_VERIFY_SERVER_CERT')) throw new RuntimeException('Database certificate verification unavailable');
-        if (!$conn->ssl_set(null, null, $ca, null, null) || !$conn->options(MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, true)) {
+        if (!$conn->ssl_set(null, null, $ca, null, null)) {
             throw new RuntimeException('Database TLS configuration failed');
         }
-        $flags = MYSQLI_CLIENT_SSL;
     }
     $failureStage = 'connection';
     if (!$conn->real_connect($host, $user, $password, $database, (int)$portText, null, $flags)) {

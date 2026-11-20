@@ -10,6 +10,8 @@ RUN sed -ri 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-avail
     && sed -ri 's/Listen 80/Listen 8080/' /etc/apache2/ports.conf \
     && sed -ri 's/<VirtualHost \*:80>/<VirtualHost *:8080>/' /etc/apache2/sites-available/000-default.conf
 COPY vayuma/ /var/www/html/vayuma/
+# Fail the build if the verified-TLS implementation is not supported by this image.
+RUN php -r 'require "/var/www/html/vayuma/config/db_tls.php"; $flags = vayuma_verified_mysqlnd_flags(mysqli_get_client_info(), PHP_VERSION_ID, extension_loaded("openssl")); if (!($flags & MYSQLI_CLIENT_SSL) || !($flags & (1 << 30))) exit(1);'
 COPY ops/php-production.ini /usr/local/etc/php/conf.d/vayuma.ini
 RUN chown -R www-data:www-data /var/www/html/vayuma
 EXPOSE 8080
