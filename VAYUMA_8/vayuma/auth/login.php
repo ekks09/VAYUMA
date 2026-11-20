@@ -1,34 +1,37 @@
 <?php
 
 session_start();
-require_once "../config/db.php";
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: ../login.php");
     exit;
 }
 
-$identifier = trim($_POST["identifier"] ?? "");
-$password = $_POST["password"] ?? "";
+$identifier = is_string($_POST["identifier"] ?? null) ? trim($_POST["identifier"]) : '';
+$password = is_string($_POST["password"] ?? null) ? $_POST["password"] : '';
 if ($identifier === "" || $password === "") {
     header("Location: ../login.php?error=empty");
     exit;
 }
 
-$stmt = $conn->prepare("SELECT id, full_name, phone, email, password, role FROM users WHERE email = ? OR phone = ? LIMIT 1");
-$stmt->bind_param("ss", $identifier, $identifier);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows !== 1) {
+require_once __DIR__ . '/../includes/login_identity.php';
+require_once __DIR__ . '/../config/db.php';
+[$phone1, $phone2, $phone3] = vayuma_login_phone_variants($identifier);
+try {
+    $stmt = $conn->prepare("SELECT id, full_name, phone, email, password, role FROM users WHERE email = ? OR phone IN (?, ?, ?) LIMIT 1");
+    if (!$stmt) throw new RuntimeException('Login query unavailable');
+    $stmt->bind_param("ssss", $identifier, $phone1, $phone2, $phone3);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result ? $result->fetch_assoc() : null;
     $stmt->close();
-    header("Location: ../login.php?error=invalid");
-    exit;
+} catch (Throwable $e) {
+    error_log('VAYUMA login query failed.');
+    http_response_code(503);
+    exit('VAYUMA is temporarily unavailable. Please try again later.');
 }
 
-$user = $result->fetch_assoc();
-$stmt->close();
-if (!password_verify($password, $user["password"])) {
+if (!$user || !is_string($user['password'] ?? null) || !password_verify($password, $user['password'])) {
     header("Location: ../login.php?error=invalid");
     exit;
 }
@@ -42,7 +45,8 @@ $allowed_roles = [
     "strategic_partner",
 ];
 
-if (!in_array($role, $allowed_roles, true)) {
+// Newly registered accounts have no role until the user completes onboarding.
+if ($role !== '' && !in_array($role, $allowed_roles, true)) {
     header("Location: ../login.php?error=profile");
     exit;
 }
@@ -55,5 +59,5 @@ $_SESSION["email"] = $user["email"];
 $_SESSION["role"] = $role;
 $_SESSION["logged_in"] = true;
 
-header("Location: ../dashboard.php");
+header('Location: ' . ($role === '' ? '../role.php' : '../dashboard.php'));
 exit;

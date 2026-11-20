@@ -9,7 +9,9 @@ $nameEnv = getenv('DB_NAME');
 $isLocal = in_array(strtolower($host), ['localhost', '127.0.0.1', '::1'], true);
 $isDevelopment = in_array($environment, ['development', 'test'], true);
 
-// Only fixed stage names are logged; never include exception text or input values.
+require_once __DIR__ . '/db_diagnostics.php';
+$diagnosticsEnabled = vayuma_db_diagnostics_enabled($environment);
+$driverErrorLogged = false;
 $failureStage = 'configuration';
 try {
     if (!in_array($environment, ['development', 'test', 'staging', 'production'], true)) {
@@ -51,6 +53,10 @@ try {
     }
     $failureStage = 'connection';
     if (!$conn->real_connect($host, $user, $password, $database, (int)$portText, null, $flags)) {
+        if ($diagnosticsEnabled) {
+            vayuma_db_log_driver_error(mysqli_connect_errno(), '', (string) mysqli_connect_error());
+            $driverErrorLogged = true;
+        }
         throw new RuntimeException('Database connection failed');
     }
     if ($tls) {
@@ -62,8 +68,13 @@ try {
     $failureStage = 'charset';
     $conn->set_charset('utf8mb4');
 } catch (Throwable $exception) {
-    // Avoid logging connection strings, credentials, or server-provided details.
     error_log('VAYUMA database connection or configuration failed. Stage: ' . $failureStage);
+    if ($diagnosticsEnabled) {
+        vayuma_db_log_environment();
+        if (!$driverErrorLogged && $exception instanceof mysqli_sql_exception) {
+            vayuma_db_log_driver_error((int) $exception->getCode(), $exception->getSqlState(), $exception->getMessage());
+        }
+    }
     // A readiness probe handles its own generic response without exposing details.
     if (($vayumaDbReadinessProbe ?? false) === true) {
         return false;

@@ -11,8 +11,10 @@ if (isset($_SESSION['user_id']) && ($_SESSION['logged_in'] ?? false) === true):
     $vyProfile = 'profile.php?return_to=' . rawurlencode($vyOrigin);
     $vyAvatarKey = 'avatar_' . (int)$_SESSION['user_id'] . '.jpg';
     require_once __DIR__ . '/avatar_storage.php';
-    $vyAvatarDir = vayuma_avatar_directory();
-    $vyHasAvatar = ($vyUser['avatar_url'] ?? '') === $vyAvatarKey && $vyAvatarDir !== null && is_file($vyAvatarDir . '/' . $vyAvatarKey) && !is_link($vyAvatarDir . '/' . $vyAvatarKey);
+    $vyAvatarDir = vayuma_avatar_uses_tidb() ? null : vayuma_avatar_directory();
+    $vyHasAvatar = ($vyUser['avatar_url'] ?? '') === $vyAvatarKey && (vayuma_avatar_uses_tidb()
+        ? vayuma_avatar_tidb_exists($conn ?? null, (int)$_SESSION['user_id'])
+        : $vyAvatarDir !== null && is_file($vyAvatarDir . '/' . $vyAvatarKey) && !is_link($vyAvatarDir . '/' . $vyAvatarKey));
     $vyH = static fn($v) => htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
 ?>
 <details class="vy-user-menu">
