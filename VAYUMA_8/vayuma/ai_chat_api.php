@@ -37,6 +37,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $token = (string)($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
 if ($token === '' || empty($_SESSION['vayuma_csrf_token']) || !hash_equals($_SESSION['vayuma_csrf_token'], $token)) respond(403, ['success'=>false,'error'=>'Your session expired. Refresh and try again.']);
+require_once __DIR__ . '/includes/feature_access_policy.php';
+$vayumaDbReadinessProbe = true;
+require_once __DIR__ . '/config/db.php';
+try {
+    if (!isset($conn) || !$conn) throw new RuntimeException('Database unavailable');
+    $decision = vayuma_feature_access_decision($conn, $_SESSION);
+    if ($decision !== 'allow') respond(403, ['success'=>false,'error'=>'Complete your profile and subscription before using VAYUMA AI.']);
+} catch (Throwable $ignored) { respond(503, ['success'=>false,'error'=>'Unable to check account setup. Please try again later.']); }
 $now = time();
 $_SESSION['ai_requests'] = array_values(array_filter($_SESSION['ai_requests'] ?? [], static fn($t) => is_int($t) && $t > $now - 3600));
 if (count($_SESSION['ai_requests']) >= 20) respond(429, ['success'=>false,'error'=>'Session limit reached. Please try again later.']);
@@ -104,11 +112,11 @@ if (($data['external_consent'] ?? false) !== true) {
 $config = require __DIR__ . '/config/ai.php';
 $apiKey = trim((string)($config['api_key'] ?? ''));
 $model = trim((string)($config['model'] ?? ''));
-if (getenv('VAYUMA_AI_EXTERNAL_ENABLED') !== '1' || $apiKey === '' || $model === '') respond(503,['success'=>false,'error'=>'External AI is not enabled. Uncheck external permission to use the free rule-based helper.']);
+if (getenv('VAYUMA_AI_EXTERNAL_ENABLED') !== '1' || $apiKey === '' || $model === '') respond(503,['success'=>false,'error'=>'External AI is not enabled. Choose the rule-based helper to continue without external AI.']);
 if (!preg_match('/^[a-zA-Z0-9_.\/-]{1,150}$/D', $model) || preg_match('/[\r\n]/', $apiKey)) respond(503,['success'=>false,'error'=>'External AI configuration is invalid. Use the free helper or contact an administrator.']);
 require_once __DIR__.'/includes/nvidia_advisor.php';
 try { $vayumaDbReadinessProbe = true; require_once __DIR__.'/config/db.php'; if (!isset($conn) || !$conn) throw new RuntimeException(); } catch (Throwable $ignored) { respond(503,['success'=>false,'error'=>'AI usage control is unavailable. Use the free helper.']); }
-if (!vayuma_reserve_ai_request($conn, (int)$_SESSION['user_id'])) respond(503,['success'=>false,'error'=>'AI daily limit reached or usage control is unavailable. Uncheck external permission to use the free helper.']);
+if (!vayuma_reserve_ai_request($conn, (int)$_SESSION['user_id'])) respond(503,['success'=>false,'error'=>'AI daily limit reached or usage control is unavailable. Choose the rule-based helper to continue without external AI.']);
 // Close the session before network I/O; all context has already been selected and copied.
 session_write_close();
 $providerEvidence = vayuma_nvidia_minimized_evidence($context, $language);
@@ -124,4 +132,4 @@ if ($answer === null) {
     respond(200,['success'=>true,'answer'=>$notice."\n\n".$evidence,'language'=>$language,'mode'=>'rule_based_fallback','context_used'=>$contextUsed]);
 }
 $notice=$language==='sw' ? 'Jibu la AI linaweza kukosea. Halithibitishwi na halichukui nafasi ya mtaalamu. Angalia taarifa na vyanzo vilivyo hapa chini.' : 'AI can make mistakes. This answer is not verified and does not replace a professional. Check the evidence and sources below.';
-respond(200,['success'=>true,'answer'=>$notice."\n\n".$answer."\n\n".($language==='sw'?'Taarifa zilizochaguliwa na vyanzo:':'Selected evidence and sources:')."\n".$evidence,'language'=>$language,'mode'=>'nvidia_ai','context_used'=>$contextUsed]);
+respond(200,['success'=>true,'answer'=>$notice."\n\n".$answer."\n\n".($language==='sw'?'Taarifa zilizochaguliwa na vyanzo:':'Selected evidence and sources:')."\n".$evidence,'language'=>$language,'mode'=>'ai_support','context_used'=>$contextUsed]);

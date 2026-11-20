@@ -8,6 +8,8 @@ require_once __DIR__ . '/includes/csrf.php';
 require_once __DIR__ . '/includes/user_menu_data.php';
 require_once __DIR__ . '/includes/avatar_storage.php';
 require_once __DIR__ . '/includes/identity_errors.php';
+require_once __DIR__ . '/includes/onboarding_policy.php';
+require_once __DIR__ . '/includes/login_identity.php';
 $dashboard = vayuma_dashboard_return_route();
 // Accept only subscription or the logged-in user's mapped dashboard.
 $returnTo = vayuma_profile_hub_return_route($_SERVER['REQUEST_METHOD'] === 'POST' ? ($_POST['return_to'] ?? null) : ($_GET['return_to'] ?? null));
@@ -18,16 +20,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         if (!vayuma_csrf_valid()) throw new VayumaProfileError('Your session expired. Refresh and try again.');
         $name = trim((string)($_POST['full_name'] ?? ''));
-        $phone = preg_replace('/[\s\-\(\)]/', '', trim((string)($_POST['phone'] ?? '')));
-        $email = trim((string)($_POST['email'] ?? ''));
+        $phone = vayuma_onboarding_phone((string)($_POST['phone'] ?? ''));
+        $email = strtolower(trim((string)($_POST['email'] ?? '')));
         if ($name === '' || mb_strlen($name, 'UTF-8') > 100) throw new VayumaProfileError('Enter a name of up to 100 characters.');
-        if (!preg_match('/^\+?[0-9]{9,15}$/', $phone)) throw new VayumaProfileError('Enter a valid phone number.');
+        if ($phone === null) throw new VayumaProfileError('Enter a valid phone number.');
         if (strlen($email) > 100 || ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL))) throw new VayumaProfileError('Enter a valid email address.');
         $existsStmt = $conn->prepare('SELECT id FROM users WHERE id=? LIMIT 1');
         $existsStmt->bind_param('i', $id); $existsStmt->execute(); $userExists = $existsStmt->get_result()->fetch_assoc(); $existsStmt->close();
         if (!$userExists) throw new VayumaProfileError('Your account could not be found. Please sign in again.');
-        $stmt = $conn->prepare('SELECT id FROM users WHERE id<>? AND (phone=? OR (email IS NOT NULL AND email<>\'\' AND email=?)) LIMIT 1');
-        $stmt->bind_param('iss',$id,$phone,$email); $stmt->execute(); $duplicate = $stmt->get_result()->fetch_assoc(); $stmt->close();
+        [$phone1, $phone2, $phone3] = vayuma_login_phone_variants($phone);
+        $stmt = $conn->prepare("SELECT id FROM users WHERE id<>? AND (phone_identity=? OR REPLACE(phone_identity, '.', '') IN (?, ?, ?) OR (email_identity IS NOT NULL AND email_identity=?)) LIMIT 1");
+        $stmt->bind_param('isssss',$id,$phone,$phone1,$phone2,$phone3,$email); $stmt->execute(); $duplicate = $stmt->get_result()->fetch_assoc(); $stmt->close();
         if ($duplicate) throw new VayumaProfileError('That phone number or email is already in use.');
         $avatarBytes = null; $dir = null;
         if (($_FILES['avatar']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
@@ -48,6 +51,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $avatarBytes = vayuma_avatar_compress($_FILES['avatar']);
         }
         $conn->begin_transaction(); $transactionStarted = true;
+        if (getenv('VAYUMA_ONBOARDING_ENABLED') === '1') {
+            require_once __DIR__ . '/includes/onboarding_lock.php';
+            vayuma_onboarding_lock_phone($conn, $phone);
+            // Do not let a profile edit take a phone reserved by someone else's intake.
+            $reserved = $conn->prepare('SELECT id FROM onboarding_records WHERE phone_identity=? AND (claimed_by_user_id IS NULL OR claimed_by_user_id<>?) LIMIT 1 FOR UPDATE');
+            if (!$reserved) throw new RuntimeException('Onboarding check unavailable');
+            $reserved->bind_param('si', $phone, $id);
+            if (!$reserved->execute()) throw new RuntimeException('Onboarding check unavailable');
+            $record = $reserved->get_result()->fetch_assoc(); $reserved->close();
+            if ($record) throw new VayumaProfileError('Unable to update the profile with those details. Contact support.');
+        }
         $emailDb = $email !== '' ? $email : null;
         if ($avatarBytes !== null) {
             $key = 'avatar_' . $id . '.jpg';

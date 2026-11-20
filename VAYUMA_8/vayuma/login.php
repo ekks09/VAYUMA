@@ -79,6 +79,14 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
                     <p><?= htmlspecialchars(t('login_intro'), ENT_QUOTES, 'UTF-8') ?></p>
                 </div>
 
+                <?php if (!empty($_SESSION['registration_success'])): unset($_SESSION['registration_success']); ?>
+                    <div class="login-success" role="status"><?= htmlspecialchars($current_language === 'sw' ? 'Akaunti imefunguliwa. Ingia ili kuchagua aina yako na kukamilisha wasifu.' : 'Account created. Sign in to choose your category and complete your profile.', ENT_QUOTES, 'UTF-8') ?></div>
+                <?php endif; ?>
+
+                <?php if (!empty($_SESSION['claim_success'])): unset($_SESSION['claim_success']); ?>
+                    <div class="login-success" role="status"><?= htmlspecialchars($current_language === 'sw' ? 'Akaunti imeunganishwa. Ingia ili kukamilisha wasifu wako.' : 'Account claimed. Sign in to complete your profile.', ENT_QUOTES, 'UTF-8') ?></div>
+                <?php endif; ?>
+                <?php if (getenv('VAYUMA_ONBOARDING_ENABLED') === '1' && getenv('VAYUMA_CLAIM_ENABLED') === '1'): ?><p><a class="auth-claim-link" data-claim-source="loginIdentifier" href="claim_account.php"><?= htmlspecialchars($current_language === 'sw' ? 'Una msimbo? Unganisha akaunti yako ya mkulima' : 'Have a code? Claim your farmer account', ENT_QUOTES, 'UTF-8') ?></a></p><?php endif; ?>
                 <?php if (isset($_GET["error"])): ?>
                     <div class="login-error" role="alert">
                         <?php
@@ -116,7 +124,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
                             <label for="loginPassword">
                                 <?= htmlspecialchars(t('password'), ENT_QUOTES, 'UTF-8') ?>
                             </label>
-                            <span class="password-help"><?= htmlspecialchars(t('password_recovery_unavailable'), ENT_QUOTES, 'UTF-8') ?></span>
+                            <a class="password-help" href="forgot_password.php"><?= htmlspecialchars(t('forgot_password'), ENT_QUOTES, 'UTF-8') ?></a>
                         </div>
                         <div class="password-wrapper">
                             <input
@@ -185,6 +193,7 @@ function togglePassword() {
 
 </script>
 
+<script src="assets/js/claim-phone.js?v=1" defer></script>
 </body>
 
 </html>

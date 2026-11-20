@@ -30,8 +30,9 @@ $navLinks = [
     'Dashboard' => 'consumer_dashboard.php',
     'Marketplace' => 'market_connect.php',
     'My Orders' => 'my_orders.php',
-    'VAYUMA AI' => 'ai_advisor.php',
+    'VAYUMA AI' => 'feature_access.php?feature=ai',
     'My Profile' => 'consumer_profile.php?from=consumer_dashboard.php',
+    'Profile & Settings' => 'profile.php?return_to=consumer_dashboard.php',
 ];
 
 require_once __DIR__ . '/includes/ui_simple.php';
@@ -56,6 +57,16 @@ require_once __DIR__ . '/includes/ui_simple.php';
       <?php
       echo render_subscription_banner($conn, $user_id);
       ?>
+
+      <section class="dashboard-quick-links va-mb-6" aria-labelledby="consumer-quick-title">
+        <div><h2 id="consumer-quick-title">Quick access</h2><p>Open the tools you use most.</p></div>
+        <nav aria-label="Consumer quick access">
+          <a href="market_connect.php"><svg class="va-icon" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-marketplace"/></svg> Marketplace</a>
+          <a href="my_orders.php"><svg class="va-icon" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-orders"/></svg> My Orders</a>
+          <a href="feature_access.php?feature=ai"><svg class="va-icon" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-ai"/></svg> VAYUMA AI</a>
+          <a href="profile.php?return_to=consumer_dashboard.php"><svg class="va-icon" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-profile"/></svg> Profile &amp; settings</a>
+        </nav>
+      </section>
 
       <div class="va-dashboard-grid va-mb-6">
         <div class="va-stat-card">
@@ -110,7 +121,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
                     <div style="width:100%;height:140px;border-radius:var(--va-radius);background:#edf4ed;display:flex;align-items:center;justify-content:center;font-size:2rem;margin-bottom:var(--va-space-3);">
                       <?php
                       $cat = strtolower($row['category'] ?? '');
-                      echo strpos($cat, 'vegetable') !== false ? '🥬' : (strpos($cat, 'fruit') !== false ? '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-apple"/></svg>' : (strpos($cat, 'livestock') !== false ? '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-cattle"/></svg>' : '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg>'));
+                      echo strpos($cat, 'vegetable') !== false ? '🥬' : (strpos($cat, 'fruit') !== false ? '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-apple"/></svg>' : (strpos($cat, 'livestock') !== false ? '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-livestock"/></svg>' : '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg>'));
                       ?>
                     </div>
                   <?php endif; ?>
@@ -138,7 +149,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
         <a href="market_connect.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-marketplace"/></svg> Browse Marketplace</a>
         <a href="my_orders.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-orders"/></svg> My Orders</a>
         <a href="consumer_profile.php?from=consumer_dashboard.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-profile"/></svg> My Profile</a>
-        <a href="ai_advisor.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg> Ask VAYUMA AI</a>
+        <a href="feature_access.php?feature=ai" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg> Ask VAYUMA AI</a>
       </div>
 
     </div>

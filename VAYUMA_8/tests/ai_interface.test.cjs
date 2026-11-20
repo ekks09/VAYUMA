@@ -28,3 +28,24 @@ test('NVIDIA gets curated guidance, not live account access', () => {
   assert.match(guide, /Payment processing is currently unavailable/);
   assert.match(read('includes/nvidia_advisor.php'), /vayuma_ai_guide\(\$question, \$language, true\)/);
 });
+test('AI is the default with explicit third-party consent and honest mode labels', () => {
+  const page=read('ai_advisor.php');
+  assert.match(page, /class="ai-provider-choice"[\s\S]*?id="externalConsent"/);
+  assert.doesNotMatch(page.match(/<input[^>]*id="externalConsent"[^>]*>/)[0], /\bchecked\b/);
+  assert.ok(page.indexOf('id="externalConsent"') < page.indexOf('class="privacy-details"'));
+  assert.match(page, /externalConsent\.checked/); assert.match(page, /data\.mode === 'ai_support'/);
+  assert.match(page, /third-party AI service/); assert.match(page, /may log inputs and outputs/);
+  assert.match(page, /<option value="ai"[\s\S]*?<option value="rules"/);
+  assert.match(page, /useAi && !externalConsent.checked/); assert.match(page, /useAi && externalConsent.checked/);
+  assert.doesNotMatch(page, /NVIDIA/);
+});
+test('farmer dashboard uses working destinations and does not present voice or SMS as available', () => {
+  const dashboard=read('farmer_dashboard.php');
+  assert.match(dashboard, /'VAYUMA AI' => 'feature_access\.php\?feature=ai'/);
+  assert.match(dashboard, /'Profile & Settings' => 'profile\.php\?return_to=farmer_dashboard\.php'/);
+  assert.match(dashboard, /Voice support and SMS \/ USSD are not available yet/);
+  assert.match(dashboard, /farmer-quick-links/);
+  for (const file of ['climate.php','soil_analysis.php','market_connect.php','profile.php']) assert.ok(fs.existsSync(path.join(root,file)), file);
+  assert.match(read('includes/dashboard_farmer_icon.php'), /'Climate Guidance'=>'weather'/);
+  assert.match(read('includes/dashboard_farmer_icon.php'), /'VAYUMA AI'=>'ai'/);
+});

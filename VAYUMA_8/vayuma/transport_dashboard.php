@@ -67,7 +67,7 @@ $full_name = $_SESSION['full_name'] ?? "Transport Provider";
 <link rel="stylesheet" href="frontend/css/dashboard-shell-transitions.css">
 <style>
 </style>
-<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=2">
+<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-4">
 
 </head>
 
@@ -81,13 +81,7 @@ $full_name = $_SESSION['full_name'] ?? "Transport Provider";
 
 <aside class="va-dash-sidebar" id="vaDashSidebar">
 
-    <div class="va-dash-sidebar--logo">
-
-        <h1>VAYUMA</h1><p>Smart Ecosystem</p>
-
-        <p>SMART ECOSYSTEM</p>
-
-    </div>
+    <?php require __DIR__ . '/includes/dashboard_brand.php'; ?>
 
 
     <div class="menu-title">

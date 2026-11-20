@@ -424,6 +424,12 @@
   flex-wrap: wrap;
   gap: var(--va-space-3);
 }
+.va-subscription-navigation .va-btn {
+  min-height: 44px;
+  max-width: 100%;
+  white-space: normal;
+  text-align: center;
+}
 form button[type="submit"]:not(.va-btn) {
   display: inline-flex;
   min-height: 48px;

@@ -53,7 +53,7 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
 <link rel="stylesheet" href="frontend/css/dashboard-shell.css">
 <style>
 </style>
-<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=2">
+<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-4">
 
 </head>
 
@@ -70,13 +70,7 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
 <div class="va-sidebar-overlay" id="vaSidebarOverlay"></div>
 <aside class="va-dash-sidebar" id="vaDashSidebar">
 
-    <div class="va-dash-sidebar--logo">
-
-        <h1>VAYUMA</h1><p>Smart Ecosystem</p>
-
-        <p>SMART ECOSYSTEM</p>
-
-    </div>
+    <?php require __DIR__ . '/includes/dashboard_brand.php'; ?>
 
 
     <div class="va-dash-sidebar--section">
@@ -116,7 +110,7 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
     </a>
 
 
-    <a class="va-dash-sidebar--nav-item" href="ai_advisor.php" class="nav-item">
+    <a class="va-dash-sidebar--nav-item" href="feature_access.php?feature=ai" class="nav-item">
         <span class="va-dash-sidebar--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg></span>
         Crop Advisory
     </a>
@@ -145,7 +139,7 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
     </a>
 
 
-    <a class="va-dash-sidebar--nav-item" href="ai_advisor.php" class="nav-item">
+    <a class="va-dash-sidebar--nav-item" href="feature_access.php?feature=ai" class="nav-item">
         <span class="va-dash-sidebar--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg></span>
         VAYUMA AI
     </a>
@@ -481,7 +475,7 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
             </a>
 
 
-            <a class="va-dash-sidebar--nav-item" href="ai_advisor.php" class="quick-action">
+            <a class="va-dash-sidebar--nav-item" href="feature_access.php?feature=ai" class="quick-action">
                 <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg> &nbsp; Give Crop Advice
             </a>
 
@@ -491,7 +485,7 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
             </a>
 
 
-            <a class="va-dash-sidebar--nav-item" href="ai_advisor.php" class="quick-action">
+            <a class="va-dash-sidebar--nav-item" href="feature_access.php?feature=ai" class="quick-action">
                 <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg> &nbsp; Ask VAYUMA AI
             </a>
 

@@ -479,3 +479,14 @@
   border-color: var(--va-border);
   color: var(--va-text-muted);
 }
+
+/* Keep simple page navigation available without squeezing the brand or avatar. */
+.va-topbar { height: auto; min-height: var(--va-topbar-height); flex-wrap: wrap; gap: 8px 12px; }
+.va-topbar--brand, .va-topbar--user { flex: 0 0 auto; }
+.va-topbar--nav { min-width: 0; flex-wrap: wrap; gap: 8px 16px; }
+@media (max-width: 767px) {
+  .va-topbar { padding: 8px max(12px, env(safe-area-inset-right)) 8px max(12px, env(safe-area-inset-left)); }
+  .va-topbar--user { margin-left: auto; }
+  .va-topbar--nav { order: 3; flex: 1 0 100%; justify-content: flex-start; }
+  .va-topbar--nav a { display: inline-flex; align-items: center; min-height: 44px; }
+}

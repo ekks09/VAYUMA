@@ -15,6 +15,8 @@ if (isset($_SESSION['user_id']) && ($_SESSION['logged_in'] ?? false) === true):
     $vyHasAvatar = ($vyUser['avatar_url'] ?? '') === $vyAvatarKey && (vayuma_avatar_uses_tidb()
         ? vayuma_avatar_tidb_exists($conn ?? null, (int)$_SESSION['user_id'])
         : $vyAvatarDir !== null && is_file($vyAvatarDir . '/' . $vyAvatarKey) && !is_link($vyAvatarDir . '/' . $vyAvatarKey));
+    require_once __DIR__ . '/onboarding_policy.php';
+    $vyCanOnboard = getenv('VAYUMA_ONBOARDING_ENABLED') === '1' && vayuma_onboarding_authorized((int)$_SESSION['user_id'], (string)(getenv('VAYUMA_ONBOARDING_USER_IDS') ?: ''));
     $vyH = static fn($v) => htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
 ?>
 <details class="vy-user-menu">
@@ -26,8 +28,10 @@ if (isset($_SESSION['user_id']) && ($_SESSION['logged_in'] ?? false) === true):
     <div class="vy-user-menu__summary"><strong><?= $vyH($vyName) ?></strong><span class="vy-user-menu__role"><?= $vyH($vyRole) ?></span><?php if ($vyContact !== ''): ?><span class="vy-user-menu__contact"><?= $vyH($vyContact) ?></span><?php endif; ?></div>
     <div class="vy-user-menu__plan"><strong><?= $vyH($vyPlan['stakeholder_name'] ?? 'Subscription') ?></strong><span class="vy-user-menu__status vy-user-menu__status--<?= $vyH($vyStatusClass) ?>"><?= $vyH($vyStatus) ?></span><?php if ($vyDate): ?><small><?= $vyStatusClass === 'grace' ? 'Grace ends' : 'Expiry' ?>: <?= $vyH($vyDate) ?></small><?php endif; ?><a href="subscription.php">Manage subscription</a></div>
     <a class="vy-user-menu__link" href="<?= $vyH($vyDashboard) ?>">Dashboard</a>
-    <a class="vy-user-menu__link" href="<?= $vyH($vyProfile) ?>">Edit profile &amp; photo</a>
+    <a class="vy-user-menu__link" href="<?= $vyH($vyProfile) ?>">Profile &amp; Settings</a>
+    <a class="vy-user-menu__link" href="feature_access.php?feature=ai">VAYUMA AI</a>
     <a class="vy-user-menu__link" href="role.php">Change account category</a>
+    <?php if ($vyCanOnboard): ?><a class="vy-user-menu__link" href="onboarding.php">Staff Access</a><?php endif; ?>
     <a class="vy-user-menu__link" href="auth/logout.php">Sign out</a>
   </div>
 </details>

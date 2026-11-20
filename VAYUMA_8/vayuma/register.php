@@ -8,6 +8,7 @@ $platformHomeUrl = vayuma_platform_home_route();
 
 $error = $_SESSION['register_error'] ?? '';
 unset($_SESSION['register_error']);
+$registerPhone = is_string($_SESSION['register_phone'] ?? null) ? $_SESSION['register_phone'] : ''; unset($_SESSION['register_phone']);
 if ($current_language === 'sw') {
     $registerErrorTranslations = [
         'Your session expired. Refresh the form and try again.' => 'Muda wa kikao chako umekwisha. Pakia upya fomu na ujaribu tena.',
@@ -15,12 +16,12 @@ if ($current_language === 'sw') {
         'Please enter a valid full name.' => 'Tafadhali weka jina kamili sahihi.',
         'Please enter a valid phone number.' => 'Tafadhali weka nambari sahihi ya simu.',
         'Please enter a valid email address.' => 'Tafadhali weka anwani sahihi ya barua pepe.',
-        'Password must contain at least 8 characters.' => 'Nenosiri lazima liwe na angalau herufi 8.',
+        'Password must be between 8 and 72 bytes.' => 'Nenosiri lazima liwe kati ya baiti 8 na 72.',
         'Passwords do not match.' => 'Manenosiri hayalingani.',
         'You must accept the Terms of Service and Privacy Policy.' => 'Lazima ukubali Masharti ya Huduma na Sera ya Faragha.',
-        'An account with this phone number already exists.' => 'Akaunti yenye nambari hii ya simu tayari ipo.',
-        'An account with this email already exists.' => 'Akaunti yenye barua pepe hii tayari ipo.',
+        'Unable to create your account. Please sign in or try again later.' => 'Imeshindikana kufungua akaunti. Ingia au ujaribu tena baadaye.',
         'That phone number or email is already in use.' => 'Nambari hiyo ya simu au barua pepe tayari inatumika.',
+        'This phone has an onboarding record. Use the claim account link with your staff-issued code.' => 'Nambari hii ina rekodi ya usajili. Tumia kiungo cha kuunganisha akaunti pamoja na msimbo kutoka kwa mfanyakazi.',
         'Unable to create your account. Please try again.' => 'Imeshindikana kufungua akaunti yako. Tafadhali jaribu tena.',
     ];
     $error = $registerErrorTranslations[$error] ?? $error;
@@ -129,6 +130,7 @@ if ($current_language === 'sw') {
                 <?php endif; ?>
 
 
+                <?php if (getenv('VAYUMA_ONBOARDING_ENABLED') === '1' && getenv('VAYUMA_CLAIM_ENABLED') === '1'): ?><p><a class="auth-claim-link" data-claim-source="phone" href="claim_account.php"><?= htmlspecialchars($current_language === 'sw' ? 'Una msimbo wa mfanyakazi? Unganisha akaunti yako ya mkulima' : 'Have a staff-issued code? Claim your farmer account', ENT_QUOTES, 'UTF-8') ?></a></p><?php endif; ?>
                 <form
                     action="auth/register_process.php"
                     method="POST"
@@ -183,6 +185,7 @@ if ($current_language === 'sw') {
                                 type="tel"
                                 id="phone"
                                 name="phone"
+                                value="<?= htmlspecialchars($registerPhone, ENT_QUOTES, 'UTF-8') ?>"
                                 placeholder="<?= htmlspecialchars(t('phone_example'), ENT_QUOTES, 'UTF-8') ?>"
                                 autocomplete="tel"
                                 required
@@ -530,5 +533,6 @@ document.getElementById("registrationForm")
 
 </script>
 
+<script src="assets/js/claim-phone.js?v=1" defer></script>
 </body>
 </html>

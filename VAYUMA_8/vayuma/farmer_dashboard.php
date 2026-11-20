@@ -40,7 +40,7 @@ $navLinks = [
     'My Produce' => 'my_produce.php',
     'My Orders' => 'my_orders.php',
     'Produce Requests' => 'seller_orders.php',
-    'VAYUMA AI' => 'ai_advisor.php',
+    'VAYUMA AI' => 'feature_access.php?feature=ai',
     'Profile & Settings' => 'profile.php?return_to=farmer_dashboard.php',
 ];
 
@@ -80,13 +80,23 @@ require_once __DIR__ . '/includes/ui_simple.php';
             <h1 class="va-section--title">Farmer Dashboard</h1>
             <p class="va-section--sub">Good day, <?= h($full_name) ?>. Manage your farm business with VAYUMA.</p>
           </div>
-          <a href="ai_advisor.php" class="va-btn va-btn--primary va-btn--sm"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg> Ask VAYUMA AI</a>
+          <a href="feature_access.php?feature=ai" class="va-btn va-btn--primary va-btn--sm"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg> Ask VAYUMA AI</a>
         </div>
       </div>
 
       <?php
       echo render_subscription_banner($conn, $userId);
       ?>
+
+      <section class="farmer-quick-links va-mb-6" aria-labelledby="farmer-quick-title">
+        <div><h2 id="farmer-quick-title">Quick access</h2><p>Open the tools you use most.</p></div>
+        <nav aria-label="Farmer quick access">
+          <a href="climate.php"><svg class="va-icon" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-weather"/></svg> Weather</a>
+          <a href="soil_analysis.php"><svg class="va-icon" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-soil"/></svg> Soil</a>
+          <a href="market_connect.php"><svg class="va-icon" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-marketplace"/></svg> Market</a>
+          <a href="profile.php?return_to=farmer_dashboard.php"><svg class="va-icon" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-profile"/></svg> Profile &amp; settings</a>
+        </nav>
+      </section>
 
       <div class="va-dashboard-grid va-mb-6">
         <div class="va-stat-card">
@@ -108,6 +118,15 @@ require_once __DIR__ . '/includes/ui_simple.php';
         </div>
         <?php endforeach; ?>
       </div>
+
+      <section class="va-mb-6" aria-labelledby="farm-insights-title">
+        <div class="va-mb-4"><h2 class="va-section--title" id="farm-insights-title">Farm insights</h2><p class="va-section--sub">Open each tool to see the information available for your farm.</p></div>
+        <div class="va-feature-grid va-feature-grid--farmer">
+          <article class="va-feature-card"><div class="va-feature-card--icon"><svg class="va-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-weather"/></svg></div><div class="va-feature-card--content"><h3 class="va-feature-card--title">Weather forecast</h3><p class="va-feature-card--desc">Choose your location to view a weather forecast.</p><a href="climate.php" class="va-btn va-btn--outline va-btn--sm va-mt-3">Open forecast</a></div></article>
+          <article class="va-feature-card"><div class="va-feature-card--icon"><svg class="va-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-target"/></svg></div><div class="va-feature-card--content"><h3 class="va-feature-card--title">Farming score</h3><p class="va-feature-card--desc">See an estimate based on your farm profile, not a field measurement.</p><a href="farming_score.php" class="va-btn va-btn--outline va-btn--sm va-mt-3">View farming score</a></div></article>
+          <article class="va-feature-card"><div class="va-feature-card--icon"><svg class="va-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-crops"/></svg></div><div class="va-feature-card--content"><h3 class="va-feature-card--title">Crop opportunities</h3><p class="va-feature-card--desc">Explore crop suggestions based on the information you provide.</p><a href="crop_opportunities.php" class="va-btn va-btn--outline va-btn--sm va-mt-3">Explore opportunities</a></div></article>
+        </div>
+      </section>
 
       <div class="va-section va-mb-6">
         <h2 class="va-section--title">Manage your farm business</h2>
@@ -139,20 +158,26 @@ require_once __DIR__ . '/includes/ui_simple.php';
           <div class="va-feature-card--content">
             <div class="va-feature-card--badge">Soil Analysis</div>
             <div class="va-feature-card--title">Understand your soil</div>
-            <div class="va-feature-card--desc">Get soil recommendations and improve crop productivity.</div>
+            <div class="va-feature-card--desc">Record measured soil results and learn what information an adviser needs.</div>
             <a href="soil_analysis.php" class="va-btn va-btn--outline va-btn--sm">Analyze Soil</a>
           </div>
         </div>
         <div class="va-feature-card">
-          <div class="va-feature-card--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-health"/></svg></div>
+          <div class="va-feature-card--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-diseases"/></svg></div>
           <div class="va-feature-card--content">
             <div class="va-feature-card--badge">Disease Helper</div>
             <div class="va-feature-card--title">Protect your crops</div>
-            <div class="va-feature-card--desc">Identify crop diseases and receive treatment guidance.</div>
+            <div class="va-feature-card--desc">Explore possible causes and seek confirmation from a qualified adviser.</div>
             <a href="disease_helper.php" class="va-btn va-btn--outline va-btn--sm">Check Crop Health</a>
           </div>
         </div>
       </div>
+
+      <section class="farmer-services-note va-mb-6" aria-label="Service availability">
+        <strong>More ways to get help</strong>
+        <p>Voice support and SMS / USSD are not available yet. You can use VAYUMA AI Support when enabled.</p>
+        <a href="feature_access.php?feature=ai">Open the text assistant →</a>
+      </section>
 
       <!-- Produce Category Tabs -->
       <?php if (!empty($categoryStats)): ?>
@@ -182,7 +207,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
           </div>
           <div class="va-avatar" style="width:64px;height:64px;font-size:2rem;"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg></div>
         </div>
-        <a href="ai_advisor.php" class="va-btn va-btn--primary va-btn--lg va-w-full">Ask VAYUMA AI →</a>
+        <a href="feature_access.php?feature=ai" class="va-btn va-btn--primary va-btn--lg va-w-full">Ask VAYUMA AI →</a>
       </div>
 
     </div>

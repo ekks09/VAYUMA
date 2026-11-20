@@ -17,13 +17,16 @@ if ($identifier === "" || $password === "") {
 require_once __DIR__ . '/../includes/login_identity.php';
 require_once __DIR__ . '/../config/db.php';
 [$phone1, $phone2, $phone3] = vayuma_login_phone_variants($identifier);
+$emailIdentity = strtolower($identifier);
 try {
-    $stmt = $conn->prepare("SELECT id, full_name, phone, email, password, role FROM users WHERE email = ? OR phone IN (?, ?, ?) LIMIT 1");
+    $stmt = $conn->prepare("SELECT id, full_name, phone, email, password, role FROM users WHERE email_identity = ? OR phone_identity = ? OR REPLACE(phone_identity, '.', '') IN (?, ?, ?) LIMIT 2");
     if (!$stmt) throw new RuntimeException('Login query unavailable');
-    $stmt->bind_param("ssss", $identifier, $phone1, $phone2, $phone3);
+    $stmt->bind_param("sssss", $emailIdentity, $phone1, $phone1, $phone2, $phone3);
     $stmt->execute();
     $result = $stmt->get_result();
     $user = $result ? $result->fetch_assoc() : null;
+    // Never authenticate an ambiguous identity.
+    if ($result && $result->fetch_assoc()) $user = null;
     $stmt->close();
 } catch (Throwable $e) {
     error_log('VAYUMA login query failed.');
@@ -58,6 +61,16 @@ $_SESSION["phone"] = $user["phone"];
 $_SESSION["email"] = $user["email"];
 $_SESSION["role"] = $role;
 $_SESSION["logged_in"] = true;
+
+// Claimed farmers complete their own profile before subscription/dashboard routing.
+if ($role === 'farmer' && getenv('VAYUMA_ONBOARDING_ENABLED') === '1' && getenv('VAYUMA_CLAIM_ENABLED') === '1') {
+    try {
+        $claimUserId = (int)$user['id'];
+        $claimStmt = $conn->prepare('SELECT r.id FROM onboarding_records r WHERE r.claimed_by_user_id=? AND NOT EXISTS (SELECT 1 FROM farmer_profiles fp WHERE fp.user_id=r.claimed_by_user_id) LIMIT 1');
+        $claimStmt->bind_param('i', $claimUserId); $claimStmt->execute(); $needsProfile = $claimStmt->get_result()->fetch_assoc(); $claimStmt->close();
+        if ($needsProfile) { header('Location: ../profile_setup.php'); exit; }
+    } catch (Throwable $e) { error_log('VAYUMA claimed profile lookup unavailable.'); http_response_code(503); exit('VAYUMA is temporarily unavailable. Please try again later.'); }
+}
 
 $pending = $_SESSION['pending_feature'] ?? '';
 if ($role !== '' && is_string($pending) && in_array($pending, ['climate', 'soil', 'ai'], true)) {

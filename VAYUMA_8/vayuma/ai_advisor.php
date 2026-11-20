@@ -12,6 +12,15 @@ if (
     exit;
 }
 
+require_once __DIR__ . '/includes/feature_access_policy.php';
+$vayumaDbReadinessProbe = true;
+require_once __DIR__ . '/config/db.php';
+try {
+    if (!isset($conn) || !$conn) throw new RuntimeException('Database unavailable');
+    $decision = vayuma_feature_access_decision($conn, $_SESSION);
+    if ($decision !== 'allow') { header('Location: ' . vayuma_feature_access_destination($decision, $_SESSION)); exit; }
+} catch (Throwable $ignored) { http_response_code(503); exit('Unable to check account setup. Please try again later.'); }
+
 $role = strtolower(trim($_SESSION['role'] ?? ''));
 
 $dashboards = [
@@ -72,7 +81,7 @@ $roleLabel = ucwords(str_replace('_', ' ', $role ?: 'user'));
 }
 </style>
 <link rel="stylesheet" href="frontend/css/agriculture-tools.css?v=1">
-<link rel="stylesheet" href="frontend/css/ai-assistant.css?v=1">
+<link rel="stylesheet" href="frontend/css/ai-assistant.css?v=3">
 </head>
 
 <body class="va-ai-tool">
@@ -85,6 +94,7 @@ $roleLabel = ucwords(str_replace('_', ' ', $role ?: 'user'));
     <a class="va-profile-back" href="<?= htmlspecialchars($dashboard, ENT_QUOTES, 'UTF-8') ?>">
         ← <span data-en="Dashboard" data-sw="Dashibodi">Dashboard</span>
     </a>
+    <?php require __DIR__ . '/includes/header_user_menu.php'; ?>
 </header>
 
 <main class="container" id="main-content">
@@ -92,7 +102,7 @@ $roleLabel = ucwords(str_replace('_', ' ', $role ?: 'user'));
     <section class="intro">
         <div class="intro-icon" aria-hidden="true"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg></div>
 
-        <div class="intro-copy"><span class="intro-eyebrow" data-en="YOUR AGRICULTURAL COMPANION" data-sw="MSAIDIZI WAKO WA KILIMO">YOUR AGRICULTURAL COMPANION</span><h1>VAYUMA AI</h1>
+        <div class="intro-copy"><span class="intro-eyebrow" data-en="YOUR AGRICULTURAL COMPANION" data-sw="MSAIDIZI WAKO WA KILIMO">YOUR AGRICULTURAL COMPANION</span><h1>VAYUMA AI Support</h1>
 
         <p
             data-en="Your agricultural companion for smarter farming decisions."
@@ -120,20 +130,16 @@ $roleLabel = ucwords(str_replace('_', ' ', $role ?: 'user'));
             <div class="chat-mark" aria-hidden="true"><svg class="va-icon" width="24" height="24"><use href="frontend/images/icons.svg#va-icon-ai"/></svg></div>
 
             <div>
-                <strong>VAYUMA AI</strong>
+                <strong>VAYUMA AI Support</strong>
                 <small data-en="Agricultural assistance" data-sw="Msaada wa kilimo">
                     Agricultural assistance
                 </small>
             </div>
 
-            <span class="status-label"
-                  data-en="Free helper by default"
-                  data-sw="Msaidizi wa bure kwa chaguo-msingi">
-                Free helper by default
-            </span>
+            <span class="status-label" id="responseMode" aria-live="polite">VAYUMA AI Support — permission required</span>
         </div>
 
-        <p class="chat-context" data-en="Ask a question below. The free helper is rule-based; optional NVIDIA AI requires your permission." data-sw="Uliza swali hapa chini. Msaidizi wa bure hutumia kanuni; NVIDIA AI ya hiari inahitaji ruhusa yako.">Ask a question below. The free helper is rule-based; optional NVIDIA AI requires your permission.</p>
+        <p class="chat-context" data-en="Ask VAYUMA AI Support a question. Your permission is needed before information is sent to an external AI service." data-sw="Uliza VAYUMA AI Support swali. Ruhusa yako inahitajika kabla ya kutuma taarifa kwa huduma ya AI ya nje.">Ask VAYUMA AI Support a question. Your permission is needed before information is sent to an external AI service.</p>
         <div
             class="messages"
             id="messages"
@@ -182,7 +188,7 @@ $roleLabel = ucwords(str_replace('_', ' ', $role ?: 'user'));
                 </button>
 
                 <button class="suggestion" data-question="livestock">
-                    <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-cattle"/></svg> Livestock
+                    <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-livestock"/></svg> Livestock
                 </button>
 
                 <button class="suggestion" data-question="market">
@@ -209,16 +215,25 @@ $roleLabel = ucwords(str_replace('_', ' ', $role ?: 'user'));
                 </button>
             </div>
 
+            <div class="ai-provider-choice">
+                <label for="responseChoice" data-en="Response mode" data-sw="Aina ya majibu">Response mode</label>
+                <select id="responseChoice" aria-label="Response mode">
+                    <option value="ai" data-en="VAYUMA AI Support" data-sw="VAYUMA AI Support">VAYUMA AI Support</option>
+                    <option value="rules" data-en="Rule-based helper (not AI)" data-sw="Msaidizi wa kanuni (si AI)">Rule-based helper (not AI)</option>
+                </select>
+                <label for="externalConsent"><input type="checkbox" id="externalConsent" aria-describedby="externalConsentNotice consentError"> <span data-en="I agree to send my question to an external AI service" data-sw="Ninakubali swali langu litumwe kwa huduma ya AI ya nje">I agree to send my question to an external AI service</span></label>
+                <p id="externalConsentNotice" data-en="VAYUMA AI Support sends your question and any selected weather or soil summary to a third-party AI service, which may log inputs and outputs. Do not include personal or confidential details. The rule-based helper does not send them externally." data-sw="VAYUMA AI Support hutuma swali lako na muhtasari uliochaguliwa wa hali ya hewa au udongo kwa huduma ya AI ya nje, ambayo inaweza kuhifadhi ingizo na majibu. Usiandike taarifa binafsi au za siri. Msaidizi wa kanuni havitumi nje.">VAYUMA AI Support sends your question and any selected weather or soil summary to a third-party AI service, which may log inputs and outputs. Do not include personal or confidential details. The rule-based helper does not send them externally.</p>
+                <p id="consentError" role="alert" hidden></p>
+            </div>
             <details class="privacy-details"><summary><span data-en="Privacy &amp; farm context" data-sw="Faragha na taarifa za shamba">Privacy &amp; farm context</span><small data-en="Optional" data-sw="Hiari">Optional</small></summary>
             <fieldset><legend data-en="Privacy and optional context" data-sw="Faragha na taarifa za hiari">Privacy and optional context</legend>
-                <p data-en="The free helper explains selected inputs using rules, not AI. If configured by the administrator, NVIDIA AI is optional, may make mistakes, and is subject to a daily limit." data-sw="Msaidizi wa bure hueleza taarifa ulizochagua kwa kutumia kanuni, si AI. Msimamizi akiisanidi, NVIDIA AI ni ya hiari, inaweza kukosea na ina kikomo cha kila siku.">The free helper explains selected inputs using rules, not AI. If configured by the administrator, NVIDIA AI is optional, may make mistakes, and is subject to a daily limit.</p>
-                <label><input type="checkbox" id="externalConsent"> <span data-en="Send my question and selected context to NVIDIA for AI processing" data-sw="Tuma swali na taarifa nilizochagua kwa NVIDIA ili AI izichakate">Send my question and selected context to NVIDIA for AI processing</span></label><br>
+                <p data-en="VAYUMA AI Support may make mistakes and is subject to a daily limit. The rule-based helper uses rules, not AI." data-sw="VAYUMA AI Support inaweza kukosea na ina kikomo cha kila siku. Msaidizi wa kanuni hutumia kanuni, si AI.">VAYUMA AI Support may make mistakes and is subject to a daily limit. The rule-based helper uses rules, not AI.</p>
                 <label><input type="checkbox" id="shareWeather"> <span data-en="Include the forecast I chose to keep in this session" data-sw="Jumuisha utabiri niliouchagua kuhifadhi katika kipindi hiki">Include the forecast I chose to keep in this session</span></label><br>
                 <label><input type="checkbox" id="shareSoil"> <span data-en="Include my latest saved soil report" data-sw="Jumuisha ripoti yangu ya hivi karibuni ya udongo">Include my latest saved soil report</span></label><br>
                 <label for="cropContext" data-en="Crop (optional, your entry)" data-sw="Zao (hiari, umeingiza mwenyewe)">Crop (optional, your entry)</label><input id="cropContext" maxlength="80">
                 <label for="stageContext" data-en="Growth stage (optional, your entry)" data-sw="Hatua ya ukuaji (hiari, umeingiza mwenyewe)">Growth stage (optional, your entry)</label><input id="stageContext" maxlength="80">
                 <label for="locationContext" data-en="County (optional, your entry; exact county name for reviewed guidance)" data-sw="Kaunti (hiari; ingiza jina sahihi la kaunti kwa mwongozo uliopitiwa)">County (optional, your entry; exact county name for reviewed guidance)</label><input id="locationContext" maxlength="100">
-                <p data-en="If you choose external AI, your question and a minimized summary of selected weather and soil results are sent to NVIDIA. Do not enter names, contact details, precise locations or other personal or confidential information in your question. NVIDIA trial inputs and outputs may be logged. Reviewed crop guidance is shown only when available; no rules are currently approved." data-sw="Ukichagua AI ya nje, swali lako na muhtasari uliopunguzwa wa hali ya hewa na vipimo vya udongo utatumwa kwa NVIDIA. Usiandike majina, mawasiliano, eneo sahihi au taarifa binafsi au za siri kwenye swali. NVIDIA inaweza kuhifadhi ingizo na majibu ya majaribio. Hakuna kanuni za mazao zilizoidhinishwa kwa sasa.">If you choose external AI, your question and a minimized summary of selected weather and soil results are sent to NVIDIA. Do not enter names, contact details, precise locations or other personal or confidential information in your question. NVIDIA trial inputs and outputs may be logged. Reviewed crop guidance is shown only when available; no rules are currently approved.</p>
+                <p data-en="If you choose AI support, your question and a minimized summary of selected weather and soil results are sent to a third-party AI service and may be logged. Do not enter names, contact details, precise locations or other personal or confidential information. Reviewed crop guidance is shown only when available; no rules are currently approved." data-sw="Ukichagua msaada wa AI, swali lako na muhtasari uliopunguzwa wa hali ya hewa na vipimo vya udongo utatumwa kwa huduma ya AI ya nje na vinaweza kuhifadhiwa. Usiandike majina, mawasiliano, eneo sahihi au taarifa binafsi au za siri. Hakuna kanuni za mazao zilizoidhinishwa kwa sasa.">If you choose AI support, your question and a minimized summary of selected weather and soil results are sent to a third-party AI service and may be logged. Do not enter names, contact details, precise locations or other personal or confidential information. Reviewed crop guidance is shown only when available; no rules are currently approved.</p>
             </fieldset></details>
             <p class="composer-note"
                 data-en="Ask VAYUMA AI about crops, soil, livestock, diseases, or farming."
@@ -277,6 +292,10 @@ const messages = document.getElementById('messages');
 const form = document.getElementById('chatForm');
 const questionInput = document.getElementById('question');
 const sendBtn = document.getElementById('sendBtn');
+const externalConsent = document.getElementById('externalConsent');
+const responseChoice = document.getElementById('responseChoice');
+const consentError = document.getElementById('consentError');
+const responseMode = document.getElementById('responseMode');
 let chatRequest = 0;
 let chatController = null;
 const suggestionButtons = [...document.querySelectorAll('.suggestion')];
@@ -293,7 +312,7 @@ const translations = {
             '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-soil"/></svg> Soil health',
             '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-weather"/></svg> Weather',
             '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-diseases"/></svg> Crop diseases',
-            '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-cattle"/></svg> Livestock',
+            '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-livestock"/></svg> Livestock',
             '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-marketplace"/></svg> Markets'
         ],
         questions: {
@@ -319,7 +338,7 @@ const translations = {
             '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-soil"/></svg> Afya ya udongo',
             '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-weather"/></svg> Hali ya hewa',
             '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-diseases"/></svg> Magonjwa ya mazao',
-            '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-cattle"/></svg> Mifugo',
+            '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-livestock"/></svg> Mifugo',
             '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-marketplace"/></svg> Masoko'
         ],
         questions: {
@@ -357,6 +376,7 @@ function applyLanguage() {
     if (welcomeText) welcomeText.textContent = t.welcomeText;
     questionInput.placeholder = t.placeholder;
     sendBtn.textContent = t.send;
+    updateResponseMode();
 
     document.querySelectorAll('.suggestion').forEach(button => {
         const key = button.dataset.question;
@@ -369,6 +389,17 @@ function applyLanguage() {
         button.append(document.createTextNode(label));
     });
 }
+
+function updateResponseMode() {
+    const sw = currentLanguage() === 'sw';
+    const usingAi = responseChoice.value === 'ai';
+    responseMode.textContent = usingAi
+        ? (externalConsent.checked ? (sw ? 'VAYUMA AI Support imechaguliwa' : 'VAYUMA AI Support selected') : (sw ? 'VAYUMA AI Support — ruhusa inahitajika' : 'VAYUMA AI Support — permission required'))
+        : (sw ? 'Msaidizi wa kanuni amechaguliwa' : 'Rule-based helper selected');
+    if (!usingAi || externalConsent.checked) { consentError.hidden = true; consentError.textContent = ''; }
+}
+externalConsent.addEventListener('change', updateResponseMode);
+responseChoice.addEventListener('change', updateResponseMode);
 
 function addMessage(text, type) {
     const row = document.createElement('div');
@@ -401,6 +432,16 @@ async function submitQuestion(text) {
     }
 
     if (chatController) return;
+    const useAi = responseChoice.value === 'ai';
+    if (useAi && !externalConsent.checked) {
+        questionInput.value = question;
+        consentError.textContent = currentLanguage() === 'sw'
+            ? 'Kubali kutuma swali kwa huduma ya AI ya nje, au chagua msaidizi wa kanuni.'
+            : 'Agree to send your question to the external AI service, or choose the rule-based helper.';
+        consentError.hidden = false;
+        externalConsent.focus();
+        return;
+    }
     const request = ++chatRequest;
     chatController = new AbortController();
     addMessage(question, 'user');
@@ -429,7 +470,7 @@ async function submitQuestion(text) {
             signal: chatController.signal,
             body: JSON.stringify({
                 question: question,
-                language: lang, external_consent: document.getElementById('externalConsent').checked, share_weather: document.getElementById('shareWeather').checked, share_soil: document.getElementById('shareSoil').checked, crop: document.getElementById('cropContext').value, stage: document.getElementById('stageContext').value, location: document.getElementById('locationContext').value
+                language: lang, external_consent: useAi && externalConsent.checked, share_weather: document.getElementById('shareWeather').checked, share_soil: document.getElementById('shareSoil').checked, crop: document.getElementById('cropContext').value, stage: document.getElementById('stageContext').value, location: document.getElementById('locationContext').value
             })
         });
 
@@ -442,7 +483,10 @@ async function submitQuestion(text) {
                     ? 'Huduma ya AI haipatikani kwa sasa.'
                     : 'The AI service is currently unavailable.');
         } else {
-            loadingBubble.textContent = data.answer;
+            const modeLabel = data.mode === 'ai_support'
+                ? 'VAYUMA AI Support'
+                : (lang === 'sw' ? 'Msaidizi wa kanuni' : 'Rule-based helper');
+            loadingBubble.textContent = modeLabel + '\n\n' + data.answer;
         }
     } catch (error) {
         if (request !== chatRequest || error.name === 'AbortError') return;
