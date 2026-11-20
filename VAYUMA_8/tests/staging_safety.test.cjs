@@ -20,3 +20,21 @@ test('AI files have no output before PHP', () => {
 test('receipt pages request private no-store caching', () => {
   for (const f of ['mpesa_receipt.php','subscription_receipt.php']) assert.match(fs.readFileSync(path.join(root,f),'utf8'),/Cache-Control: private, no-store/);
 });
+test('database configuration failures log only a safe stage, not credentials', () => {
+  const r=spawnSync(php, [path.join(root, 'config/db.php')], {
+    encoding:'utf8', env:{...process.env, APP_ENV:'invalid', DB_USER:'synthetic-user', DB_PASSWORD:'synthetic-secret'}
+  });
+  assert.equal(r.status, 0, r.stderr);
+  const output = r.stdout + r.stderr;
+  assert.match(output, /Stage: configuration/);
+  assert.match(output, /VAYUMA is temporarily unavailable/);
+  assert.doesNotMatch(output, /synthetic-user|synthetic-secret/);
+});
+test('Render Blueprint targets the free staging Docker service', () => {
+  const blueprint = fs.readFileSync(path.join(__dirname, '..', '..', 'render.yaml'), 'utf8');
+  assert.match(blueprint, /^\s+plan:\s*free\s*$/m);
+  assert.match(blueprint, /^\s+dockerfilePath:\s*\.\/VAYUMA_8\/Dockerfile\s*$/m);
+  assert.match(blueprint, /^\s+dockerContext:\s*\.\/VAYUMA_8\s*$/m);
+  assert.match(blueprint, /^\s+healthCheckPath:\s*\/health\.php\s*$/m);
+  assert.match(blueprint, /key:\s*APP_ENV\s*\n\s*value:\s*staging/);
+});

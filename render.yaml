@@ -2,6 +2,7 @@ services:
   - type: web
     name: vayuma-staging
     runtime: docker
+    plan: free
     dockerfilePath: ./VAYUMA_8/Dockerfile
     dockerContext: ./VAYUMA_8
     healthCheckPath: /health.php
