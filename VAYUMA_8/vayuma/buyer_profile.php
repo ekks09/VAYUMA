@@ -35,7 +35,7 @@ function oldv($profile,$key,$fallback=''){return htmlspecialchars((string)($prof
 <link rel="stylesheet" href="frontend/css/components_addition.css?v=20261110">
 <link rel="stylesheet" href="frontend/css/layout.css">
 <link rel="stylesheet" href="frontend/css/pages.css">
-<link rel="stylesheet" href="frontend/css/profile_forms.css?v=20261110-3">
+<link rel="stylesheet" href="frontend/css/profile_forms.css?v=20261120-1">
 <style>
 .va-profile-page { max-width: 950px; margin: 0 auto; padding: var(--va-space-6); }
 .va-profile-brand { text-align: center; margin-bottom: var(--va-space-6); }

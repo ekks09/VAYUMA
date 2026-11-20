@@ -1,4 +1,3 @@
-
 <?php
 /*
  * VAYUMA subscription access guard.

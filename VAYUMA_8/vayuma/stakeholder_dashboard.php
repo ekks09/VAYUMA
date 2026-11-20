@@ -52,7 +52,7 @@ $full_name = $_SESSION["full_name"] ?? "Member";
 <html lang="en">
 <head><?php require __DIR__ . '/includes/pwa.php'; ?>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title><?php echo htmlspecialchars($role_name, ENT_QUOTES, "UTF-8"); ?> Dashboard | VAYUMA</title>
     <link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
@@ -62,13 +62,16 @@ $full_name = $_SESSION["full_name"] ?? "Member";
 <link rel="stylesheet" href="frontend/css/dashboard-shell.css">
 <style>
 </style>
+<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=2">
 </head>
 <body>
-<?php vayuma_language_selector(); ?>
-    <main class="shell">
-        <header class="top vy-user-menu__stakeholder-header"><div class="brand">VAYUMA<small>SMART ECOSYSTEM</small></div><nav><a class="va-dash-sidebar--nav-item" href="market_connect.php">Marketplace</a> &nbsp; <a class="va-dash-sidebar--nav-item" href="auth/logout.php">Logout</a></nav><?php require __DIR__ . '/includes/header_user_menu.php'; ?></header>
+<div class="va-dash-layout"><?php
+$dashboardLinks = ['Dashboard' => 'stakeholder_dashboard.php', 'Marketplace' => 'market_connect.php', 'Exchange' => 'stakeholder_offers.php', 'Requests' => 'stakeholder_requests.php', 'Edit profile' => 'stakeholder_profile.php?from=stakeholder_dashboard.php'];
+require __DIR__ . '/includes/dashboard_generic_sidebar.php'; ?>
+    <main class="shell va-generic-main">
+        <header class="top vy-user-menu__stakeholder-header"><button type="button" class="va-mobile-menu-btn" aria-controls="vaDashSidebar" aria-expanded="false" aria-label="Open navigation">Menu</button><div class="brand">VAYUMA<small>SMART ECOSYSTEM</small></div><nav><a class="va-dash-sidebar--nav-item" href="market_connect.php">Marketplace</a> &nbsp; <a class="va-dash-sidebar--nav-item" href="auth/logout.php">Logout</a></nav><?php require __DIR__ . '/includes/header_user_menu.php'; ?></header>
         <section class="hero"><small><?php echo htmlspecialchars(strtoupper($role_name), ENT_QUOTES, "UTF-8"); ?> DASHBOARD</small><h1>Welcome, <?php echo htmlspecialchars($full_name, ENT_QUOTES, "UTF-8"); ?> <?php echo $icon; ?></h1><p><?php echo htmlspecialchars($intro, ENT_QUOTES, "UTF-8"); ?></p></section>
-        <section class="profile"><div><h2><?php echo htmlspecialchars($profile["organization_name"], ENT_QUOTES, "UTF-8"); ?></h2><p><?php echo htmlspecialchars($profile["county"], ENT_QUOTES, "UTF-8"); ?><?php echo $profile["service_focus"] ? " · " . htmlspecialchars($profile["service_focus"], ENT_QUOTES, "UTF-8") : ""; ?></p></div><a class="va-dash-sidebar--nav-item" class="button" href="stakeholder_profile.php?from=stakeholder_dashboard.php">Edit Profile</a></section>
+        <section class="profile"><div><h2><?php echo htmlspecialchars($profile["organization_name"], ENT_QUOTES, "UTF-8"); ?></h2><p><?php echo htmlspecialchars($profile["county"], ENT_QUOTES, "UTF-8"); ?><?php echo $profile["service_focus"] ? " · " . htmlspecialchars($profile["service_focus"], ENT_QUOTES, "UTF-8") : ""; ?></p></div><a class="va-dash-sidebar--nav-item button" href="stakeholder_profile.php?from=stakeholder_dashboard.php">Edit Profile</a></section>
         <h2 class="section-title">Your workspace</h2>
         <section class="grid">
             <?php foreach ($cards as [$card_icon, $title, $description]): ?>
@@ -90,6 +93,8 @@ $full_name = $_SESSION["full_name"] ?? "Member";
             <?php endforeach; ?>
         </section>
     </main>
+</div>
+<script src="frontend/js/vayuma-ui.js" defer></script>
 <script src="assets/js/vayuma-language.js" defer></script>
 </body>
 </html>

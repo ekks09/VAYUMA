@@ -25,3 +25,5 @@
   .vy-user-menu__stakeholder-header .vy-user-menu { order:1; }
   .vy-user-menu__stakeholder-header > nav { order:2; flex-basis:100%; }
 }
+.vy-user-menu__trigger { width:44px; height:44px; display:flex; align-items:center; justify-content:center; }
+.vy-user-menu__link { min-height:44px; display:flex; align-items:center; }

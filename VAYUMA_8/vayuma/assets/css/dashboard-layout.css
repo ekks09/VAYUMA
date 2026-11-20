@@ -1,0 +1,66 @@
+/* Dashboard-only layout. Role navigation and content remain in their templates. */
+.va-dash-layout, .va-simple-dashboard-grid {
+  display:grid; grid-template-columns:260px minmax(0,1fr); min-height:100vh;
+}
+.va-simple-dashboard-grid { max-width:none; margin:0; padding:0; }
+.va-dash-layout > .va-dash-sidebar, .va-simple-dashboard-grid > .va-sidebar {
+  position:relative; inset:auto; transform:none; width:100%; max-width:none;
+  min-width:0; height:auto; overflow:visible; z-index:1;
+}
+.va-dash-layout > .va-dash-main, .va-simple-dashboard-grid > .va-main--content {
+  min-width:0; width:auto; margin:0; padding:var(--va-space-6);
+}
+.va-sidebar--nav { overflow:visible; }
+.va-dash-topbar, .va-topbar { min-width:0; gap:12px; flex-wrap:wrap; height:auto; min-height:64px; }
+.va-dash-topbar > *, .va-topbar > * { min-width:0; }
+.va-dash-sidebar .va-language-selector, .va-sidebar .va-language-selector { position:static; z-index:auto; flex-wrap:wrap; padding:12px 8px; }
+.va-dash-sidebar--nav-item[href], .va-nav-item, .va-logout-item, .va-language-selector a { min-height:44px; }
+.va-sidebar-overlay { display:none; }
+.va-dash-layout .va-dash-stats { grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr)); }
+.va-dash-layout .va-dash-content-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr)); }
+.va-dash-layout .va-dash-panel, .va-dash-layout .va-dash-stat { min-width:0; overflow-wrap:anywhere; }
+@media (min-width:768px) {
+  .va-dash-main .va-mobile-menu-btn, .va-topbar .va-mobile-menu-btn, .va-sidebar-close { display:none; }
+}
+@media (max-width:767px) {
+  .va-dash-layout, .va-simple-dashboard-grid { grid-template-columns:minmax(0,1fr); min-height:0; }
+  .va-dash-layout > .va-dash-sidebar, .va-simple-dashboard-grid > .va-sidebar {
+    position:fixed; top:0; bottom:0; left:0; height:100dvh; width:min(280px,86vw); max-width:86vw;
+    overflow-y:auto; z-index:calc(var(--va-z-modal) + 1); transform:translateX(-110%);
+    transition:transform .2s ease; padding-bottom:max(20px,env(safe-area-inset-bottom));
+  }
+  .va-dash-layout > .va-dash-sidebar--open, .va-simple-dashboard-grid > .va-sidebar--open { transform:translateX(0); }
+  .va-dash-layout > .va-dash-main, .va-simple-dashboard-grid > .va-main--content { padding:16px max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left)); }
+  .va-dash-main .va-mobile-menu-btn, .va-topbar .va-mobile-menu-btn, .va-sidebar-close { display:inline-flex; }
+  .va-sidebar-overlay--active { display:block; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:var(--va-z-modal); }
+  .va-sidebar-open { overflow:hidden; }
+  .va-dash-topbar .va-dash-search { display:none; }
+  .va-dash-topbar .vy-user-menu { margin-left:auto; }
+  .va-dash-stats, .va-dash-content-grid { grid-template-columns:minmax(0,1fr); }
+  .va-simple-dashboard-grid .va-d-flex.va-justify-between { flex-wrap:wrap; gap:12px; }
+}
+@media (prefers-reduced-motion:reduce) { .va-dash-layout > .va-dash-sidebar, .va-simple-dashboard-grid > .va-sidebar { transition:none; } }
+/* Cards and header for stakeholder and admin dashboards. */
+.va-generic-main { min-width:0; width:100%; padding:24px; }
+.va-generic-main .top { display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:24px; }
+.va-generic-main .top nav { display:flex; align-items:center; flex-wrap:wrap; gap:4px; min-width:0; }
+.va-generic-main .brand { color:var(--va-primary); font-weight:700; }
+.va-generic-main .brand small { display:block; font-size:10px; color:var(--va-text-muted); }
+.va-generic-main .hero, .va-generic-main .profile, .va-generic-main .card, .va-generic-main .notice { padding:20px; margin-bottom:16px; background:var(--va-surface); border:1px solid var(--va-border); border-radius:var(--va-radius-lg); overflow-wrap:anywhere; }
+.va-generic-main .profile { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+.va-generic-main .stats, .va-generic-main .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr)); gap:16px; margin:16px 0; }
+.va-generic-main .card { margin:0; min-width:0; }
+.va-generic-main .top .vy-user-menu { margin-left:auto; }
+@media (min-width:768px) { .va-generic-main .va-mobile-menu-btn { display:none; } }
+@media (max-width:767px) {
+  .va-generic-main { padding:16px max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left)); }
+  .va-generic-main .va-mobile-menu-btn { display:inline-flex; }
+  .va-generic-main .top nav { flex-basis:100%; }
+}
+
+/* Wide administrative tables scroll within their card, not the whole page. */
+.va-table-scroll { max-width:100%; min-width:0; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.va-table-scroll .va-table { min-width:640px; }
+.va-table-scroll:focus-visible { outline:3px solid var(--va-primary); outline-offset:2px; }
+/* Keep the mobile menu's touch target when flex children are allowed to shrink. */
+.va-topbar > .va-mobile-menu-btn, .va-dash-topbar > .va-mobile-menu-btn { min-width:44px; min-height:44px; flex:0 0 44px; }

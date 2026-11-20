@@ -52,7 +52,7 @@ $full_name = $_SESSION['full_name'] ?? "Transport Provider";
 
 <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
 >
 
 <title>Transport Dashboard | VAYUMA</title>
@@ -67,12 +67,13 @@ $full_name = $_SESSION['full_name'] ?? "Transport Provider";
 <link rel="stylesheet" href="frontend/css/dashboard-shell-transitions.css">
 <style>
 </style>
+<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=2">
 
 </head>
 
 
 <body>
-<?php vayuma_language_selector(); ?>
+<div class="va-dash-layout">
 
 
 <div class="va-sidebar-overlay" id="vaSidebarOverlay"></div>
@@ -161,6 +162,7 @@ $full_name = $_SESSION['full_name'] ?? "Transport Provider";
 
     </div>
 
+    <?php vayuma_language_selector(); ?>
 </aside>
 
 
@@ -337,6 +339,7 @@ $full_name = $_SESSION['full_name'] ?? "Transport Provider";
 
 
 </main>
+</div>
 
 
 <script src="frontend/js/vayuma-ui.js" defer></script>

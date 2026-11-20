@@ -17,6 +17,8 @@ const roles = {farmer:'farmer_dashboard.php',buyer:'buyer_dashboard.php',consume
         assert.ok(await page.$('.va-install-entry'), 'missing install entry');
         assert.ok(await page.$('.vy-user-menu__trigger'), 'missing account menu');
         assert.equal(await page.$eval('.vy-user-menu a[href="subscription.php"]',e=>e.getAttribute('href')), 'subscription.php');
+        assert.ok(await page.$('.vy-user-menu a[href="role.php"]'), 'missing category link');
+        assert.ok(await page.$('aside .va-language-selector'), 'language selector is not in the sidebar');
         assert.equal(await page.$eval('.vy-user-menu a[href^="profile.php"]',e=>e.getAttribute('href')), `profile.php?return_to=${dashboard}`);
         await page.click('.vy-user-menu__trigger');
         assert.equal(await page.$eval('.vy-user-menu',e=>e.open),true);
@@ -43,10 +45,20 @@ const roles = {farmer:'farmer_dashboard.php',buyer:'buyer_dashboard.php',consume
         await page.keyboard.press('Escape');
         assert.equal(await page.$('.va-install-dialog'),null);
         if (nav && await nav.isIntersectingViewport()) await page.keyboard.press('Escape');
-        for (const viewport of [320, 390, 768, 1280]) {
+        for (const viewport of [320, 390, 767, 768, 1024, 1280]) {
           await page.setViewport({width:viewport,height:844});
-          const width = await page.evaluate(()=>({viewport:innerWidth,document:document.documentElement.scrollWidth}));
-          assert.ok(width.document <= width.viewport + 1, `horizontal overflow ${JSON.stringify(width)}`);
+          const layout = await page.evaluate(()=>{
+            const sidebar = document.querySelector('aside.va-sidebar, aside.va-dash-sidebar');
+            const main = document.querySelector('.va-main--content, .va-dash-main, .va-generic-main');
+            const toggle = document.querySelector('.va-mobile-menu-btn');
+            return {viewport:innerWidth, document:document.documentElement.scrollWidth,
+              sidebarRight:sidebar.getBoundingClientRect().right, mainLeft:main.getBoundingClientRect().left,
+              toggleVisible:getComputedStyle(toggle).display !== 'none'};
+          });
+          assert.ok(layout.document <= layout.viewport + 1, `horizontal overflow ${JSON.stringify(layout)}`);
+          if (viewport < 768) { const target=await page.$eval('.va-mobile-menu-btn',e=>{const r=e.getBoundingClientRect();return {width:r.width,height:r.height};}); assert.ok(target.width >= 44 && target.height >= 44, `menu touch target ${JSON.stringify(target)}`); }
+          assert.equal(layout.toggleVisible, viewport < 768, `incorrect menu breakpoint ${JSON.stringify(layout)}`);
+          if (viewport >= 768) assert.ok(layout.sidebarRight <= layout.mainLeft + 1, `sidebar overlaps content ${JSON.stringify(layout)}`);
         }
         console.log(`PASS ${role}: install guidance, account menu, navigation and 320–1280px layouts`);
       } catch (e) { failures.push(`${role}: ${e.message}`); console.error(`FAIL ${role}: ${e.message}`); }

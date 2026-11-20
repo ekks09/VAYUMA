@@ -6,8 +6,8 @@ require_once "../config/db.php";
 require_once __DIR__ . '/../includes/csrf.php';
 require_once __DIR__ . '/../includes/role_routes.php';
 
-if (!isset($_SESSION["user_id"])) {
-    header("Location: ../register.php");
+if (!isset($_SESSION["user_id"]) || ($_SESSION['logged_in'] ?? false) !== true) {
+    header("Location: ../login.php");
     exit;
 }
 

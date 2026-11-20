@@ -56,7 +56,7 @@ $st=$conn->prepare("SELECT * FROM extension_field_reports WHERE extension_office
   .va-profile-form-grid { grid-template-columns: 1fr; }
   .va-profile-full { grid-column: auto; }
 }
-</style></head><body><div class="wrap"><div class="top"><div><h1>Farm Reports</h1><p class="muted">Record field observations, recommendations and follow-up needs.</p></div><a class="btn" href="extension_dashboard.php">← Dashboard</a></div>
+</style><link rel="stylesheet" href="frontend/css/extension-workspace.css?v=1"></head><body class="va-extension-workspace"><div class="wrap"><div class="top"><div><h1>Farm Reports</h1><p class="muted">Record field observations, recommendations and follow-up needs.</p></div><a class="btn" href="extension_dashboard.php">← Dashboard</a></div>
 <?php if($msg):?><div class="notice"><?=h($msg)?></div><?php endif;?><?php if($err):?><div class="notice error"><?=h($err)?></div><?php endif;?>
 <section class="va-profile-card"><h2>Create a farm report</h2><form method="post" class="formgrid" style="margin-top:15px"><input class="va-profile-input" type="hidden" name="csrf" value="<?=h($_SESSION['ext_csrf'])?>">
 <div class="field"><label class="va-profile-label-field">Farmer (optional)</label><select class="va-profile-input" name="farmer_id"><option value="0">Select farmer</option><?php foreach($farmers as $f):?><option value="<?=$f['id']?>"><?=h($f['full_name'])?></option><?php endforeach;?></select></div>

@@ -95,9 +95,10 @@ function soilOptionSelected(string $option, string $saved): string {
 }
 </style>
 
+<link rel="stylesheet" href="frontend/css/agriculture-tools.css?v=1">
 </head>
 
-<body>
+<body class="va-soil-tool">
 <?php vayuma_language_selector(); ?>
 
 <div class="va-profile-page">
@@ -153,6 +154,7 @@ function soilOptionSelected(string $option, string $saved): string {
         </h2>
 
 
+        <p><a href="soil_records.php">Save or view laboratory test history →</a> · <a href="stakeholder_directory.php?role=extension_officer">Find an extension officer →</a></p>
         <form id="soilForm">
 
 
@@ -161,7 +163,7 @@ function soilOptionSelected(string $option, string $saved): string {
 
                 <div class="va-profile-form-group">
 
-                    <label class="va-profile-label-field">
+                    <label class="va-profile-label-field" for="soil_type">
                         Soil Type
                     </label>
 
@@ -201,7 +203,7 @@ function soilOptionSelected(string $option, string $saved): string {
 
                 <div class="va-profile-form-group">
 
-                    <label class="va-profile-label-field">
+                    <label class="va-profile-label-field" for="ph_level">
                         Soil pH
                     </label>
 
@@ -211,12 +213,11 @@ function soilOptionSelected(string $option, string $saved): string {
                         step="0.1"
                         min="0"
                         max="14"
-                        placeholder="e.g. 6.5"
-                        required
+                        placeholder="e.g. 6.5 (optional)"
                     >
 
                     <span class="va-profile-hint">
-                        Most crops prefer approximately pH 5.5–7.5.
+                        Interpret pH for your crop using your laboratory method and local advice.
                     </span>
 
                 </div>
@@ -224,7 +225,7 @@ function soilOptionSelected(string $option, string $saved): string {
 
                 <div class="va-profile-form-group">
 
-                    <label class="va-profile-label-field">
+                    <label class="va-profile-label-field" for="nitrogen">
                         Nitrogen (N)
                     </label>
 
@@ -244,7 +245,7 @@ function soilOptionSelected(string $option, string $saved): string {
 
                 <div class="va-profile-form-group">
 
-                    <label class="va-profile-label-field">
+                    <label class="va-profile-label-field" for="phosphorus">
                         Phosphorus (P)
                     </label>
 
@@ -260,7 +261,7 @@ function soilOptionSelected(string $option, string $saved): string {
 
                 <div class="va-profile-form-group">
 
-                    <label class="va-profile-label-field">
+                    <label class="va-profile-label-field" for="potassium">
                         Potassium (K)
                     </label>
 
@@ -276,7 +277,7 @@ function soilOptionSelected(string $option, string $saved): string {
 
                 <div class="va-profile-form-group">
 
-                    <label class="va-profile-label-field">
+                    <label class="va-profile-label-field" for="organic_matter">
                         Organic Matter (%)
                     </label>
 
@@ -292,7 +293,7 @@ function soilOptionSelected(string $option, string $saved): string {
 
                 <div class="form-group full">
 
-                    <label class="va-profile-label-field">
+                    <label class="va-profile-label-field" for="moisture">
                         Soil Moisture (%)
                     </label>
 
@@ -315,7 +316,7 @@ function soilOptionSelected(string $option, string $saved): string {
                 type="submit"
                 class="button"
             >
-                <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg> Analyze My Soil
+                <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg> Show General Guidance
             </button>
 
 
@@ -328,7 +329,7 @@ function soilOptionSelected(string $option, string $saved): string {
         >
 
             <h2>
-                <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg> VAYUMA Soil Assessment
+                <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg> General Soil Guidance
             </h2>
 
             <p id="resultText"></p>
@@ -342,188 +343,18 @@ function soilOptionSelected(string $option, string $saved): string {
 
 
 <script>
-
-document
-.getElementById("soilForm")
-.addEventListener(
-    "submit",
-    function(event) {
-
-        event.preventDefault();
-
-
-        const ph =
-            parseFloat(
-                document.getElementById(
-                    "ph_level"
-                ).value
-            );
-
-
-        let result = "";
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | PH ANALYSIS
-        |--------------------------------------------------------------------------
-        */
-
-        if (ph < 5.5) {
-
-            result +=
-                "<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg> Your soil is acidic. "
-                + "Consider soil amendments recommended "
-                + "by a qualified agricultural professional. ";
-
-        }
-
-        else if (ph > 7.5) {
-
-            result +=
-                "<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg> Your soil is alkaline. "
-                + "Consider management practices suitable "
-                + "for alkaline soils. ";
-
-        }
-
-        else {
-
-            result +=
-                "<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg> Your soil pH is within a generally "
-                + "suitable range for many crops. ";
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | SOIL TYPE
-        |--------------------------------------------------------------------------
-        */
-
-        const soil =
-            document.getElementById(
-                "soil_type"
-            ).value;
-
-
-        if (soil === "Loamy") {
-
-            result +=
-                "Loamy soil generally provides a good "
-                + "balance of drainage and nutrient retention. ";
-
-        }
-
-        else if (soil === "Sandy") {
-
-            result +=
-                "Sandy soil usually drains quickly. "
-                + "Pay attention to irrigation and organic matter. ";
-
-        }
-
-        else if (soil === "Clay") {
-
-            result +=
-                "Clay soil can retain water and nutrients "
-                + "but may require careful drainage management. ";
-
-        } else if (soil === "Silty") {
-
-            result +=
-                "Silty soil often holds moisture and nutrients; protect it from erosion and compaction. ";
-
-        } else if (soil === "Sandy Loam") {
-
-            result +=
-                "Sandy loam often balances drainage and moisture retention; add organic matter when appropriate. ";
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | MOISTURE
-        |--------------------------------------------------------------------------
-        */
-
-        const moisture =
-            parseFloat(
-                document.getElementById(
-                    "moisture"
-                ).value
-            );
-
-
-        if (!isNaN(moisture)) {
-
-            if (moisture < 25) {
-
-                result +=
-                    "💧 Soil moisture appears low. "
-                    + "Check irrigation needs and local weather "
-                    + "conditions before watering. ";
-
-            }
-
-            else if (moisture > 75) {
-
-                result +=
-                    "💧 Soil moisture is high. "
-                    + "Monitor drainage and avoid unnecessary "
-                    + "irrigation. ";
-
-            }
-
-            else {
-
-                result +=
-                    "💧 Soil moisture is currently "
-                    + "within a moderate range. ";
-
-            }
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | OPTIONAL NUTRIENT / ORGANIC MATTER NOTES
-        |--------------------------------------------------------------------------
-        | Values are not interpreted as low/normal/high because units and
-        | laboratory methods can differ. Remind users to follow their report.
-        */
-        const nitrogen = document.getElementById("nitrogen").value.trim();
-        const phosphorus = document.getElementById("phosphorus").value.trim();
-        const potassium = document.getElementById("potassium").value.trim();
-        const organicMatter = document.getElementById("organic_matter").value.trim();
-
-        if (nitrogen || phosphorus || potassium || organicMatter) {
-            result += "You entered optional nutrient or organic-matter test values. Compare these with the units and interpretation on your laboratory report; nutrient ranges vary by test method and soil. ";
-        } else {
-            result += "No nutrient test values were entered, so this assessment cannot determine nitrogen, phosphorus or potassium levels. A soil laboratory test can provide that information. ";
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | DISPLAY RESULT
-        |--------------------------------------------------------------------------
-        */
-
-        document.getElementById(
-            "resultText"
-        ).textContent = result;
-
-
-        document.getElementById(
-            "result"
-        ).style.display = "block";
-
-    }
-);
-
+document.getElementById('soilForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+  const ph = document.getElementById('ph_level').value;
+  const soil = document.getElementById('soil_type').value;
+  let result = 'Soil type is your observation, not a laboratory measurement. ';
+  if (soil) result += 'Selected type: ' + soil + '. ';
+  if (ph !== '') result += 'You entered pH ' + ph + '. pH describes acidity or alkalinity; suitable ranges depend on crop and test method. ';
+  else result += 'No pH value was supplied. ';
+  result += 'Nutrient values cannot be inferred from soil type. Compare measured values and units with your laboratory report and ask an extension officer. No fertilizer or lime rate is calculated.';
+  document.getElementById('resultText').textContent = result;
+  document.getElementById('result').style.display = 'block';
+});
 </script>
 
 <script src="assets/js/vayuma-language.js" defer></script>

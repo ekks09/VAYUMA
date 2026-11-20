@@ -40,7 +40,7 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
 
 <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
 >
 
 <title>Extension Officer Dashboard | VAYUMA</title>
@@ -53,12 +53,12 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
 <link rel="stylesheet" href="frontend/css/dashboard-shell.css">
 <style>
 </style>
+<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=2">
 
 </head>
 
 <body>
-<?php vayuma_language_selector(); ?>
-<div style="max-width:1180px;margin:12px auto;padding:12px 18px;background:#eaf6ed;border-radius:10px;display:flex;gap:18px;flex-wrap:wrap"><a class="va-dash-sidebar--nav-item" style="color:#087d42;font-weight:700" href="extension_profile.php?from=extension_dashboard.php">Edit extension profile</a><a class="va-dash-sidebar--nav-item" style="color:#087d42;font-weight:700" href="agricultural_support_requests.php?view=received">Manage farmer support requests</a><a class="va-dash-sidebar--nav-item" style="color:#087d42;font-weight:700" href="agricultural_support_requests.php?view=sent">My sent requests</a></div>
+
 
 <div class="va-dash-layout">
 
@@ -67,6 +67,7 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
      SIDEBAR
 ====================================================== -->
 
+<div class="va-sidebar-overlay" id="vaSidebarOverlay"></div>
 <aside class="va-dash-sidebar" id="vaDashSidebar">
 
     <div class="va-dash-sidebar--logo">
@@ -166,6 +167,7 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
         Logout
     </a>
 
+    <?php vayuma_language_selector(); ?>
 </aside>
 
 
@@ -174,6 +176,7 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
 ====================================================== -->
 
 <main class="va-dash-main">
+
 
 
 
@@ -190,6 +193,7 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
         <?php require __DIR__ . '/includes/header_user_menu.php'; ?>
 
     </div>
+<div style="max-width:1180px;margin:12px auto;padding:12px 18px;background:#eaf6ed;border-radius:10px;display:flex;gap:18px;flex-wrap:wrap"><a class="va-dash-sidebar--nav-item" style="color:#087d42;font-weight:700" href="extension_profile.php?from=extension_dashboard.php">Edit extension profile</a><a class="va-dash-sidebar--nav-item" style="color:#087d42;font-weight:700" href="agricultural_support_requests.php?view=received">Manage farmer support requests</a><a class="va-dash-sidebar--nav-item" style="color:#087d42;font-weight:700" href="agricultural_support_requests.php?view=sent">My sent requests</a></div>
 
 
     <!-- PAGE HEADER -->

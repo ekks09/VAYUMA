@@ -6,6 +6,7 @@ session_start();
 require_once __DIR__ . '/includes/language.php';
 $simpleShellOnly = true;
 $showSidebarMenu = true;
+$dashboardShell = true;
 $showNav = false;
 require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/subscription_guard.php';
@@ -37,30 +38,9 @@ require_once __DIR__ . '/includes/ui_simple.php';
 ?>
 
 <main class="va-page-main" id="va-main-content">
-  <div class="va-container">
+  <div class="va-container va-simple-dashboard-grid">
     <?php if ($user_id > 0): ?>
-    <div class="va-sidebar-overlay" id="vaSidebarOverlay" onclick="vaCloseSidebar()"></div>
-    <aside class="va-sidebar" id="vaSidebar">
-      <div class="va-sidebar--logo">
-        <a href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA home">
-          <img src="frontend/images/vayuma-logo.jpg" alt="VAYUMA">
-          <div><strong>VAYUMA</strong><small>Smart Ecosystem</small></div>
-        </a>
-      </div>
-      <nav class="va-sidebar--nav">
-        <?php foreach ($navLinks as $label => $href): ?>
-          <?php $isActive = ($activePage === $href); ?>
-          <a href="<?= htmlspecialchars($href) ?>" class="va-nav-item<?= $isActive ? ' va-nav-item--active' : '' ?>" <?= $isActive ? 'aria-current="page"' : '' ?>>
-            <span class="va-nav-icon"><?= $label === 'Dashboard' ? '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-dashboard"/></svg>' : ($label === 'Marketplace' ? '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-marketplace"/></svg>' : ($label === 'My Orders' ? '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-orders"/></svg>' : '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-profile"/></svg>')) ?></span>
-            <span><?= htmlspecialchars($label) ?></span>
-          </a>
-        <?php endforeach; ?>
-      </nav>
-      <div class="va-sidebar--bottom">
-        <a href="subscription.php" class="va-btn va-btn--outline va-btn--sm va-mb-3" style="width:auto;">Subscription</a>
-        <a href="auth/logout.php" class="va-logout-item"><span>⇥</span>Logout</a>
-      </div>
-    </aside>
+    <?php $dashboardIconPartial = 'dashboard_consumer_icon.php'; require __DIR__ . '/includes/dashboard_sidebar.php'; ?>
     <?php endif; ?>
 
     <div class="va-main--content">

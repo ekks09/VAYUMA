@@ -1,0 +1,25 @@
+/* Extension pages opened from the dashboard, using existing VAYUMA dimensions. */
+.va-extension-workspace .wrap { max-width:1100px; margin:auto; padding:var(--va-space-6); }
+.va-extension-workspace .top { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:var(--va-space-4); margin-bottom:var(--va-space-6); }
+.va-extension-workspace .top > * { min-width:0; }
+.va-extension-workspace .va-profile-brand { text-align:left; margin-bottom:var(--va-space-2); font-weight:var(--va-font-weight-bold); color:var(--va-primary); }
+.va-extension-workspace .va-profile-card { min-width:0; margin-bottom:var(--va-space-5); }
+.va-extension-workspace .filters { display:flex; align-items:center; flex-wrap:wrap; gap:var(--va-space-3); }
+.va-extension-workspace .filters input, .va-extension-workspace .filters select { flex:1 1 200px; min-width:0; }
+.va-extension-workspace .formgrid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--va-space-4); align-items:start; }
+.va-extension-workspace .field { min-width:0; }
+.va-extension-workspace .field.full { grid-column:1/-1; }
+.va-extension-workspace .field label { display:block; margin-bottom:var(--va-space-2); }
+.va-extension-workspace .btn { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:var(--va-space-3) var(--va-space-4); background:var(--va-primary); color:#fff; border:0; border-radius:var(--va-radius-md); text-decoration:none; font:inherit; font-weight:var(--va-font-weight-semibold); cursor:pointer; }
+.va-extension-workspace .tablewrap { max-width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.va-extension-workspace .tablewrap table { min-width:640px; border-collapse:collapse; width:100%; }
+.va-extension-workspace .tablewrap th, .va-extension-workspace .tablewrap td { text-align:left; padding:var(--va-space-3); border-bottom:1px solid var(--va-border); }
+.va-extension-workspace .tablewrap:focus-visible { outline:3px solid var(--va-primary); outline-offset:2px; }
+.va-extension-workspace .report, .va-extension-workspace .farmer { min-width:0; padding:var(--va-space-4); border:1px solid var(--va-border); border-radius:var(--va-radius-md); overflow-wrap:anywhere; }
+.va-extension-workspace .muted { color:var(--va-text-secondary); }
+.va-extension-workspace .notice { margin-bottom:var(--va-space-4); padding:var(--va-space-4); background:var(--va-primary-light); border-radius:var(--va-radius-md); }
+@media (max-width:700px) {
+  .va-extension-workspace .wrap { padding:var(--va-space-4); }
+  .va-extension-workspace .formgrid { grid-template-columns:minmax(0,1fr); }
+  .va-extension-workspace .field.full { grid-column:auto; }
+}

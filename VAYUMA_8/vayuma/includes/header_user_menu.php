@@ -27,6 +27,7 @@ if (isset($_SESSION['user_id']) && ($_SESSION['logged_in'] ?? false) === true):
     <div class="vy-user-menu__plan"><strong><?= $vyH($vyPlan['stakeholder_name'] ?? 'Subscription') ?></strong><span class="vy-user-menu__status vy-user-menu__status--<?= $vyH($vyStatusClass) ?>"><?= $vyH($vyStatus) ?></span><?php if ($vyDate): ?><small><?= $vyStatusClass === 'grace' ? 'Grace ends' : 'Expiry' ?>: <?= $vyH($vyDate) ?></small><?php endif; ?><a href="subscription.php">Manage subscription</a></div>
     <a class="vy-user-menu__link" href="<?= $vyH($vyDashboard) ?>">Dashboard</a>
     <a class="vy-user-menu__link" href="<?= $vyH($vyProfile) ?>">Edit profile &amp; photo</a>
+    <a class="vy-user-menu__link" href="role.php">Change account category</a>
     <a class="vy-user-menu__link" href="auth/logout.php">Sign out</a>
   </div>
 </details>

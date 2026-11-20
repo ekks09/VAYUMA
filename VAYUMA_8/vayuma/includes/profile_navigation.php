@@ -4,5 +4,6 @@ require_once __DIR__ . '/role_routes.php';
 ?>
 <nav class="va-profile-navigation" aria-label="Profile setup navigation">
   <a href="<?= htmlspecialchars($profileBackUrl, ENT_QUOTES, 'UTF-8') ?>"><span aria-hidden="true">&larr;</span> <?= htmlspecialchars($profileBackLabel, ENT_QUOTES, 'UTF-8') ?></a>
+  <a href="role.php">Change account category</a>
   <span>Stakeholder profile setup</span>
 </nav>

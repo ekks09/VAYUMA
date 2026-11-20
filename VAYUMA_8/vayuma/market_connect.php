@@ -6,7 +6,8 @@
 session_start();
 require_once __DIR__ . '/includes/language.php';
 $simpleShellOnly = true;
-$showSidebarMenu = true;
+$showSidebarMenu = isset($_SESSION['user_id']) && ($_SESSION['logged_in'] ?? false) === true;
+$dashboardShell = $showSidebarMenu;
 $showNav = false;
 require_once __DIR__ . '/includes/ui_simple.php';
 require_once __DIR__ . '/config/db.php';
@@ -17,9 +18,10 @@ function vayuma_market_h($value): string {
 
 $currentUserId = (int)($_SESSION['user_id'] ?? 0);
 $currentRole = strtolower(trim($_SESSION['role'] ?? ''));
+$currentUserRole = $currentRole;
 $orderError = (string)($_SESSION['order_error'] ?? '');
 unset($_SESSION['order_error']);
-$dashboardLink = ($currentRole === 'farmer') ? 'farmer_dashboard.php' : (($currentRole === 'buyer') ? 'buyer_dashboard.php' : 'dashboard.php');
+$dashboardLink = vayuma_dashboard_return_route();
 
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $categoryId = (int)($_GET['category_id'] ?? 0);
@@ -99,35 +101,15 @@ $navLinks = [
 ?>
 
 <main class="va-page-main" id="va-main-content">
-  <div class="va-container">
-    <?php if ($orderError !== ''): ?>
-      <div class="va-alert va-alert--error" role="alert"><?= vayuma_market_h($orderError) ?></div>
-    <?php endif; ?>
-    <?php if ($currentUserId > 0): ?>
-    <div class="va-sidebar-overlay" id="vaSidebarOverlay" onclick="vaCloseSidebar()"></div>
-    <aside class="va-sidebar" id="vaSidebar">
-      <div class="va-sidebar--logo">
-        <a href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA home">
-          <img src="frontend/images/vayuma-logo.jpg" alt="VAYUMA">
-          <div><strong>VAYUMA</strong><small>Smart Ecosystem</small></div>
-        </a>
-      </div>
-      <nav class="va-sidebar--nav">
-        <?php foreach ($navLinks as $label => $href): ?>
-          <?php $isActive = ($activePage === $href); ?>
-          <a href="<?= htmlspecialchars($href) ?>" class="va-nav-item<?= $isActive ? ' va-nav-item--active' : '' ?>" <?= $isActive ? 'aria-current="page"' : '' ?>>
-            <span class="va-nav-icon"><?= $label === 'Dashboard' ? '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-dashboard"/></svg>' : ($label === 'Add Produce' ? '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg>' : '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg>') ?></span>
-            <span><?= htmlspecialchars($label) ?></span>
-          </a>
-        <?php endforeach; ?>
-      </nav>
-      <div class="va-sidebar--bottom">
-        <a href="auth/logout.php" class="va-logout-item"><span>⇥</span>Logout</a>
-      </div>
-    </aside>
+  <div class="va-container<?= $dashboardShell ? ' va-simple-dashboard-grid' : '' ?>">
+    <?php if ($dashboardShell): ?>
+      <?php $activePage = 'market_connect.php'; $dashboardIconPartial = 'dashboard_farmer_icon.php'; require __DIR__ . '/includes/dashboard_sidebar.php'; ?>
     <?php endif; ?>
 
-    <div class="va-main--content">
+    <div class="va-main--content<?= $dashboardShell ? '' : ' va-market-guest-content' ?>">
+      <?php if ($orderError !== ''): ?>
+        <div class="va-alert va-alert--error" role="alert"><?= vayuma_market_h($orderError) ?></div>
+      <?php endif; ?>
       <?php if ($currentUserRole === 'farmer'): ?>
       <div class="va-section va-mb-4">
         <div class="va-d-flex va-justify-between va-items-center">
@@ -205,7 +187,7 @@ $navLinks = [
           <div class="va-text-muted va-text-sm"><?= number_format($totalListings) ?> listing(s)</div>
         </div>
 
-        <div class="va-d-grid va-gap-4" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr));">
+        <div class="va-d-grid va-gap-4" style="grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));">
           <?php if ($totalListings > 0): ?>
             <?php while ($product = $result->fetch_assoc()): ?>
             <article class="va-card va-card--p va-mb-4" style="cursor:pointer;" onclick="window.location.href='produce_details.php?id=<?= (int)$product['id'] ?>'">
@@ -269,7 +251,7 @@ $navLinks = [
               <div class="va-empty--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg></div>
               <div class="va-empty--title">No produce available yet</div>
               <div class="va-empty--desc">
-                <?php if ($search !== '' || $category !== ''): ?>
+                <?php if ($search !== '' || $categoryId > 0): ?>
                   We couldn't find any active listings matching your search. Try another search.
                 <?php else: ?>
                   Farmers have not listed any produce on VAYUMA yet.

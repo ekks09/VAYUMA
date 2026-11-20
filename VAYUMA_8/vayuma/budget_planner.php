@@ -822,7 +822,7 @@ function calculateBudget() {
             "budgetTip"
         ).innerHTML =
 
-            "<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg> <strong>VAYUMA Warning:</strong> " +
+            '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg> <strong>VAYUMA Warning:</strong> ' +
 
             "Your estimated expenses are higher than " +
 

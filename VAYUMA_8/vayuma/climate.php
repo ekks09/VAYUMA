@@ -39,6 +39,8 @@ $full_name = $_SESSION['full_name'] ?? 'Farmer';
 <link rel="stylesheet" href="frontend/css/layout.css">
 <link rel="stylesheet" href="frontend/css/pages.css">
 <style>
+.container { max-width:1100px; margin:auto; padding:16px; } .hero,.card,.advice,.forecast { background:#fff; border:1px solid #dfe9e1; border-radius:12px; padding:18px; margin:12px 0; } .climate-form { display:flex; gap:8px; flex-wrap:wrap; align-items:center; } .climate-form input, #matches { padding:10px; min-height:44px; max-width:100%; } .climate-form button, #showForecast { min-height:44px; padding:10px 16px; cursor:pointer; } .climate-form p { width:100%; } .weather-grid,.lower-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr)); gap:12px; } .forecast-day { padding:10px 0; border-bottom:1px solid #e5ebe6; } .status { padding:12px; overflow-wrap:anywhere; }
+
 .va-dash-sidebar { width: 260px; background: var(--va-surface); border-right: 1px solid var(--va-border); position: fixed; left: 0; top: 0; bottom: 0; padding: var(--va-space-5); overflow-y: auto; z-index: 100; }
 .va-dash-sidebar--logo { padding: 0 var(--va-space-4) var(--va-space-6); }
 .va-dash-sidebar--logo h1 { color: var(--va-primary); font-size: var(--va-font-size-xl); font-weight: var(--va-font-weight-bold); letter-spacing: 0.05em; margin: 0; }
@@ -82,10 +84,11 @@ $full_name = $_SESSION['full_name'] ?? 'Farmer';
 @media (max-width: 650px) { .va-dash-sidebar { position: fixed; left: -260px; transition: left 0.3s; box-shadow: var(--va-shadow-lg); z-index: 200; } .va-dash-sidebar--open { left: 0; } .va-dash-main { margin-left: 0; width: 100%; padding: var(--va-space-4); } .va-dash-stats { grid-template-columns: 1fr; } }
 </style>
 
+<link rel="stylesheet" href="frontend/css/agriculture-tools.css?v=1">
 </head>
 
 
-<body>
+<body class="va-climate-tool">
 <?php vayuma_language_selector(); ?>
 
 
@@ -123,29 +126,18 @@ $full_name = $_SESSION['full_name'] ?? 'Farmer';
         </h1>
 
         <p>
-            Get real-time weather information and
-            farming recommendations based on your
-            location.
+            Find a forecast for your chosen location. Forecasts are estimates, not measurements from your farm. <a href="https://open-meteo.com/" rel="noopener noreferrer">Weather data: Open-Meteo</a>.
         </p>
 
 
-        <form
-            id="climateForm"
-            class="location-form"
-        >
-
-            <input
-                type="text"
-                id="location"
-                placeholder="Enter your location e.g. Nakuru"
-                required
-            >
-
-            <button type="submit">
-                Check Climate
-            </button>
-
+        <form id="climateForm" class="climate-form">
+            <label for="county">County (optional)</label><input id="county" list="kenya-counties" maxlength="80" placeholder="e.g. Nakuru"><datalist id="kenya-counties"><option value="Baringo"><option value="Bomet"><option value="Bungoma"><option value="Busia"><option value="Elgeyo-Marakwet"><option value="Embu"><option value="Garissa"><option value="Homa Bay"><option value="Isiolo"><option value="Kajiado"><option value="Kakamega"><option value="Kericho"><option value="Kiambu"><option value="Kilifi"><option value="Kirinyaga"><option value="Kisii"><option value="Kisumu"><option value="Kitui"><option value="Kwale"><option value="Laikipia"><option value="Lamu"><option value="Machakos"><option value="Makueni"><option value="Mandera"><option value="Meru"><option value="Migori"><option value="Mombasa"><option value="Muranga"><option value="Nairobi"><option value="Nakuru"><option value="Nandi"><option value="Narok"><option value="Nyamira"><option value="Nyandarua"><option value="Nyeri"><option value="Samburu"><option value="Siaya"><option value="Taita-Taveta"><option value="Tana River"><option value="Tharaka-Nithi"><option value="Trans Nzoia"><option value="Turkana"><option value="Uasin Gishu"><option value="Vihiga"><option value="Wajir"><option value="West Pokot"><option value="Marsabit"></datalist>
+            <label for="location">Town or local area</label><input type="text" id="location" maxlength="80" placeholder="e.g. Naivasha" required>
+            <button type="submit">Find location</button>
+            <button type="button" id="useGps">Use phone GPS (optional)</button><label><input type="checkbox" id="keepForecast"> Keep this forecast in my session for optional assistant use</label>
+            <p>GPS is requested only when you choose it; coordinates are sent to the weather service to obtain a forecast.</p>
         </form>
+        <div id="matchArea" hidden><label for="matches">Confirm the matched place</label><select id="matches"></select><button type="button" id="showForecast">Get forecast</button></div>
 
     </div>
 
@@ -154,9 +146,9 @@ $full_name = $_SESSION['full_name'] ?? 'Farmer';
 
     <div
         id="status"
-        class="status"
+        class="status" role="status" aria-live="polite"
     >
-        Loading climate information...
+        Search for a place or choose phone GPS.
     </div>
 
 
@@ -239,7 +231,7 @@ $full_name = $_SESSION['full_name'] ?? 'Farmer';
             </div>
 
             <div class="muted">
-                Current precipitation
+                Current precipitation (mm over the provider’s current interval)
             </div>
 
         </div>
@@ -285,11 +277,11 @@ $full_name = $_SESSION['full_name'] ?? 'Farmer';
 
             <p id="farmingAdvice">
 
-                Enter your location above to receive
-                climate-based farming guidance.
+Choose a location to see general, unreviewed decision-support guidance.
 
             </p>
-
+            <ul id="climateWarnings"></ul>
+            <p>General indicators are not official warnings or crop-specific recommendations. Forecasts can change and may differ at your farm. Consult <a href="https://meteo.go.ke/" rel="noopener noreferrer">Kenya Meteorological Department forecasts and alerts</a> and an <a href="stakeholder_directory.php?role=extension_officer">extension officer</a> before acting.</p>
         </div>
 
 
@@ -385,291 +377,7 @@ $full_name = $_SESSION['full_name'] ?? 'Farmer';
      JAVASCRIPT
      ===================================================== -->
 
-<script>
-
-
-/*
-|--------------------------------------------------------------------------
-| GET ELEMENTS
-|--------------------------------------------------------------------------
-*/
-
-const form =
-    document.getElementById("climateForm");
-
-const locationInput =
-    document.getElementById("location");
-
-const status =
-    document.getElementById("status");
-
-
-/*
-|--------------------------------------------------------------------------
-| WHEN USER CLICKS CHECK CLIMATE
-|--------------------------------------------------------------------------
-*/
-
-form.addEventListener(
-    "submit",
-    function(event) {
-
-        event.preventDefault();
-
-        const location =
-            locationInput.value.trim();
-
-
-        if (location === "") {
-
-            alert(
-                "Please enter your location."
-            );
-
-            return;
-
-        }
-
-
-        getClimate(location);
-
-    }
-);
-
-
-/*
-|--------------------------------------------------------------------------
-| GET CLIMATE DATA
-|--------------------------------------------------------------------------
-*/
-
-async function getClimate(location) {
-
-
-    status.style.display = "block";
-
-    status.textContent =
-        "Loading climate information for "
-        + location
-        + "...";
-
-
-    try {
-
-
-        /*
-        ------------------------------------------------------
-        SEND LOCATION TO get_climate.php
-        ------------------------------------------------------
-        */
-
-        const response =
-            await fetch(
-                "get_climate.php?location="
-                + encodeURIComponent(location)
-            );
-
-
-        const data =
-            await response.json();
-
-
-        /*
-        ------------------------------------------------------
-        CHECK FOR ERROR
-        ------------------------------------------------------
-        */
-
-        if (!data.success) {
-
-            status.textContent =
-                data.message;
-
-            return;
-
-        }
-
-
-        /*
-        ------------------------------------------------------
-        TEMPERATURE
-        ------------------------------------------------------
-        */
-
-        document.getElementById(
-            "temperature"
-        ).textContent =
-            Math.round(
-                data.current.temperature
-            )
-            + "°C";
-
-
-        /*
-        ------------------------------------------------------
-        WEATHER CONDITION
-        ------------------------------------------------------
-        */
-
-        document.getElementById(
-            "condition"
-        ).textContent =
-            data.current.condition;
-
-
-        /*
-        ------------------------------------------------------
-        HUMIDITY
-        ------------------------------------------------------
-        */
-
-        document.getElementById(
-            "humidity"
-        ).textContent =
-            data.current.humidity
-            + "%";
-
-
-        /*
-        ------------------------------------------------------
-        RAINFALL
-        ------------------------------------------------------
-        */
-
-        document.getElementById(
-            "rainfall"
-        ).textContent =
-            data.current.rainfall
-            + " mm";
-
-
-        /*
-        ------------------------------------------------------
-        WIND
-        ------------------------------------------------------
-        */
-
-        document.getElementById(
-            "wind"
-        ).textContent =
-            data.current.wind
-            + " km/h";
-
-
-        /*
-        ------------------------------------------------------
-        FARMING ADVICE
-        ------------------------------------------------------
-        */
-
-        document.getElementById(
-            "farmingAdvice"
-        ).textContent =
-            data.farming_advice;
-
-
-        /*
-        ------------------------------------------------------
-        STATUS
-        ------------------------------------------------------
-        */
-
-        status.textContent =
-            "Climate information loaded for "
-            + data.location.name
-            + ", "
-            + data.location.country;
-
-
-        /*
-        ------------------------------------------------------
-        FORECAST
-        ------------------------------------------------------
-        */
-
-        const forecastContainer =
-            document.getElementById(
-                "forecast"
-            );
-
-
-        forecastContainer.innerHTML = "";
-
-
-        data.forecast.forEach(
-            function(day) {
-
-
-                const date =
-                    new Date(day.date);
-
-
-                const dayName =
-                    date.toLocaleDateString(
-                        undefined,
-                        {
-                            weekday: "long"
-                        }
-                    );
-
-
-                const row =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                row.className =
-                    "forecast-day";
-
-
-                row.innerHTML =
-
-                    "<span>"
-                    + dayName
-                    + "</span>"
-
-                    +
-
-                    "<span>"
-                    + Math.round(day.max)
-                    + "°C / "
-                    + Math.round(day.min)
-                    + "°C"
-                    + "</span>";
-
-
-                forecastContainer.appendChild(
-                    row
-                );
-
-            }
-        );
-
-
-    }
-
-
-    catch (error) {
-
-
-        console.error(error);
-
-
-        status.style.display = "block";
-
-
-        status.textContent =
-            "Unable to load climate information. "
-            + "Make sure XAMPP is running and "
-            + "your internet connection is working.";
-
-
-    }
-
-}
-
-</script>
+<script src="frontend/js/climate-guidance.js?v=1" defer></script>
 
 
 <script src="assets/js/vayuma-language.js" defer></script>

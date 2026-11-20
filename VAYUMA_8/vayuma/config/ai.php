@@ -1,12 +1,9 @@
 <?php
-/**
- * VAYUMA AI configuration.
- * Never store your actual API key in this file.
- */
-
+// Secrets come from the server environment, never from the browser or repository.
 return [
-    'api_key' => getenv('OPENAI_API_KEY') ?: '',
-    'model' => 'gpt-4.1-mini',
-    'api_url' => 'https://api.openai.com/v1/responses',
-    'timeout' => 45,
+    'provider' => 'nvidia',
+    'api_key' => getenv('NVIDIA_API_KEY') ?: '',
+    'model' => getenv('NVIDIA_MODEL') ?: '',
+    'api_url' => 'https://integrate.api.nvidia.com/v1/chat/completions',
+    'timeout' => 30,
 ];
