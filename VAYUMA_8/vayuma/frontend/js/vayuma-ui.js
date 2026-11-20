@@ -16,7 +16,8 @@
 
     const dashboardSidebar = sidebar.id === "vaDashSidebar";
     const openClass = dashboardSidebar ? "va-dash-sidebar--open" : "va-sidebar--open";
-    const mobile = window.matchMedia(dashboardSidebar ? "(max-width: 650px)" : "(max-width: 1024px)");
+    const gridShell = !!sidebar.closest(".va-dash-layout, .va-simple-dashboard-grid");
+    const mobile = window.matchMedia(gridShell ? "(max-width: 767px)" : (dashboardSidebar ? "(max-width: 650px)" : "(max-width: 1024px)"));
     let returnFocus = opener;
     let closeButton = sidebar.querySelector(".va-sidebar-close");
 

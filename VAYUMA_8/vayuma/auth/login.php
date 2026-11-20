@@ -59,5 +59,10 @@ $_SESSION["email"] = $user["email"];
 $_SESSION["role"] = $role;
 $_SESSION["logged_in"] = true;
 
-header('Location: ' . ($role === '' ? '../role.php' : '../dashboard.php'));
+$pending = $_SESSION['pending_feature'] ?? '';
+if ($role !== '' && is_string($pending) && in_array($pending, ['climate', 'soil', 'ai'], true)) {
+    header('Location: ../feature_access.php?feature=' . $pending);
+} else {
+    header('Location: ' . ($role === '' ? '../role.php' : '../dashboard.php'));
+}
 exit;

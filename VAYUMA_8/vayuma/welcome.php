@@ -83,7 +83,7 @@ $platformHomeUrl = vayuma_platform_home_route();
 
                 <div class="welcome-features">
 
-                    <div class="feature">
+                    <a class="feature feature-link" href="feature.php?feature=climate">
 
                         <div class="feature-icon">
                             <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
@@ -102,10 +102,10 @@ $platformHomeUrl = vayuma_platform_home_route();
                             <?= htmlspecialchars(t('climate_desc'), ENT_QUOTES, 'UTF-8') ?>
                         </span>
 
-                    </div>
+                    </a>
 
 
-                    <div class="feature">
+                    <a class="feature feature-link" href="feature.php?feature=soil">
 
                         <div class="feature-icon">
                             <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
@@ -122,10 +122,10 @@ $platformHomeUrl = vayuma_platform_home_route();
                             <?= htmlspecialchars(t('soil_desc'), ENT_QUOTES, 'UTF-8') ?>
                         </span>
 
-                    </div>
+                    </a>
 
 
-                    <div class="feature">
+                    <a class="feature feature-link" href="feature.php?feature=ai">
 
                         <div class="feature-icon">
                             <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
@@ -144,7 +144,7 @@ $platformHomeUrl = vayuma_platform_home_route();
                             <?= htmlspecialchars(t('ai_guidance'), ENT_QUOTES, 'UTF-8') ?>
                         </span>
 
-                    </div>
+                    </a>
 
 
                     <div class="feature">

@@ -3057,3 +3057,7 @@ body {
         transform: none;
     }
 }
+
+/* The welcome feature tiles are real keyboard-accessible links. */
+.welcome-features .feature-link { display:block; text-decoration:none; color:inherit; }
+.welcome-features .feature-link:focus-visible { outline:3px solid #087d42; outline-offset:3px; }

@@ -9,11 +9,12 @@ $roleAccountName = (string)($_SESSION['full_name'] ?? 'VAYUMA member');
 $roleAccountEmail = (string)($_SESSION['email'] ?? $_SESSION['phone'] ?? '');
 
 /* Make sure the user has completed registration. */
-if (!isset($_SESSION["user_id"])) {
-    header("Location: register.php");
+if (!isset($_SESSION["user_id"]) || ($_SESSION['logged_in'] ?? false) !== true) {
+    header("Location: login.php");
     exit;
 }
 
+require_once __DIR__ . '/config/db.php';
 $role_error = $_SESSION["role_error"] ?? "";
 unset($_SESSION["role_error"]);
 
@@ -181,7 +182,7 @@ $role_groups = [
         </a>
         <div class="role-topbar-locale"><?php vayuma_language_selector(); ?></div>
         <div class="role-account" aria-label="Your account">
-            <span class="role-account-avatar" aria-hidden="true"><?= htmlspecialchars(strtoupper(substr($roleAccountName, 0, 1)), ENT_QUOTES, 'UTF-8') ?></span>
+            <?php require __DIR__ . '/includes/header_user_menu.php'; ?>
             <span class="role-account-copy">
                 <strong><?= htmlspecialchars($roleAccountName, ENT_QUOTES, 'UTF-8') ?></strong>
                 <small><?= htmlspecialchars($roleAccountEmail !== '' ? $roleAccountEmail : 'Account setup', ENT_QUOTES, 'UTF-8') ?></small>
@@ -195,7 +196,10 @@ $role_groups = [
                 <div class="step-badge">STEP 2 OF 3</div>
                 <h1>Choose Your Role</h1>
                 <p>Welcome, <strong><?= htmlspecialchars($roleAccountName, ENT_QUOTES, 'UTF-8') ?></strong></p>
-                <span>Tell us how you will use VAYUMA so we can personalize your experience.</span>
+                <span>Tell us how you will use VAYUMA so we can personalize your experience. A different category cannot be selected while a paid subscription is active; you can change it after the subscription expires.</span>
+                <?php if (vayuma_role_route((string)($_SESSION['role'] ?? ''), 'dashboard')): ?>
+                    <p><a href="<?= htmlspecialchars(vayuma_dashboard_return_route(), ENT_QUOTES, 'UTF-8') ?>">← Back to your dashboard</a> · <a href="subscription.php">View subscription</a></p>
+                <?php endif; ?>
             </div>
 
             <form action="auth/save_role.php" method="POST" id="roleForm" novalidate>

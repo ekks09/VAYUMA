@@ -69,7 +69,7 @@ try {
 
 <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
 >
 
 <title>Cooperative Dashboard | VAYUMA</title>
@@ -84,12 +84,12 @@ try {
 <link rel="stylesheet" href="frontend/css/dashboard-shell-transitions.css">
 <style>
 </style>
+<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=2">
 
 </head>
 
 
 <body>
-<?php vayuma_language_selector(); ?>
 
 
 <div class="va-dash-layout">
@@ -199,6 +199,7 @@ try {
     </a>
 
 
+    <?php vayuma_language_selector(); ?>
 </aside>
 
 

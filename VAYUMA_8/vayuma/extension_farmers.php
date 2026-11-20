@@ -56,7 +56,7 @@ if($r){while($row=$r->fetch_assoc())$counties[]=$row['county'];}
   .va-profile-form-grid { grid-template-columns: 1fr; }
   .va-profile-full { grid-column: auto; }
 }
-</style></head><body><div class="wrap">
+</style><link rel="stylesheet" href="frontend/css/extension-workspace.css?v=1"></head><body class="va-extension-workspace"><div class="wrap">
 <div class="top"><div><div class="va-profile-brand">VAYUMA · Farmers</div><p class="muted">Browse registered farmers and their published farm profile details.</p></div><a class="btn" href="extension_dashboard.php">← Dashboard</a></div>
 <div class="va-profile-card"><form method="get" class="filters"><input class="va-profile-input" name="q" value="<?=h($search)?>" placeholder="Search farmer, farm, crop or location"><select class="va-profile-input" name="county"><option value="">All counties</option><?php foreach($counties as $c):?><option value="<?=h($c)?>" <?=$county===$c?'selected':''?>><?=h($c)?></option><?php endforeach;?></select><button class="btn">Search</button><a class="btn" style="background:#647568" href="extension_farmers.php">Clear</a></form>
 <p class="muted" style="margin-top:14px"><?=count($farmers)?> farmer record(s) found. This page does not create farmer accounts; farmers register through the normal VAYUMA registration process.</p>

@@ -329,7 +329,10 @@ $stmt->close();
 |--------------------------------------------------------------------------
 */
 
+session_regenerate_id(true);
 $_SESSION["user_id"] = $user_id;
+$_SESSION["logged_in"] = true;
+$_SESSION["role"] = '';
 
 $_SESSION["full_name"] = $full_name;
 

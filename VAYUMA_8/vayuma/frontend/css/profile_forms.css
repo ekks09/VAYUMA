@@ -212,12 +212,20 @@
   }
 
   .va-profile-navigation {
-    align-items: flex-start;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: var(--va-space-2);
   }
 
-  .va-profile-navigation span {
-    max-width: 112px;
-    text-align: right;
+  .va-profile-navigation > span {
+    flex-basis: 100%;
+    max-width: none;
+    text-align: left;
+  }
+
+  .va-profile-navigation a {
+    max-width: 100%;
   }
 
   .va-profile-document form button[type="submit"],

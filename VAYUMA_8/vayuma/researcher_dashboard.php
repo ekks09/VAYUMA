@@ -36,7 +36,7 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
 <head><?php require __DIR__ . '/includes/pwa.php'; ?>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
 <title>Researcher Dashboard | VAYUMA</title>
 
@@ -49,11 +49,12 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
 <link rel="stylesheet" href="frontend/css/dashboard-shell-transitions.css">
 <style>
 </style>
+<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=2">
 
 </head>
 
 <body>
-<?php vayuma_language_selector(); ?>
+<div class="va-dash-layout">
 
 <div class="dashboard">
 
@@ -126,6 +127,7 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
         <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-logout"/></svg> <span>Logout</span>
     </a>
 
+    <?php vayuma_language_selector(); ?>
 </aside>
 
 
@@ -300,6 +302,7 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
     </div>
 
 </main>
+</div>
 
 </div>
 

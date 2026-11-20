@@ -50,7 +50,7 @@ function transport_h($value) { return htmlspecialchars((string)$value, ENT_QUOTE
 <link rel="stylesheet" href="frontend/css/components_addition.css?v=20261110">
 <link rel="stylesheet" href="frontend/css/layout.css">
 <link rel="stylesheet" href="frontend/css/pages.css">
-<link rel="stylesheet" href="frontend/css/profile_forms.css?v=20261110-3">
+<link rel="stylesheet" href="frontend/css/profile_forms.css?v=20261120-1">
 <style>
 .va-form-page { max-width: 950px; margin: 0 auto; padding: var(--va-space-6); }
 .va-form-brand { text-align: center; margin-bottom: var(--va-space-6); }

@@ -12,7 +12,7 @@ const puppeteer=require('puppeteer-core'); const root=path.join(__dirname,'../va
   for(const f of ['tokens.css','user-menu.css']) await page.addStyleTag({content:fs.readFileSync(path.join(root,'frontend/css',f),'utf8')});
   await page.addScriptTag({content:fs.readFileSync(path.join(root,'frontend/js/user-menu.js'),'utf8')});
   assert.equal(await page.$eval('.vy-user-menu__initials',e=>e.textContent),'MW');
-  const rect=await page.$eval('.vy-user-menu__trigger',e=>[e.getBoundingClientRect().width,e.getBoundingClientRect().height]); assert.deepEqual(rect,[36,36]);
+  const rect=await page.$eval('.vy-user-menu__trigger',e=>[e.getBoundingClientRect().width,e.getBoundingClientRect().height]); assert.deepEqual(rect,[44,44]);
   await page.click('.vy-user-menu__trigger'); await page.waitForFunction(()=>document.querySelector('summary').getAttribute('aria-expanded')==='true');
   const bounds=await page.$eval('.vy-user-menu__popover',e=>({left:e.getBoundingClientRect().left,right:e.getBoundingClientRect().right})); assert.ok(bounds.left>=0&&bounds.right<=width,JSON.stringify(bounds));
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
