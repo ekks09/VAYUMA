@@ -25,9 +25,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($name === '' || mb_strlen($name, 'UTF-8') > 100) throw new VayumaProfileError('Enter a name of up to 100 characters.');
         if ($phone === null) throw new VayumaProfileError('Enter a valid phone number.');
         if (strlen($email) > 100 || ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL))) throw new VayumaProfileError('Enter a valid email address.');
-        $existsStmt = $conn->prepare('SELECT id FROM users WHERE id=? LIMIT 1');
+        $existsStmt = $conn->prepare('SELECT id, phone FROM users WHERE id=? LIMIT 1');
         $existsStmt->bind_param('i', $id); $existsStmt->execute(); $userExists = $existsStmt->get_result()->fetch_assoc(); $existsStmt->close();
         if (!$userExists) throw new VayumaProfileError('Your account could not be found. Please sign in again.');
+        // A user-editable phone must not be used to acquire or transfer staff access.
+        $oldPhone = vayuma_onboarding_phone((string)($userExists['phone'] ?? ''));
+        $staffPhones = (string)(getenv('VAYUMA_ONBOARDING_PHONES') ?: '');
+        if ($phone !== $oldPhone && (vayuma_onboarding_phone_allowed($phone, $staffPhones) || vayuma_onboarding_phone_allowed((string)($userExists['phone'] ?? ''), $staffPhones))) {
+            throw new VayumaProfileError('Staff phone changes require support.');
+        }
         [$phone1, $phone2, $phone3] = vayuma_login_phone_variants($phone);
         $stmt = $conn->prepare("SELECT id FROM users WHERE id<>? AND (phone_identity=? OR REPLACE(phone_identity, '.', '') IN (?, ?, ?) OR (email_identity IS NOT NULL AND email_identity=?)) LIMIT 1");
         $stmt->bind_param('isssss',$id,$phone,$phone1,$phone2,$phone3,$email); $stmt->execute(); $duplicate = $stmt->get_result()->fetch_assoc(); $stmt->close();

@@ -22,11 +22,13 @@ try {
     $stmt = $conn->prepare("SELECT id, full_name, phone, email, password, role FROM users WHERE email_identity = ? OR phone_identity = ? OR REPLACE(phone_identity, '.', '') IN (?, ?, ?) LIMIT 2");
     if (!$stmt) throw new RuntimeException('Login query unavailable');
     $stmt->bind_param("sssss", $emailIdentity, $phone1, $phone1, $phone2, $phone3);
-    $stmt->execute();
+    if (!$stmt->execute()) throw new RuntimeException('Login query unavailable');
     $result = $stmt->get_result();
-    $user = $result ? $result->fetch_assoc() : null;
+    if (!$result) throw new RuntimeException('Login query unavailable');
+    $user = $result->fetch_assoc();
     // Never authenticate an ambiguous identity.
-    if ($result && $result->fetch_assoc()) $user = null;
+    $ambiguous = $user && $result->fetch_assoc();
+    if ($ambiguous) $user = null;
     $stmt->close();
 } catch (Throwable $e) {
     error_log('VAYUMA login query failed.');
@@ -34,7 +36,14 @@ try {
     exit('VAYUMA is temporarily unavailable. Please try again later.');
 }
 
-if (!$user || !is_string($user['password'] ?? null) || !password_verify($password, $user['password'])) {
+$passwordMatches = $user && is_string($user['password'] ?? null) && password_verify($password, $user['password']);
+if (!$passwordMatches) {
+    // Temporary opt-in operational diagnostic: no identities, passwords, hashes,
+    // request metadata or user-supplied values are written to the log.
+    if (getenv('VAYUMA_AUTH_DIAGNOSTICS') === '1') {
+        $stage = $ambiguous ? 'ambiguous' : (!$user ? 'no_match' : 'password_verification_failed');
+        error_log('VAYUMA login diagnostic: ' . $stage);
+    }
     header("Location: ../login.php?error=invalid");
     exit;
 }
