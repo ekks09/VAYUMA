@@ -300,12 +300,14 @@ if (empty($email)) {
 */
 
 require_once __DIR__ . '/../includes/identity_errors.php';
-$onboardingTx = false;
+$registrationTx = false;
 try {
+    // Do not report success until the exact password hash can be read back and
+    // verified. Roll back on any failure, even when staff onboarding is off.
+    if (!$conn->begin_transaction()) throw new RuntimeException('Transaction unavailable');
+    $registrationTx = true;
     if (getenv('VAYUMA_ONBOARDING_ENABLED') === '1') {
         require_once __DIR__ . '/../includes/onboarding_lock.php';
-        if (!$conn->begin_transaction()) throw new RuntimeException('Transaction unavailable');
-        $onboardingTx = true;
         vayuma_onboarding_lock_phone($conn, $phone_clean);
         // A staff record reserves its phone regardless of stakeholder type or claim flag.
         $claimCheck = $conn->prepare('SELECT id FROM onboarding_records WHERE phone_identity=? LIMIT 1 FOR UPDATE');
@@ -314,23 +316,33 @@ try {
         if (!$claimCheck->execute()) throw new RuntimeException('Onboarding check unavailable');
         $reserved = $claimCheck->get_result()->fetch_assoc(); $claimCheck->close();
         if ($reserved) {
-            $conn->rollback(); $onboardingTx = false; $stmt->close();
+            $conn->rollback(); $registrationTx = false; $stmt->close();
             $_SESSION['register_error'] = 'Unable to create your account. Please sign in or try again later.';
             $_SESSION['register_phone'] = $phone;
             header('Location: ../register.php'); exit;
         }
     }
-    if (!$stmt->execute()) {
-        if ($onboardingTx) $conn->rollback();
-        $stmt->close();
-        $_SESSION['register_error'] = 'Unable to create your account. Please sign in or try again later.';
-        header('Location: ../register.php');
-        exit;
+    if (!$stmt->execute()) throw new RuntimeException('Registration insert unavailable');
+    $newUserId = (int)$stmt->insert_id;
+    if ($newUserId <= 0 || !is_string($hashed_password)) throw new RuntimeException('Registration verification unavailable');
+    $verifyStmt = $conn->prepare('SELECT password FROM users WHERE id=? LIMIT 1');
+    if (!$verifyStmt) throw new RuntimeException('Registration verification unavailable');
+    $verifyStmt->bind_param('i', $newUserId);
+    if (!$verifyStmt->execute()) { $verifyStmt->close(); throw new RuntimeException('Registration verification unavailable'); }
+    $verifyResult = $verifyStmt->get_result();
+    if (!$verifyResult) { $verifyStmt->close(); throw new RuntimeException('Registration verification unavailable'); }
+    $stored = $verifyResult->fetch_assoc(); $verifyStmt->close();
+    $storedHash = $stored['password'] ?? null;
+    if (!is_string($storedHash) || !hash_equals($hashed_password, $storedHash) || !password_verify($password, $storedHash)) {
+        // Categorical only: never log the submitted password, hash or identity.
+        error_log('VAYUMA registration password integrity check failed.');
+        throw new RuntimeException('Registration verification unavailable');
     }
-    if ($onboardingTx && !$conn->commit()) throw new RuntimeException('Transaction commit unavailable');
-    $onboardingTx = false;
+    unset($storedHash, $stored);
+    if (!$conn->commit()) throw new RuntimeException('Transaction commit unavailable');
+    $registrationTx = false;
 } catch (Throwable $e) {
-    if ($onboardingTx) { try { $conn->rollback(); } catch (Throwable $ignored) {} }
+    if ($registrationTx) { try { $conn->rollback(); } catch (Throwable $ignored) {} }
     $_SESSION['register_error'] = 'Unable to create your account. Please sign in or try again later.';
     $stmt->close();
     header('Location: ../register.php');
