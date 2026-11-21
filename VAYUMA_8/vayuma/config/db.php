@@ -28,10 +28,12 @@ try {
         ($userEnv === false || $userEnv === '' || $passwordEnv === false || $passwordEnv === '' || $nameEnv === false || $nameEnv === '')) {
         throw new RuntimeException('Database credentials must be configured');
     }
-    $user = $userEnv === false ? 'root' : $userEnv;
-    $password = $passwordEnv === false ? '' : $passwordEnv;
+    // Included files execute in their caller's scope. Never overwrite common
+    // application variables such as $user or $password with DB credentials.
+    $dbConnectionUser = $userEnv === false ? 'root' : $userEnv;
+    $dbConnectionPassword = $passwordEnv === false ? '' : $passwordEnv;
     $database = $nameEnv === false ? 'vayuma_db' : $nameEnv;
-    if ($user === '' || $database === '') {
+    if ($dbConnectionUser === '' || $database === '') {
         throw new RuntimeException('Invalid database configuration');
     }
     // Staging/production and all non-loopback connections must use a CA and
@@ -54,7 +56,7 @@ try {
         }
     }
     $failureStage = 'connection';
-    if (!$conn->real_connect($host, $user, $password, $database, (int)$portText, null, $flags)) {
+    if (!$conn->real_connect($host, $dbConnectionUser, $dbConnectionPassword, $database, (int)$portText, null, $flags)) {
         $failureStage = vayuma_db_connection_stage((int)mysqli_connect_errno());
         if ($diagnosticsEnabled) {
             vayuma_db_log_driver_error(mysqli_connect_errno(), '', '');

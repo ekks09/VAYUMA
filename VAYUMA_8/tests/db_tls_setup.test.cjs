@@ -19,6 +19,6 @@ test('DB bootstrap uses CA plus audited mysqlnd verification flags, not the reje
   assert.match(db,/is_file\(\$ca\)\s*\|\|\s*!is_readable\(\$ca\)/);
   assert.match(db,/vayuma_verified_mysqlnd_flags\(mysqli_get_client_info\(\), PHP_VERSION_ID, extension_loaded\('openssl'\)\)/);
   assert.match(db,/ssl_set\(null, null, \$ca, null, null\)/);
-  assert.match(db,/real_connect\(\$host, \$user, \$password, \$database, \(int\)\$portText, null, \$flags\)/);
+  assert.match(db,/real_connect\(\$host, \$dbConnectionUser, \$dbConnectionPassword, \$database, \(int\)\$portText, null, \$flags\)/);
   assert.doesNotMatch(db,/options\(MYSQLI_OPT_SSL_VERIFY_SERVER_CERT/);
 });
