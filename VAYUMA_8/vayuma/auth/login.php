@@ -8,8 +8,8 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 $identifier = is_string($_POST["identifier"] ?? null) ? trim($_POST["identifier"]) : '';
-$password = is_string($_POST["password"] ?? null) ? $_POST["password"] : '';
-if ($identifier === "" || $password === "") {
+$submittedPassword = is_string($_POST["password"] ?? null) ? $_POST["password"] : '';
+if ($identifier === "" || $submittedPassword === "") {
     header("Location: ../login.php?error=empty");
     exit;
 }
@@ -36,8 +36,8 @@ try {
     exit('VAYUMA is temporarily unavailable. Please try again later.');
 }
 
-$passwordMatches = $user && is_string($user['password'] ?? null) && password_verify($password, $user['password']);
-if (!$passwordMatches) {
+$submittedPasswordMatches = $user && is_string($user['password'] ?? null) && password_verify($submittedPassword, $user['password']);
+if (!$submittedPasswordMatches) {
     // Temporary opt-in operational diagnostic: no identities, passwords, hashes,
     // request metadata or user-supplied values are written to the log.
     if (getenv('VAYUMA_AUTH_DIAGNOSTICS') === '1') {

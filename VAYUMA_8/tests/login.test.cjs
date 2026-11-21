@@ -20,6 +20,8 @@ test('login authenticates valid accounts and permits unfinished onboarding, but 
     fs.copyFileSync(path.join(root,'auth/login.php'), path.join(dir,'auth/login.php'));
     fs.copyFileSync(path.join(root,'includes/login_identity.php'), path.join(dir,'includes/login_identity.php'));
     fs.writeFileSync(path.join(dir,'config/db.php'), `<?php
+// Reproduce the old included-config collision without using real credentials.
+$password = 'mock-db-password'; $user = 'mock-db-user';
 class FakeResult { private $done=false; function fetch_assoc() { if($this->done)return null;$this->done=true; return ['id'=>17,'full_name'=>'Example','phone'=>'0712345678','email'=>'person@example.com','password'=>password_hash('correct-password', PASSWORD_DEFAULT),'role'=>getenv('TEST_ROLE')]; } }
 class FakeStmt { function bind_param($types, &...$vars) {} function execute() { return true; } function get_result() { return new FakeResult(); } function close() {} }
 class FakeConn { function prepare($query) { return new FakeStmt(); } }
@@ -43,6 +45,7 @@ test('registration stores a usable hash, signs out, and the new account can sign
     for (const file of ['auth/register_process.php', 'auth/login.php', 'includes/login_identity.php', 'includes/identity_errors.php', 'includes/onboarding_policy.php']) fs.copyFileSync(path.join(root, file), path.join(dir, file));
     fs.writeFileSync(path.join(dir, 'includes/csrf.php'), '<?php function vayuma_csrf_valid(): bool { return true; }');
     fs.writeFileSync(path.join(dir, 'config/db.php'), `<?php
+$password = 'mock-db-password'; $user = 'mock-db-user';
 class FakeResult { public $num_rows=0; private $row; function __construct($row=null){$this->row=$row;} function fetch_assoc(){$row=$this->row;$this->row=null;return $row;} }
 class FakeStmt { public $insert_id=17; public $errno=0; private $query; private $vars; function __construct($q){$this->query=$q;} function bind_param($t,&...$v){$this->vars=&$v;} function execute(){if(strpos($this->query,'INSERT INTO users')!==false){[$name,$phone,$email,$password]=$this->vars; file_put_contents(getenv('TEST_ACCOUNT_FILE'),json_encode(['id'=>17,'full_name'=>$name,'phone'=>$phone,'email'=>$email,'password'=>$password,'role'=>'']));}return true;} function get_result(){if(strpos($this->query,'SELECT password FROM users')!==false){$u=json_decode(file_get_contents(getenv('TEST_ACCOUNT_FILE')),true);return new FakeResult(['password'=>$u['password']]);} if(strpos($this->query,'SELECT id, full_name')!==false){$u=json_decode(file_get_contents(getenv('TEST_ACCOUNT_FILE')),true); $matches=strtolower(trim($this->vars[0]))===strtolower(trim($u['email'])) || $u['phone']===$this->vars[1]; return new FakeResult($matches?$u:null);} return new FakeResult();} function close(){} }
 class FakeConn { function prepare($q){return new FakeStmt($q);} function begin_transaction(){return true;} function commit(){return true;} function rollback(){return true;} } $conn=new FakeConn();`);

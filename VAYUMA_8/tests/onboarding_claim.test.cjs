@@ -5,6 +5,7 @@ test('claim requires a private code, persists failed attempts and consumes a suc
  try {
   fs.cpSync(root,dir,{recursive:true});
   fs.writeFileSync(path.join(dir,'config/db.php'),`<?php
+$password = 'mock-db-password'; $user = 'mock-db-user';
 class FakeResult {private $r; function __construct($r){$this->r=$r;} function fetch_assoc(){return $this->r;}}
 class FakeStmt {private $db,$q,$vars=[]; public $insert_id=24,$affected_rows=1; function __construct($db,$q){$this->db=$db;$this->q=$q;} function bind_param($types,&...$v){$this->vars=&$v;} function execute(){if(strpos($this->q,'claim_attempts=claim_attempts+1')!==false)$this->db->state['claim_attempts']++; if(strpos($this->q,'INSERT INTO users')!==false){$this->db->state['account']=['phone'=>$this->vars[1], 'email'=>$this->vars[2], 'password'=>$this->vars[3]];} if(strpos($this->q,'SET claimed_by_user_id=')!==false){$this->db->state['claimed_by_user_id']=$this->vars[0];$this->db->state['claim_code_hash']=null;}return true;} function get_result(){if(strpos($this->q,'SELECT phone_key')!==false)return new FakeResult(['phone_key'=>'ok']); if(strpos($this->q,'FROM onboarding_records WHERE phone_identity')!==false){$s=$this->db->state;return new FakeResult(['id'=>5,'full_name'=>'Sample Farmer','claim_code_hash'=>$s['claim_code_hash'],'claim_attempts'=>$s['claim_attempts'],'claimed_by_user_id'=>$s['claimed_by_user_id'],'unexpired'=>$s['unexpired']]);} if(strpos($this->q,'SELECT id FROM users')!==false)return new FakeResult($this->db->state['existing']?['id'=>2]:null);return new FakeResult(null);}function close(){}}
 class FakeConn {public $state; function __construct(){$this->state=json_decode(file_get_contents(getenv('TEST_STATE')),true);} function begin_transaction(){return true;} function commit(){file_put_contents(getenv('TEST_STATE'),json_encode($this->state));return true;}function rollback(){return true;}function prepare($q){return new FakeStmt($this,$q);}} $conn=new FakeConn();`);
@@ -22,6 +23,8 @@ class FakeConn {public $state; function __construct(){$this->state=json_decode(f
   put({...initial,unexpired:0});out=request();assert.match(out,/invalid or expired/i);assert.equal(get().claimed_by_user_id,null);
   put({...initial,existing:true});out=request();assert.match(out,/Unable to complete the claim/i);assert.equal(get().claimed_by_user_id,null);
   put({...initial});request();let state=get();assert.equal(state.claimed_by_user_id,24);assert.equal(state.claim_code_hash,null);assert.equal(state.account.phone,'0712345678');assert.notEqual(state.account.password,'very-strong-pass');
+  const verify=spawnSync(php,['-r',`$s=json_decode(file_get_contents(getenv('TEST_STATE')),true); echo json_encode([password_verify('very-strong-pass',$s['account']['password']),password_verify('mock-db-password',$s['account']['password'])]);`],{encoding:'utf8',env:{...process.env,TEST_STATE:statePath}});
+  assert.equal(verify.status,0,verify.stderr);assert.deepEqual(JSON.parse(verify.stdout),[true,false]);
   out=request();assert.match(out,/invalid or expired/i);assert.equal(get().claimed_by_user_id,24);
  } finally {fs.rmSync(dir,{recursive:true,force:true});}
 });
