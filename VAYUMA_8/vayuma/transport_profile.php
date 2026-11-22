@@ -44,7 +44,7 @@ function transport_h($value) { return htmlspecialchars((string)$value, ENT_QUOTE
 <head><?php require __DIR__ . '/includes/pwa.php'; ?>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Transport Provider Profile | VAYUMA</title>
+<title>Transport Provider Profile | VAYUMA TRIX</title>
 <link rel="stylesheet" href="frontend/css/tokens.css?v=20261110">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css?v=20261110">
@@ -85,7 +85,7 @@ function transport_h($value) { return htmlspecialchars((string)$value, ENT_QUOTE
 <body class="va-profile-document">
 <?php require __DIR__ . '/includes/profile_navigation.php'; ?>
 <main class="va-form-page">
-<div class="va-form-brand">VAYUMA<small>SMART ECOSYSTEM</small></div>
+<div class="va-form-brand">VAYUMA TRIX<small>AGRITECH INNOVATIONS KENYA</small></div>
 <h1><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-transport"/></svg> Transport Provider Profile</h1>
 <p class="intro">Welcome, <?=transport_h($full_name)?>. Tell farmers, buyers and other stakeholders where your transport business is based, what vehicles you operate and the areas you serve.</p>
 <?php if ($error): ?><div class="alert"><?=transport_h($error)?></div><?php endif; ?>

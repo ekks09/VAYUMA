@@ -8,9 +8,9 @@ function vayuma_payment_navigation(string $backHref, string $backLabel): void
     $safeBackLabel = htmlspecialchars($backLabel, ENT_QUOTES, 'UTF-8');
 
     echo '<nav class="va-payment-navigation" aria-label="Payment navigation">';
-    echo '<a class="va-payment-navigation__brand" href="' . $homeUrl . '" aria-label="VAYUMA home">';
-    echo '<img src="frontend/images/vayuma-logo.jpg" alt="">';
-    echo '<span>VAYUMA</span>';
+    echo '<a class="va-payment-navigation__brand" href="' . $homeUrl . '" aria-label="VAYUMA TRIX home">';
+    echo '<img src="assets/images/brand/app-icon-192.png" alt="">';
+    echo '<span>VAYUMA TRIX</span>';
     echo '</a>';
     echo '<a class="va-payment-navigation__back" href="' . $safeBackHref . '">';
     echo '<span aria-hidden="true">←</span> ' . $safeBackLabel;

@@ -176,7 +176,7 @@ if ((float)$produce["quantity"] <= 0) {
 
 <header class="header">
 
-    <h1><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg> VAYUMA</h1>
+    <h1><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg> VAYUMA TRIX</h1>
 
 </header>
 

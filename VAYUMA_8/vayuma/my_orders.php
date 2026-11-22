@@ -82,7 +82,7 @@ $orders = $stmt->get_result();
     content="width=device-width,initial-scale=1"
 >
 
-<title>My Orders | VAYUMA</title>
+<title>My Orders | VAYUMA TRIX</title>
 
 <link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
@@ -133,7 +133,7 @@ $orders = $stmt->get_result();
         VAYUMA
 
         <small>
-            SMART ECOSYSTEM
+            AGRITECH INNOVATIONS KENYA
         </small>
 
     </div>

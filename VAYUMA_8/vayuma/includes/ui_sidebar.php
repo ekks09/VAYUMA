@@ -33,7 +33,7 @@ if ($userRole === 'farmer') {
     ['label' => 'My Produce', 'href' => 'my_produce.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg>'],
     ['label' => 'My Orders', 'href' => 'my_orders.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-orders"/></svg>'],
     ['label' => 'Produce Requests', 'href' => 'seller_orders.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg>'],
-    ['label' => 'VAYUMA AI', 'href' => 'ai_advisor.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg>'],
+    ['label' => 'VAYUMA TRIX AI', 'href' => 'ai_advisor.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg>'],
     ['label' => 'Settings', 'href' => 'service_placeholder.php?service=Settings', 'icon' => '⚙'],
   ];
 } elseif ($userRole === 'buyer') {
@@ -44,7 +44,7 @@ if ($userRole === 'farmer') {
     ['label' => 'Deliveries', 'href' => 'deliveries.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-transport"/></svg>'],
     ['label' => 'Agricultural Products', 'href' => 'market_connect.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-maize"/></svg>'],
     ['label' => 'Recommended', 'href' => 'recommended.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg>'],
-    ['label' => 'VAYUMA AI', 'href' => 'ai_advisor.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg>'],
+    ['label' => 'VAYUMA TRIX AI', 'href' => 'ai_advisor.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg>'],
     ['label' => 'My Profile', 'href' => 'buyer_profile.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-profile"/></svg>'],
   ];
 } elseif ($userRole === 'consumer') {
@@ -52,7 +52,7 @@ if ($userRole === 'farmer') {
     ['label' => 'Dashboard', 'href' => 'consumer_dashboard.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-dashboard"/></svg>'],
     ['label' => 'Marketplace', 'href' => 'market_connect.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-marketplace"/></svg>'],
     ['label' => 'My Orders', 'href' => 'my_orders.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-orders"/></svg>'],
-    ['label' => 'VAYUMA AI', 'href' => 'ai_advisor.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg>'],
+    ['label' => 'VAYUMA TRIX AI', 'href' => 'ai_advisor.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg>'],
     ['label' => 'My Profile', 'href' => 'consumer_profile.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-profile"/></svg>'],
   ];
 } elseif ($userRole === 'cooperative') {
@@ -60,7 +60,7 @@ if ($userRole === 'farmer') {
     ['label' => 'Dashboard', 'href' => 'cooperative_dashboard.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-dashboard"/></svg>'],
     ['label' => 'Marketplace', 'href' => 'market_connect.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-marketplace"/></svg>'],
     ['label' => 'My Orders', 'href' => 'my_orders.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-orders"/></svg>'],
-    ['label' => 'VAYUMA AI', 'href' => 'ai_advisor.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg>'],
+    ['label' => 'VAYUMA TRIX AI', 'href' => 'ai_advisor.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg>'],
     ['label' => 'My Profile', 'href' => 'cooperative_profile.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-profile"/></svg>'],
   ];
 } elseif ($userRole === 'farmer') {
@@ -71,7 +71,7 @@ if ($userRole === 'farmer') {
     ['label' => 'Market Connect', 'href' => 'market_connect.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-marketplace"/></svg>'],
     ['label' => 'My Orders', 'href' => 'my_orders.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-orders"/></svg>'],
     ['label' => 'Profile', 'href' => 'profile_setup.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-profile"/></svg>'],
-    ['label' => 'VAYUMA AI', 'href' => 'ai_advisor.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg>'],
+    ['label' => 'VAYUMA TRIX AI', 'href' => 'ai_advisor.php', 'icon' => '<svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg>'],
   ];
 }
 
@@ -89,11 +89,11 @@ if ($isAdmin) {
   $platformHomeUrl = vayuma_platform_home_route();
   ?>
   <div class="va-sidebar--logo">
-    <a href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA home">
-      <img src="frontend/images/vayuma-logo.jpg" alt="VAYUMA">
+    <a href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA TRIX home">
+      <img src="assets/images/brand/app-icon-192.png" alt="VAYUMA TRIX">
       <div>
-        <strong>VAYUMA</strong>
-        <small>Smart Ecosystem</small>
+        <strong>VAYUMA TRIX</strong>
+        <small>Agritech Innovations Kenya</small>
       </div>
     </a>
   </div>

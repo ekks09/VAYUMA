@@ -30,7 +30,7 @@ $navLinks = [
     'Dashboard' => 'consumer_dashboard.php',
     'Marketplace' => 'market_connect.php',
     'My Orders' => 'my_orders.php',
-    'VAYUMA AI' => 'feature_access.php?feature=ai',
+    'VAYUMA TRIX AI' => 'feature_access.php?feature=ai',
     'My Profile' => 'consumer_profile.php?from=consumer_dashboard.php',
     'Profile & Settings' => 'profile.php?return_to=consumer_dashboard.php',
 ];
@@ -63,7 +63,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
         <nav aria-label="Consumer quick access">
           <a href="market_connect.php"><svg class="va-icon" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-marketplace"/></svg> Marketplace</a>
           <a href="my_orders.php"><svg class="va-icon" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-orders"/></svg> My Orders</a>
-          <a href="feature_access.php?feature=ai"><svg class="va-icon" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-ai"/></svg> VAYUMA AI</a>
+          <a href="feature_access.php?feature=ai"><svg class="va-icon" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-ai"/></svg> VAYUMA TRIX AI</a>
           <a href="profile.php?return_to=consumer_dashboard.php"><svg class="va-icon" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-profile"/></svg> Profile &amp; settings</a>
         </nav>
       </section>
@@ -87,7 +87,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
         </div>
         <div class="va-stat-card">
           <div class="va-stat-card--header">
-            <div><div class="va-stat-card--label">VAYUMA AI</div></div>
+            <div><div class="va-stat-card--label">VAYUMA TRIX AI</div></div>
             <div class="va-stat-card--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg></div>
           </div>
           <div class="va-stat-card--value">Ask</div>
@@ -149,7 +149,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
         <a href="market_connect.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-marketplace"/></svg> Browse Marketplace</a>
         <a href="my_orders.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-orders"/></svg> My Orders</a>
         <a href="consumer_profile.php?from=consumer_dashboard.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-profile"/></svg> My Profile</a>
-        <a href="feature_access.php?feature=ai" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg> Ask VAYUMA AI</a>
+        <a href="feature_access.php?feature=ai" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg> Ask VAYUMA TRIX AI</a>
       </div>
 
     </div>

@@ -7,7 +7,7 @@ test('extension dashboard keeps its role guard and existing navigation destinati
 });
 test('dashboard uses honest unavailable metrics and useful links without fabricated zeroes',()=>{
  const s=read('extension_dashboard.php');for(const label of ['Farmers Supported','Farm Visits','Farm Reports','Farmer Advisories']) assert.ok(s.includes(label));assert.equal((s.match(/Count not available/g)||[]).length,4);assert.doesNotMatch(s,/stat-number[^>]*>\s*0/);assert.match(s,/Search VAYUMA: not available yet/);
- for(const label of ['View visits','View reports','Browse farmers','Open crop advisory','Extension Activities','Quick Actions','VAYUMA Mission']) assert.ok(s.includes(label),label);
+ for(const label of ['View visits','View reports','Browse farmers','Open crop advisory','Extension Activities','Quick Actions','VAYUMA TRIX Mission']) assert.ok(s.includes(label),label);
 });
 test('scoped styling adds responsive clearance, compact cards, icons and actions',()=>{
  const s=read('extension_dashboard.php'),css=read('assets/css/dashboard-layout.css'),icons=read('frontend/images/icons.svg');

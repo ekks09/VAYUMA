@@ -57,7 +57,7 @@ function soilOptionSelected(string $option, string $saved): string {
     content="width=device-width, initial-scale=1.0"
 >
 
-<title>Soil Analysis | VAYUMA</title>
+<title>Soil Analysis | VAYUMA TRIX</title>
 
 <link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">

@@ -6,7 +6,7 @@ $service=trim($_GET['service']??'VAYUMA Service');
 $role=strtolower(trim($_SESSION['role']??''));
 $dashboard=$role==='farmer'?'farmer_dashboard.php':($role==='buyer'?'buyer_dashboard.php':'dashboard.php');
 ?>
-<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title><?=htmlspecialchars($service)?> | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
+<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title><?=htmlspecialchars($service)?> | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">
@@ -41,5 +41,5 @@ $dashboard=$role==='farmer'?'farmer_dashboard.php':($role==='buyer'?'buyer_dashb
   .va-profile-full { grid-column: auto; }
 }
 </style></head><body>
-<?php vayuma_language_selector(); ?><header class="top"><div class="va-profile-brand">VAYUMA<small>SMART ECOSYSTEM</small></div><a class="va-profile-back" href="<?=$dashboard?>">← Dashboard</a></header><main class="wrap"><?php require __DIR__ . '/includes/workspace_back.php'; ?><div class="va-profile-card"><div class="icon">⚙️</div><h1><?=htmlspecialchars($service)?></h1><p>This navigation item is now active. The full <?=htmlspecialchars($service)?> integration is a later VAYUMA module.</p><div class="note"><strong>Coming next:</strong> connect the service to its live provider/API while keeping this page as its entry point.</div><a class="btn" href="<?=$dashboard?>">Return to Dashboard</a></div></main><script src="assets/js/vayuma-language.js" defer></script>
+<?php vayuma_language_selector(); ?><header class="top"><div class="va-profile-brand">VAYUMA TRIX<small>AGRITECH INNOVATIONS KENYA</small></div><a class="va-profile-back" href="<?=$dashboard?>">← Dashboard</a></header><main class="wrap"><?php require __DIR__ . '/includes/workspace_back.php'; ?><div class="va-profile-card"><div class="icon">⚙️</div><h1><?=htmlspecialchars($service)?></h1><p>This navigation item is now active. The full <?=htmlspecialchars($service)?> integration is a later VAYUMA module.</p><div class="note"><strong>Coming next:</strong> connect the service to its live provider/API while keeping this page as its entry point.</div><a class="btn" href="<?=$dashboard?>">Return to Dashboard</a></div></main><script src="assets/js/vayuma-language.js" defer></script>
 </body></html>

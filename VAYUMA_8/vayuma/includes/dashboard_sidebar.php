@@ -2,9 +2,9 @@
 <div class="va-sidebar-overlay" id="vaSidebarOverlay"></div>
 <aside class="va-sidebar" id="vaSidebar" aria-label="Dashboard navigation">
   <div class="va-sidebar--logo">
-    <a href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA home">
-      <img src="frontend/images/pwa/icon-192.png" alt="">
-      <div><strong>VAYUMA</strong><small>Smart Ecosystem</small></div>
+    <a href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA TRIX home">
+      <img src="assets/images/brand/app-icon-192.png" alt="">
+      <div><strong>VAYUMA TRIX</strong><small>Agritech Innovations Kenya</small></div>
     </a>
   </div>
   <nav class="va-sidebar--nav">

@@ -85,8 +85,8 @@ $role_groups = [
 <head><?php require __DIR__ . '/includes/pwa.php'; ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Choose your role in the VAYUMA Smart Ecosystem.">
-    <title>Choose Your Role | VAYUMA</title>
+    <meta name="description" content="Choose your role in the VAYUMA TRIX AGRITECH INNOVATIONS KENYA.">
+    <title>Choose Your Role | VAYUMA TRIX</title>
     <link rel="stylesheet" href="frontend/css/tokens.css">
     <link rel="stylesheet" href="frontend/css/components.css">
     <link rel="stylesheet" href="frontend/css/components_addition.css?v=account-nav-1">
@@ -176,9 +176,9 @@ $role_groups = [
 </head>
 <body class="role-body">
     <header class="role-topbar">
-        <a class="role-brand" href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA home">
-            <img src="assets/images/vayuma-logo.jpg" alt="">
-            <span>VAYUMA<small>SMART ECOSYSTEM</small></span>
+        <a class="role-brand" href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA TRIX home">
+            <img src="assets/images/brand/shield-source.png" alt="">
+            <span>VAYUMA TRIX<small>AGRITECH INNOVATIONS KENYA</small></span>
         </a>
         <div class="role-topbar-locale"><?php vayuma_language_selector(); ?></div>
         <div class="role-account" aria-label="Your account">

@@ -25,7 +25,7 @@ const roles = {farmer:'farmer_dashboard.php',buyer:'buyer_dashboard.php',consume
         assert.ok(await page.$('.vy-user-menu a[href="onboarding.php"]'), 'missing staff access');
         assert.ok(await page.$('.vy-user-menu a[href="feature_access.php?feature=ai"]'), 'missing AI access');
         assert.match(await page.$eval('.vy-user-menu a[href^="profile.php"]',e=>e.textContent), /Profile & Settings/);
-        const logo=await page.$eval('aside img[src="frontend/images/pwa/icon-192.png"]', e=>({width:e.getBoundingClientRect().width,natural:e.naturalWidth}));
+        const logo=await page.$eval('aside img[src="assets/images/brand/app-icon-192.png"]', e=>({width:e.getBoundingClientRect().width,natural:e.naturalWidth}));
         assert.ok(logo.natural>0 && logo.width<=48, 'sidebar brand missing or oversized');
         if (role==='buyer' || role==='consumer') {
           assert.ok(await page.$('.dashboard-quick-links a[href^="profile.php"]'), 'missing profile shortcut');

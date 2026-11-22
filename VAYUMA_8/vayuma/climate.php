@@ -30,7 +30,7 @@ $full_name = $_SESSION['full_name'] ?? 'Farmer';
     content="width=device-width, initial-scale=1.0"
 >
 
-<title>Climate Guidance | VAYUMA</title>
+<title>Climate Guidance | VAYUMA TRIX</title>
 
 
 <link rel="stylesheet" href="frontend/css/tokens.css">

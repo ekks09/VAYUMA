@@ -55,7 +55,7 @@ $full_name = $_SESSION['full_name'] ?? "Transport Provider";
     content="width=device-width, initial-scale=1.0, viewport-fit=cover"
 >
 
-<title>Transport Dashboard | VAYUMA</title>
+<title>Transport Dashboard | VAYUMA TRIX</title>
 
 
 <link rel="stylesheet" href="frontend/css/tokens.css">

@@ -22,7 +22,7 @@ $sql.=" ORDER BY CASE sp.verification_status WHEN 'pending' THEN 0 WHEN 'rejecte
 $stmt=$conn->prepare($sql); if(!$stmt){http_response_code(500);exit('Unable to load verification records.');}
 if($types!==''){$stmt->bind_param($types,...$params);} $stmt->execute();$rows=$stmt->get_result();
 $roleLabels=['government_officer'=>'Government Officer','extension_officer'=>'Extension Officer','veterinary_officer'=>'Veterinary Officer','financial_institution'=>'Financial Institution','transport_provider'=>'Transport Provider','cooperative'=>'Cooperative','ngo_partner'=>'NGO Partner','insurance_provider'=>'Insurance Provider','manufacturer'=>'Manufacturer','buyer'=>'Buyer','input_supplier'=>'Input Supplier','warehouse_provider'=>'Warehouse Provider','agricultural_service_provider'=>'Agricultural Service Provider','strategic_partner'=>'Strategic Partner','researcher'=>'Researcher'];
-?><!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Stakeholder Verification | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
+?><!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Stakeholder Verification | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">

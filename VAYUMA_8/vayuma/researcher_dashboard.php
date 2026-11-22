@@ -38,7 +38,7 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-<title>Researcher Dashboard | VAYUMA</title>
+<title>Researcher Dashboard | VAYUMA TRIX</title>
 
 <link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">

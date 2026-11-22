@@ -24,10 +24,10 @@ $isAdmin = $currentUserId > 0 && function_exists('is_vayuma_admin') && is_vayuma
 ?>
 <header class="va-topbar">
   <div class="va-topbar--brand">
-    <a href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" style="text-decoration:none;display:flex;align-items:center;gap:var(--va-space-2);color:inherit;" aria-label="VAYUMA home">
-      <img src="frontend/images/vayuma-logo.jpg" alt="VAYUMA">
-      <strong>VAYUMA</strong>
-      <small>Smart Ecosystem</small>
+    <a href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" style="text-decoration:none;display:flex;align-items:center;gap:var(--va-space-2);color:inherit;" aria-label="VAYUMA TRIX home">
+      <img src="assets/images/brand/app-icon-192.png" alt="VAYUMA TRIX">
+      <strong>VAYUMA TRIX</strong>
+      <small>Agritech Innovations Kenya</small>
     </a>
   </div>
 

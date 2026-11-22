@@ -28,8 +28,8 @@ function vayuma_ai_platform_facts(): array
             'en'=>'Budget Planner: Enter your own estimated income and costs to calculate an indicative result. Estimates are not guaranteed profits and the assistant cannot see saved finances.',
             'sw'=>'Mpangaji wa Bajeti: Ingiza makadirio yako ya mapato na gharama kukokotoa matokeo ya makadirio. Makadirio si faida iliyohakikishwa na msaidizi hawezi kuona fedha zilizohifadhiwa.'],
         'assistant'=>['keywords'=>['ai','assistant','nvidia','msaidizi','akili bandia'],
-            'en'=>'VAYUMA AI Support sends your questions and selected context to an external AI service when enabled. Answers can be wrong; it cannot see the codebase, accounts or live data. Avoid sending personal or confidential information.',
-            'sw'=>'VAYUMA AI Support hutuma maswali na taarifa ulizochagua kwa huduma ya AI ya nje ikiwezeshwa. Majibu yanaweza kukosea; haina ufikiaji wa msimbo, akaunti au data ya moja kwa moja. Usitume taarifa binafsi au za siri.'],
+            'en'=>'VAYUMA TRIX AI Support sends your questions and selected context to an external AI service when enabled. Answers can be wrong; it cannot see the codebase, accounts or live data. Avoid sending personal or confidential information.',
+            'sw'=>'VAYUMA TRIX AI Support hutuma maswali na taarifa ulizochagua kwa huduma ya AI ya nje ikiwezeshwa. Majibu yanaweza kukosea; haina ufikiaji wa msimbo, akaunti au data ya moja kwa moja. Usitume taarifa binafsi au za siri.'],
     ];
 }
 function vayuma_ai_guide(string $question, string $language, bool $all = false): string

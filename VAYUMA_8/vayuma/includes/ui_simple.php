@@ -27,7 +27,7 @@ $platformHomeUrl = $platformHomeUrl ?? vayuma_platform_home_route();
 <?php require __DIR__ . '/pwa.php'; ?>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title><?= htmlspecialchars($pageTitle) ?> | VAYUMA</title>
+<title><?= htmlspecialchars($pageTitle) ?> | VAYUMA TRIX</title>
 <link rel="stylesheet" href="frontend/css/tokens.css?v=20261110">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css?v=20261120-subscription-nav">

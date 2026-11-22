@@ -73,7 +73,7 @@ try {
     content="width=device-width, initial-scale=1.0, viewport-fit=cover"
 >
 
-<title>Cooperative Dashboard | VAYUMA</title>
+<title>Cooperative Dashboard | VAYUMA TRIX</title>
 
 
 <link rel="stylesheet" href="frontend/css/tokens.css">
@@ -167,7 +167,7 @@ try {
 
     <a class="va-dash-sidebar--nav-item" href="feature_access.php?feature=ai">
         <span class="va-dash-sidebar--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg></span>
-        VAYUMA AI
+        VAYUMA TRIX AI
     </a>
 
 
@@ -493,7 +493,7 @@ try {
 
 
             <a class="va-dash-action" href="feature_access.php?feature=ai">
-                <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg> &nbsp; Ask VAYUMA AI
+                <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg> &nbsp; Ask VAYUMA TRIX AI
             </a>
 
 

@@ -34,7 +34,7 @@ $stmt->close();
 
 if (!$p) {
     http_response_code(404);
-    echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Receipt unavailable | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css"><link rel="stylesheet" href="assets/css/vayuma-ui.css?v=2"><link rel="stylesheet" href="frontend/css/user-menu.css?v=3"></head><body class="vy-denied-page">';
+    echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Receipt unavailable | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css"><link rel="stylesheet" href="assets/css/vayuma-ui.css?v=2"><link rel="stylesheet" href="frontend/css/user-menu.css?v=3"></head><body class="vy-denied-page">';
     require __DIR__ . '/includes/workspace_back.php';
     echo '<main class="vy-unavailable"><h1>Receipt unavailable</h1><p>This receipt is unavailable or does not belong to your account.</p><a href="subscription.php">Back to subscription</a></main></body></html>';
     exit;
@@ -58,9 +58,9 @@ require_once __DIR__ . '/includes/ui_simple.php';
     <div class="va-sidebar-overlay" id="vaSidebarOverlay" onclick="vaCloseSidebar()"></div>
     <aside class="va-sidebar" id="vaSidebar">
       <div class="va-sidebar--logo">
-        <a href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA home">
-          <img src="frontend/images/vayuma-logo.jpg" alt="VAYUMA">
-          <div><strong>VAYUMA</strong><small>Smart Ecosystem</small></div>
+        <a href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA TRIX home">
+          <img src="assets/images/brand/app-icon-192.png" alt="VAYUMA TRIX">
+          <div><strong>VAYUMA TRIX</strong><small>Agritech Innovations Kenya</small></div>
         </a>
       </div>
       <nav class="va-sidebar--nav">
@@ -83,11 +83,11 @@ require_once __DIR__ . '/includes/ui_simple.php';
         <div class="va-receipt--header">
           <div class="va-d-flex va-justify-between va-items-center va-mb-4">
             <div>
-              <a href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA home">
-                <img src="frontend/images/vayuma-logo.jpg" alt="VAYUMA" style="width:32px;height:32px;border-radius:6px;margin-right:var(--va-space-2);">
+              <a href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA TRIX home">
+                <img src="assets/images/brand/app-icon-192.png" alt="VAYUMA TRIX" style="width:32px;height:32px;border-radius:6px;margin-right:var(--va-space-2);">
               </a>
               <div>
-                <div class="va-font-semibold va-text-primary va-text-sm">VAYUMA Smart Ecosystem</div>
+                <div class="va-font-semibold va-text-primary va-text-sm">VAYUMA TRIX AGRITECH INNOVATIONS KENYA</div>
                 <div class="va-text-xs va-text-muted">Agricultural Marketplace</div>
               </div>
             </div>
