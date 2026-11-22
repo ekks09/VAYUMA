@@ -34,7 +34,7 @@ if (!isset($roles_needing_profiles[$role])) {
 <head><?php require __DIR__ . '/includes/pwa.php'; ?>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php echo htmlspecialchars($role_name, ENT_QUOTES, "UTF-8"); ?> Profile | VAYUMA</title>
+    <title><?php echo htmlspecialchars($role_name, ENT_QUOTES, "UTF-8"); ?> Profile | VAYUMA TRIX</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="role-body">

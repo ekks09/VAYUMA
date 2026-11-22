@@ -61,7 +61,7 @@ $full_name = $_SESSION['full_name'] ?? 'Cooperative User';
     content="width=device-width, initial-scale=1.0"
 >
 
-<title>Cooperative Profile | VAYUMA</title>
+<title>Cooperative Profile | VAYUMA TRIX</title>
 
 
 <link rel="stylesheet" href="frontend/css/tokens.css?v=20261110">
@@ -113,9 +113,9 @@ $full_name = $_SESSION['full_name'] ?? 'Cooperative User';
 
     <div class="va-profile-brand">
 
-        <h1>VAYUMA</h1>
+        <h1>VAYUMA TRIX</h1>
 
-        <p>SMART ECOSYSTEM</p>
+        <p>AGRITECH INNOVATIONS KENYA</p>
 
     </div>
 

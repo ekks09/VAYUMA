@@ -39,7 +39,7 @@
   function instructions() {
     if (isIOS) return text('On your iPhone or iPad, open this site in Safari. Tap Share, then choose Add to Home Screen and tap Add. On newer iOS versions you may need to scroll down in the Share menu.', 'Kwenye iPhone au iPad, fungua tovuti hii katika Safari. Gusa Shiriki, kisha chagua Ongeza kwenye Skrini ya Mwanzo na uguse Ongeza. Huenda ukahitaji kusogeza chini kwenye menyu ya Shiriki.');
     if (isAndroid) return text('Open your browser menu (usually the three dots), then choose Install app or Add to Home screen. The wording depends on your browser.', 'Fungua menyu ya kivinjari (kwa kawaida nukta tatu), kisha chagua Sakinisha programu au Ongeza kwenye skrini ya mwanzo. Maneno hutegemea kivinjari chako.');
-    return text('Use your browser menu and choose Install app or Add to Home screen, if available. You can continue using VAYUMA in your browser.', 'Tumia menyu ya kivinjari chako na uchague Sakinisha programu au Ongeza kwenye skrini ya mwanzo, ikiwa inapatikana. Unaweza kuendelea kutumia VAYUMA kwenye kivinjari.');
+    return text('Use your browser menu and choose Install app or Add to Home screen, if available. You can continue using VAYUMA TRIX in your browser.', 'Tumia menyu ya kivinjari chako na uchague Sakinisha programu au Ongeza kwenye skrini ya mwanzo, ikiwa inapatikana. Unaweza kuendelea kutumia VAYUMA TRIX kwenye kivinjari.');
   }
   function showInstructions() {
     if (dialog) return;
@@ -48,7 +48,7 @@
     dialog.className = 'va-install-backdrop';
     const box = document.createElement('section');
     box.className = 'va-install-dialog'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-labelledby', 'va-install-title');
-    const title = document.createElement('h2'); title.id = 'va-install-title'; title.textContent = text('Install VAYUMA', 'Sakinisha VAYUMA');
+    const title = document.createElement('h2'); title.id = 'va-install-title'; title.textContent = text('Install VAYUMA TRIX', 'Sakinisha VAYUMA TRIX');
     const paragraph = document.createElement('p'); paragraph.textContent = instructions();
     const close = document.createElement('button'); close.type = 'button'; close.className = 'va-install-close'; close.textContent = text('Got it', 'Nimeelewa'); close.addEventListener('click', closeDialog);
     box.append(title, paragraph, close); dialog.append(box); document.body.append(dialog);
@@ -79,9 +79,9 @@
   }
   function showNotice() {
     if (!document.body || notice || standalone() || dismissed() || !(isIOS || isAndroid || installEvent)) return;
-    notice = document.createElement('section'); notice.className = 'va-install-notice'; notice.setAttribute('aria-label', text('Install VAYUMA', 'Sakinisha VAYUMA'));
-    const title = document.createElement('strong'); title.textContent = text('Take VAYUMA with you', 'Tumia VAYUMA popote');
-    const message = document.createElement('p'); message.textContent = isIOS ? text('In Safari, tap Share → Add to Home Screen. If you opened this in another app, open it in Safari first.', 'Katika Safari, gusa Shiriki → Ongeza kwenye Skrini ya Mwanzo. Ikiwa umefungua kupitia programu nyingine, fungua kwanza katika Safari.') : text('Add VAYUMA to your home screen for quick access.', 'Ongeza VAYUMA kwenye skrini ya mwanzo ili kufungua kwa urahisi.');
+    notice = document.createElement('section'); notice.className = 'va-install-notice'; notice.setAttribute('aria-label', text('Install VAYUMA TRIX', 'Sakinisha VAYUMA TRIX'));
+    const title = document.createElement('strong'); title.textContent = text('Take VAYUMA TRIX with you', 'Tumia VAYUMA TRIX popote');
+    const message = document.createElement('p'); message.textContent = isIOS ? text('In Safari, tap Share → Add to Home Screen. If you opened this in another app, open it in Safari first.', 'Katika Safari, gusa Shiriki → Ongeza kwenye Skrini ya Mwanzo. Ikiwa umefungua kupitia programu nyingine, fungua kwanza katika Safari.') : text('Add VAYUMA TRIX to your home screen for quick access.', 'Ongeza VAYUMA TRIX kwenye skrini ya mwanzo ili kufungua kwa urahisi.');
     const actions = document.createElement('div'); actions.className = 'va-install-actions';
     const install = document.createElement('button'); install.type = 'button'; install.textContent = text('Install app', 'Sakinisha programu'); install.addEventListener('click', requestInstall);
     const later = document.createElement('button'); later.type = 'button'; later.className = 'va-install-later'; later.textContent = text('Not now', 'Sio sasa'); later.addEventListener('click', () => { rememberDismissal(); notice.remove(); notice = null; });

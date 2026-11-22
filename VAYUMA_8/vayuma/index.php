@@ -10,10 +10,10 @@ $platformHomeUrl = vayuma_platform_home_route();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>VAYUMA Smart Ecosystem</title>
+    <title>VAYUMA TRIX AGRITECH INNOVATIONS KENYA</title>
 
     <meta name="description"
-          content="VAYUMA Smart Ecosystem - <?= htmlspecialchars(t('tagline'), ENT_QUOTES, 'UTF-8') ?>">
+          content="VAYUMA TRIX AGRITECH INNOVATIONS KENYA - <?= htmlspecialchars(t('tagline'), ENT_QUOTES, 'UTF-8') ?>">
 
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -26,18 +26,18 @@ $platformHomeUrl = vayuma_platform_home_route();
         <div class="splash-content">
 
             <div class="logo-wrapper">
-                <a href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA home">
+                <a href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA TRIX home">
                     <img
-                        src="assets/images/vayuma-logo.jpg"
-                        alt="VAYUMA Smart Ecosystem Logo"
+                        src="assets/images/brand/shield-source.png"
+                        alt="VAYUMA TRIX AGRITECH INNOVATIONS KENYA Logo"
                         class="splash-logo"
                     >
                 </a>
             </div>
 
-            <h1>VAYUMA</h1>
+            <h1>VAYUMA TRIX</h1>
 
-            <h2>SMART ECOSYSTEM</h2>
+            <h2>AGRITECH INNOVATIONS KENYA</h2>
 
             <p class="splash-tagline">
                 <?= htmlspecialchars(t('tagline'), ENT_QUOTES, 'UTF-8') ?>

@@ -44,10 +44,10 @@ if ($current_language === 'sw') {
 
     <meta
         name="description"
-        content="Create your VAYUMA Smart Ecosystem account."
+        content="Create your VAYUMA TRIX AGRITECH INNOVATIONS KENYA account."
     >
 
-    <title>Create Account | VAYUMA</title>
+    <title>Create Account | VAYUMA TRIX</title>
 
     <link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
@@ -69,17 +69,17 @@ if ($current_language === 'sw') {
 
             <section class="register-brand">
 
-                <a class="auth-brand-link" href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA home">
+                <a class="auth-brand-link" href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA TRIX home">
                     <img
-                        src="assets/images/vayuma-logo.jpg"
-                        alt="VAYUMA Smart Ecosystem"
+                        src="assets/images/brand/shield-source.png"
+                        alt="VAYUMA TRIX AGRITECH INNOVATIONS KENYA"
                         class="register-logo"
                     >
                 </a>
 
-                <h1>VAYUMA</h1>
+                <h1>VAYUMA TRIX</h1>
 
-                <h2>SMART ECOSYSTEM</h2>
+                <h2>AGRITECH INNOVATIONS KENYA</h2>
 
                 <p>
                     <?= htmlspecialchars(t('auth_tagline'), ENT_QUOTES, 'UTF-8') ?>

@@ -29,7 +29,7 @@ if ($stmt) { $user_id = (int) $_SESSION["user_id"]; $stmt->bind_param("i", $user
 function profile_value(array $profile, string $field, string $fallback = ""): string { return htmlspecialchars($profile[$field] ?? $fallback, ENT_QUOTES, "UTF-8"); }
 ?>
 <!doctype html>
-<html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title><?= htmlspecialchars($role_name, ENT_QUOTES, "UTF-8") ?> Profile | VAYUMA</title>
+<html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title><?= htmlspecialchars($role_name, ENT_QUOTES, "UTF-8") ?> Profile | VAYUMA TRIX</title>
 <link rel="stylesheet" href="frontend/css/tokens.css?v=20261110">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css?v=20261110">
@@ -67,7 +67,7 @@ function profile_value(array $profile, string $field, string $fallback = ""): st
 }
 </style></head><body class="va-profile-document">
 <?php require __DIR__ . '/includes/profile_navigation.php'; ?><main class="va-form-page">
-<header class="topbar"><div class="va-form-brand">VAYUMA<small>SMART ECOSYSTEM</small></div></header>
+<header class="topbar"><div class="va-form-brand">VAYUMA TRIX<small>AGRITECH INNOVATIONS KENYA</small></div></header>
 <section class="hero"><div class="role-icon"><svg class="va-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg#<?= htmlspecialchars($icon, ENT_QUOTES, "UTF-8") ?>"></use></svg></div><div><div class="eyebrow">STEP 3 OF 3 · PROFILE SETUP</div><h1><?= htmlspecialchars($role_name, ENT_QUOTES, "UTF-8") ?></h1><p><?= htmlspecialchars($tagline, ENT_QUOTES, "UTF-8") ?></p></div></section>
 <div class="layout"><aside class="steps"><h2>Your VAYUMA journey</h2><div class="step"><div class="number"><svg class="va-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-checkmark"></use></svg></div><div><strong>Create account</strong><span>Your VAYUMA account is ready.</span></div></div><div class="step"><div class="number"><svg class="va-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-checkmark"></use></svg></div><div><strong>Choose role</strong><span><?= htmlspecialchars($role_name, ENT_QUOTES, "UTF-8") ?></span></div></div><div class="step active"><div class="number">3</div><div><strong>Complete profile</strong><span>Tell partners how to connect with you.</span></div></div><div class="privacy">Your details support trusted VAYUMA connections.</div></aside>
 <section class="form-card"><h2>Build your professional presence</h2><p>A complete profile helps the right farmers, buyers and partners discover your services.</p><?php if ($profile_error !== ""): ?><div class="va-form-error"><?= htmlspecialchars($profile_error, ENT_QUOTES, "UTF-8") ?></div><?php endif; ?>

@@ -5,7 +5,7 @@ if(!isset($_SESSION['user_id'])||($_SESSION['logged_in']??false)!==true){header(
 if(strtolower(trim($_SESSION['role']??''))!=='extension_officer'){header('Location: dashboard.php');exit;}
 function h($v){return htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8');}
 ?>
-<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Farming Resources | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
+<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Farming Resources | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">
@@ -40,7 +40,7 @@ function h($v){return htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8');}
   .va-profile-full { grid-column: auto; }
 }
 </style><link rel="stylesheet" href="frontend/css/extension-workspace.css?v=2"></head><body class="va-extension-workspace"><div class="wrap"><?php $workspaceBackLanguage = true; require __DIR__ . '/includes/workspace_back.php'; ?><div class="top"><div><h1>Farming Resources</h1><p class="muted">Quick access to VAYUMA's agricultural guidance tools.</p></div></div><div class="va-profile-form-grid">
-<div class="va-profile-card"><h2>Crop guidance</h2><p class="muted">Use the AI assistant to explore crop selection, planting practices, nutrient management and other farm questions.</p><a href="ai_advisor.php">Open VAYUMA AI →</a></div>
+<div class="va-profile-card"><h2>Crop guidance</h2><p class="muted">Use the AI assistant to explore crop selection, planting practices, nutrient management and other farm questions.</p><a href="ai_advisor.php">Open VAYUMA TRIX AI →</a></div>
 <div class="va-profile-card"><h2>Climate guidance</h2><p class="muted">Review climate and weather guidance available through the platform.</p><a href="climate.php">Open climate guidance →</a></div>
 <div class="va-profile-card"><h2>Disease and pest support</h2><p class="muted">Open the disease helper for crop and animal health information and precautions.</p><a href="disease_helper.php">Open disease helper →</a></div>
 <div class="va-profile-card"><h2>Farmer support requests</h2><p class="muted">Review requests submitted by farmers seeking extension assistance.</p><a href="agricultural_support_requests.php?view=received&type=extension">Manage support requests →</a></div>

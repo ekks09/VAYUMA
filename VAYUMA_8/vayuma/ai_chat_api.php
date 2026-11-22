@@ -22,7 +22,7 @@ if (
 ) {
     respond(401, [
         'success' => false,
-        'error' => 'Please log in to use VAYUMA AI.'
+        'error' => 'Please log in to use VAYUMA TRIX AI.'
     ]);
 }
 
@@ -109,10 +109,10 @@ if (($data['share_soil'] ?? false) === true) {
 $config = require __DIR__ . '/config/ai.php';
 $apiKey = trim((string)($config['api_key'] ?? ''));
 $model = trim((string)($config['model'] ?? ''));
-if (getenv('VAYUMA_AI_EXTERNAL_ENABLED') !== '1' || $apiKey === '' || $model === '') respond(503,['success'=>false,'error'=>'VAYUMA AI is not available right now. Please try again later.']);
-if (!preg_match('/^[a-zA-Z0-9_.\/-]{1,150}$/D', $model) || preg_match('/[\r\n]/', $apiKey)) respond(503,['success'=>false,'error'=>'VAYUMA AI is not available right now. Please try again later.']);
+if (getenv('VAYUMA_AI_EXTERNAL_ENABLED') !== '1' || $apiKey === '' || $model === '') respond(503,['success'=>false,'error'=>'VAYUMA TRIX AI is not available right now. Please try again later.']);
+if (!preg_match('/^[a-zA-Z0-9_.\/-]{1,150}$/D', $model) || preg_match('/[\r\n]/', $apiKey)) respond(503,['success'=>false,'error'=>'VAYUMA TRIX AI is not available right now. Please try again later.']);
 require_once __DIR__.'/includes/nvidia_advisor.php';
-try { $vayumaDbReadinessProbe = true; require_once __DIR__.'/config/db.php'; if (!isset($conn) || !$conn) throw new RuntimeException(); } catch (Throwable $ignored) { respond(503,['success'=>false,'error'=>'VAYUMA AI is temporarily unavailable. Please try again later.']); }
+try { $vayumaDbReadinessProbe = true; require_once __DIR__.'/config/db.php'; if (!isset($conn) || !$conn) throw new RuntimeException(); } catch (Throwable $ignored) { respond(503,['success'=>false,'error'=>'VAYUMA TRIX AI is temporarily unavailable. Please try again later.']); }
 if (!vayuma_reserve_ai_request($conn, (int)$_SESSION['user_id'])) respond(503,['success'=>false,'error'=>'AI daily limit reached or usage control is unavailable. Please try again later.']);
 // Close the session before network I/O; all context has already been selected and copied.
 session_write_close();
@@ -125,6 +125,6 @@ $result = is_string($response) && strlen($response) <= 200000 ? json_decode($res
 $answer = ($status>=200 && $status<300) ? vayuma_nvidia_answer($result) : null;
 if ($answer === null) {
     error_log('VAYUMA NVIDIA AI unavailable or incomplete. HTTP status '.$status);
-    respond(503,['success'=>false,'error'=>'VAYUMA AI is temporarily unavailable. Please try again later.']);
+    respond(503,['success'=>false,'error'=>'VAYUMA TRIX AI is temporarily unavailable. Please try again later.']);
 }
 respond(200,['success'=>true,'answer'=>$answer,'language'=>$language,'mode'=>'ai_support','context_used'=>$contextUsed]);

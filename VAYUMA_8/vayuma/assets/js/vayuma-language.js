@@ -26,7 +26,7 @@
     'Weather':'Hali ya Hewa','Weather Guidance':'Mwongozo wa Hali ya Hewa','Climate Guidance':'Mwongozo wa Hali ya Hewa',
     'Disease Helper':'Msaada wa Magonjwa','Crop Calendar':'Kalenda ya Mazao','Crop Opportunities':'Fursa za Mazao',
     'Farming Score':'Alama ya Kilimo','Budget Planner':'Mpangaji wa Bajeti','Livestock':'Mifugo',
-    'Ask VAYUMA AI':'Uliza VAYUMA AI','Send':'Tuma','Clear Conversation':'Futa Mazungumzo',
+    'Ask VAYUMA TRIX AI':'Uliza VAYUMA TRIX AI','Send':'Tuma','Clear Conversation':'Futa Mazungumzo',
     'Name':'Jina','Full Name':'Jina Kamili','Email':'Barua Pepe','Phone':'Simu','Phone Number':'Nambari ya Simu',
     'Email or Phone Number':'Barua Pepe au Nambari ya Simu','Password':'Nenosiri','Confirm Password':'Thibitisha Nenosiri',
     'Location':'Eneo','County':'Kaunti','Sub-county':'Kaunti Ndogo','Address':'Anwani',

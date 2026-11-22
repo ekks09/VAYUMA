@@ -1,6 +1,6 @@
 <?php
 /**
- * VAYUMA bilingual language service.
+ * VAYUMA TRIX bilingual language service.
  * Add future Kenyan languages by extending the supported list and dictionaries.
  */
 if (session_status() === PHP_SESSION_NONE) {
@@ -37,7 +37,7 @@ $translations = [
   'crop_advice'=>'Crop Advice', 'soil_analysis'=>'Soil Analysis',
   'weather'=>'Weather Guidance', 'disease_helper'=>'Disease Helper',
   'livestock'=>'Livestock', 'farm_planner'=>'Farm Planner', 'market_prices'=>'Market Prices',
-  'ask_ai'=>'Ask VAYUMA AI', 'send'=>'Send', 'clear_chat'=>'Clear Conversation',
+  'ask_ai'=>'Ask VAYUMA TRIX AI', 'send'=>'Send', 'clear_chat'=>'Clear Conversation',
   'produce'=>'Produce', 'add_produce'=>'Add Produce', 'buy'=>'Buy', 'sell'=>'Sell',
   'view_produce'=>'View Produce', 'success'=>'Operation completed successfully.',
   'error'=>'Something went wrong. Please try again.', 'no_results'=>'No results found.',
@@ -45,18 +45,18 @@ $translations = [
   'email_phone'=>'Email or Phone Number', 'enter_email_phone'=>'Enter email or phone number',
   'password'=>'Password', 'enter_password'=>'Enter your password',
   'forgot_password'=>'Forgot password?', 'sign_in'=>'Sign In',
-  'no_account'=>"Don't have a VAYUMA account?", 'secure_account'=>'Your account is securely protected',
+  'no_account'=>"Don't have a VAYUMA TRIX account?", 'secure_account'=>'Your account is securely protected',
   'invalid_login'=>'Invalid email/phone or password.', 'fill_required'=>'Please fill in all required fields.',
   'complete_profile'=>'Please complete your profile first.', 'login_failed'=>'Unable to login. Please try again.',
   'tagline'=>'Connecting Agriculture. Empowering Every Harvest.',
   'future_agriculture'=>'The Future of Smart Agriculture Begins Here.',
   'climate_guidance'=>'Climate Guidance', 'climate_desc'=>'Explore forecasts and rainfall for a place you select.',
   'soil_intelligence'=>'Soil Intelligence', 'soil_desc'=>'Record soil tests and understand your results safely.',
-  'ai_guidance'=>'Ask about your selected data and VAYUMA tools.',
+  'ai_guidance'=>'Ask about your selected data and VAYUMA TRIX tools.',
   'market_connect'=>'Market Connect', 'market_desc'=>'Connect produce with verified buyers.',
   'welcome_intro'=>'Connecting Agriculture. Empowering Every Harvest. Bringing people and opportunity into one smart ecosystem.',
   'welcome_title'=>'The Future of Smart Agriculture Begins Here.',
-  'ecosystem_intro'=>'VAYUMA brings farmers, buyers, consumers, transport providers, researchers, extension officers, cooperatives and financial partners together in one integrated agricultural ecosystem.'
+  'ecosystem_intro'=>'VAYUMA TRIX AGRITECH INNOVATIONS KENYA brings farmers, buyers, consumers, transport providers, researchers, extension officers, cooperatives, and financial partners together in one integrated smart agricultural ecosystem.'
  ],
  'sw' => [
   'language'=>'Lugha', 'english'=>'Kiingereza', 'swahili'=>'Kiswahili',
@@ -69,7 +69,7 @@ $translations = [
   'crop_advice'=>'Ushauri wa Mazao', 'soil_analysis'=>'Uchambuzi wa Udongo',
   'weather'=>'Mwongozo wa Hali ya Hewa', 'disease_helper'=>'Msaada wa Magonjwa',
   'livestock'=>'Mifugo', 'farm_planner'=>'Mpangaji wa Kilimo', 'market_prices'=>'Bei za Soko',
-  'ask_ai'=>'Uliza VAYUMA AI', 'send'=>'Tuma', 'clear_chat'=>'Futa Mazungumzo',
+  'ask_ai'=>'Uliza VAYUMA TRIX AI', 'send'=>'Tuma', 'clear_chat'=>'Futa Mazungumzo',
   'produce'=>'Mazao', 'add_produce'=>'Ongeza Mazao', 'buy'=>'Nunua', 'sell'=>'Uza',
   'view_produce'=>'Tazama Mazao', 'success'=>'Operesheni imekamilika kikamilifu.',
   'error'=>'Hitilafu imetokea. Tafadhali jaribu tena.', 'no_results'=>'Hakuna matokeo yaliyopatikana.',
@@ -77,18 +77,18 @@ $translations = [
   'email_phone'=>'Barua pepe au Nambari ya Simu', 'enter_email_phone'=>'Weka barua pepe au nambari ya simu',
   'password'=>'Nenosiri', 'enter_password'=>'Weka nenosiri lako',
   'forgot_password'=>'Umesahau nenosiri?', 'sign_in'=>'Ingia',
-  'no_account'=>'Huna akaunti ya VAYUMA?', 'secure_account'=>'Akaunti yako imelindwa kwa usalama',
+  'no_account'=>'Huna akaunti ya VAYUMA TRIX?', 'secure_account'=>'Akaunti yako imelindwa kwa usalama',
   'invalid_login'=>'Barua pepe/simu au nenosiri si sahihi.', 'fill_required'=>'Tafadhali jaza sehemu zote zinazohitajika.',
   'complete_profile'=>'Tafadhali kamilisha wasifu wako kwanza.', 'login_failed'=>'Imeshindikana kuingia. Tafadhali jaribu tena.',
   'tagline'=>'Kuunganisha Kilimo. Kuwezesha Kila Mavuno.',
   'future_agriculture'=>'Mustakabali wa Kilimo Bora Una Anza Hapa.',
   'climate_guidance'=>'Mwongozo wa Hali ya Hewa', 'climate_desc'=>'Tazama utabiri na mvua kwa eneo unalochagua.',
   'soil_intelligence'=>'Taarifa za Udongo', 'soil_desc'=>'Hifadhi vipimo vya udongo na uelewe matokeo kwa usalama.',
-  'ai_guidance'=>'Uliza kuhusu taarifa ulizochagua na huduma za VAYUMA.',
+  'ai_guidance'=>'Uliza kuhusu taarifa ulizochagua na huduma za VAYUMA TRIX.',
   'market_connect'=>'Unganisha na Soko', 'market_desc'=>'Unganisha mazao na wanunuzi waliothibitishwa.',
   'welcome_intro'=>'Kuunganisha Kilimo. Kuwezesha Kila Mavuno. Kuleta watu na fursa katika mfumo mmoja mahiri wa kilimo.',
   'welcome_title'=>'Mustakabali wa Kilimo Bora Una Anza Hapa.',
-  'ecosystem_intro'=>'VAYUMA inawaleta wakulima, wanunuzi, watumiaji, wasafirishaji, watafiti, maafisa ugani, vyama vya ushirika na washirika wa kifedha pamoja katika mfumo mmoja wa kilimo.'
+  'ecosystem_intro'=>'VAYUMA TRIX AGRITECH INNOVATIONS KENYA inawaleta wakulima, wanunuzi, watumiaji, wasafirishaji, watafiti, maafisa ugani, vyama vya ushirika na washirika wa kifedha pamoja katika mfumo mmoja wa kilimo.'
  ]
 ];
 
@@ -97,9 +97,9 @@ $translations['en'] += [
  'auth_tagline' => 'Connecting Agriculture. Empowering Every Harvest.',
  'register_brand_message' => 'One platform for smarter farming, better markets and stronger agricultural communities.',
  'register_step' => 'STEP 1 OF 3', 'register_title' => 'Create Your Account',
- 'register_intro' => 'Join the VAYUMA Smart Ecosystem.', 'full_name' => 'Full Name',
+ 'register_intro' => 'Join the VAYUMA TRIX AGRITECH INNOVATIONS KENYA.', 'full_name' => 'Full Name',
  'enter_full_name' => 'Enter your full name', 'phone_number' => 'Phone Number',
- 'phone_example' => 'e.g. 0712345678', 'phone_hint' => 'Use the phone number you will use for VAYUMA services.',
+ 'phone_example' => 'e.g. 0712345678', 'phone_hint' => 'Use the phone number you will use for VAYUMA TRIX services.',
  'email_address' => 'Email Address', 'optional' => 'Optional', 'confirm_password' => 'Confirm Password',
  'create_password' => 'Create a strong password', 'confirm_password_placeholder' => 'Confirm your password',
  'password_hint' => 'Use at least 8 characters.', 'weak_password' => 'Weak password.',
@@ -107,9 +107,9 @@ $translations['en'] += [
  'very_strong_password' => 'Very strong password.', 'passwords_match' => 'Passwords match.',
  'passwords_differ' => 'Passwords do not match.', 'password_minimum' => 'Password must contain at least 8 characters.',
  'show_password' => 'Show password', 'hide_password' => 'Hide password',
- 'agree_terms' => 'I agree to the VAYUMA', 'terms_of_service' => 'Terms of Service',
+ 'agree_terms' => 'I agree to the VAYUMA TRIX', 'terms_of_service' => 'Terms of Service',
  'and' => 'and', 'privacy_policy' => 'Privacy Policy', 'continue' => 'Continue',
- 'already_account' => 'Already have a VAYUMA account?', 'login_brand_title' => 'Growing opportunity, together.',
+ 'already_account' => 'Already have a VAYUMA TRIX account?', 'login_brand_title' => 'Growing opportunity, together.',
  'login_brand_copy' => 'A connected place for farmers, buyers and agricultural partners to build a stronger food system.',
  'market_access' => 'Market access', 'farm_insights' => 'Farm insights', 'trusted_connections' => 'Trusted connections',
  'member_sign_in' => 'MEMBER SIGN IN', 'password_recovery_unavailable' => 'Password recovery is not available yet.', 'or' => 'OR',
@@ -118,9 +118,9 @@ $translations['sw'] += [
  'auth_tagline' => 'Kuunganisha Kilimo. Kuwezesha Kila Mavuno.',
  'register_brand_message' => 'Jukwaa moja kwa kilimo bora, masoko bora na jamii imara za kilimo.',
  'register_step' => 'HATUA YA 1 KATI YA 3', 'register_title' => 'Fungua Akaunti Yako',
- 'register_intro' => 'Jiunge na Mfumo Mahiri wa VAYUMA.', 'full_name' => 'Jina Kamili',
+ 'register_intro' => 'Jiunge na Mfumo Mahiri wa VAYUMA TRIX.', 'full_name' => 'Jina Kamili',
  'enter_full_name' => 'Weka jina lako kamili', 'phone_number' => 'Nambari ya Simu',
- 'phone_example' => 'mf. 0712345678', 'phone_hint' => 'Tumia nambari ya simu utakayotumia kwa huduma za VAYUMA.',
+ 'phone_example' => 'mf. 0712345678', 'phone_hint' => 'Tumia nambari ya simu utakayotumia kwa huduma za VAYUMA TRIX.',
  'email_address' => 'Barua Pepe', 'optional' => 'Si lazima', 'confirm_password' => 'Thibitisha Nenosiri',
  'create_password' => 'Tengeneza nenosiri imara', 'confirm_password_placeholder' => 'Thibitisha nenosiri lako',
  'password_hint' => 'Tumia angalau herufi 8.', 'weak_password' => 'Nenosiri dhaifu.',
@@ -128,9 +128,9 @@ $translations['sw'] += [
  'very_strong_password' => 'Nenosiri imara sana.', 'passwords_match' => 'Manenosiri yanalingana.',
  'passwords_differ' => 'Manenosiri hayalingani.', 'password_minimum' => 'Nenosiri lazima liwe na angalau herufi 8.',
  'show_password' => 'Onyesha nenosiri', 'hide_password' => 'Ficha nenosiri',
- 'agree_terms' => 'Nakubali', 'terms_of_service' => 'Masharti ya Huduma ya VAYUMA',
+ 'agree_terms' => 'Nakubali', 'terms_of_service' => 'Masharti ya Huduma ya VAYUMA TRIX',
  'and' => 'na', 'privacy_policy' => 'Sera ya Faragha', 'continue' => 'Endelea',
- 'already_account' => 'Tayari una akaunti ya VAYUMA?', 'login_brand_title' => 'Kukuza fursa, pamoja.',
+ 'already_account' => 'Tayari una akaunti ya VAYUMA TRIX?', 'login_brand_title' => 'Kukuza fursa, pamoja.',
  'login_brand_copy' => 'Mahali pa wakulima, wanunuzi na washirika wa kilimo kujenga mfumo imara wa chakula.',
  'market_access' => 'Ufikiaji wa soko', 'farm_insights' => 'Taarifa za kilimo', 'trusted_connections' => 'Mahusiano ya kuaminika',
  'member_sign_in' => 'INGIA KAMA MWANACHAMA', 'password_recovery_unavailable' => 'Kurejesha nenosiri hakupatikani kwa sasa.', 'or' => 'AU',

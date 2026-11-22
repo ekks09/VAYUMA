@@ -4,7 +4,7 @@ function vayuma_recovery_config(): ?array {
     if (getenv('VAYUMA_PASSWORD_RESET_ENABLED') !== '1' || !defined('VAYUMA_SESSION_GUARD_ACTIVE')) return null;
     $key = trim((string)getenv('BREVO_API_KEY'));
     $sender = trim((string)(getenv('BREVO_SENDER_EMAIL') ?: getenv('BREVO_FROM_EMAIL')));
-    $senderName = trim((string)(getenv('BREVO_SENDER_NAME') ?: 'VAYUMA'));
+    $senderName = trim((string)(getenv('BREVO_SENDER_NAME') ?: 'VAYUMA TRIX'));
     $templateId = trim((string)getenv('BREVO_RESET_TEMPLATE_ID'));
     $url = rtrim(trim((string)(getenv('VAYUMA_PUBLIC_URL') ?: getenv('RENDER_EXTERNAL_URL'))), '/');
     $parsed = parse_url($url);
@@ -41,9 +41,9 @@ function vayuma_recovery_notice(array $config, string $email): bool {
     if ($config['sender'] === '') return false;
     return vayuma_recovery_brevo_send($config, [
         'sender'=>['name'=>$config['sender_name'],'email'=>$config['sender']], 'to'=>[['email'=>$email]],
-        'subject'=>'Your VAYUMA password was changed',
-        'textContent'=>'Your VAYUMA password has been changed. If this was not you, contact VAYUMA support immediately.',
-        'htmlContent'=>'<p>Your VAYUMA password has been changed.</p><p>If this was not you, contact VAYUMA support immediately.</p>'
+        'subject'=>'Your VAYUMA TRIX password was changed',
+        'textContent'=>'Your VAYUMA TRIX password has been changed. If this was not you, contact VAYUMA TRIX support immediately.',
+        'htmlContent'=>'<p>Your VAYUMA TRIX password has been changed.</p><p>If this was not you, contact VAYUMA TRIX support immediately.</p>'
     ]);
 }
 

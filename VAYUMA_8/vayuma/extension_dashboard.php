@@ -37,7 +37,7 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
 <head>
 <?php require __DIR__ . '/includes/pwa.php'; ?>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Extension Officer Dashboard | VAYUMA</title>
+<title>Extension Officer Dashboard | VAYUMA TRIX</title>
 <link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
@@ -63,7 +63,7 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
 <div class="va-dash-sidebar--section">KNOWLEDGE</div>
 <a class="va-dash-sidebar--nav-item" href="climate.php"><svg class="va-ext-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg?v=extension-1#va-ext-weather"></use></svg><span>Climate Guidance</span></a>
 <a class="va-dash-sidebar--nav-item" href="extension_resources.php"><svg class="va-ext-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg?v=extension-1#va-ext-resources"></use></svg><span>Farming Resources</span></a>
-<a class="va-dash-sidebar--nav-item" href="feature_access.php?feature=ai"><svg class="va-ext-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg?v=extension-1#va-ext-ai"></use></svg><span>VAYUMA AI</span></a>
+<a class="va-dash-sidebar--nav-item" href="feature_access.php?feature=ai"><svg class="va-ext-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg?v=extension-1#va-ext-ai"></use></svg><span>VAYUMA TRIX AI</span></a>
   </nav>
   <div class="va-ext-sidebar-footer">
     <?php vayuma_language_selector(); ?>
@@ -111,10 +111,10 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
 <a class="va-dash-action va-ext-action" href="extension_reports.php"><svg class="va-ext-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg?v=extension-1#va-ext-report"></use></svg><span>Create Farm Report</span><span class="va-ext-action__arrow" aria-hidden="true">→</span></a>
 <a class="va-dash-action va-ext-action" href="feature_access.php?feature=ai"><svg class="va-ext-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg?v=extension-1#va-ext-crop"></use></svg><span>Give Crop Advice</span><span class="va-ext-action__arrow" aria-hidden="true">→</span></a>
 <a class="va-dash-action va-ext-action" href="disease_helper.php"><svg class="va-ext-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg?v=extension-1#va-ext-pest"></use></svg><span>Open Disease &amp; Pest Helper</span><span class="va-ext-action__arrow" aria-hidden="true">→</span></a>
-<a class="va-dash-action va-ext-action" href="feature_access.php?feature=ai"><svg class="va-ext-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg?v=extension-1#va-ext-ai"></use></svg><span>Ask VAYUMA AI</span><span class="va-ext-action__arrow" aria-hidden="true">→</span></a>
+<a class="va-dash-action va-ext-action" href="feature_access.php?feature=ai"><svg class="va-ext-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg?v=extension-1#va-ext-ai"></use></svg><span>Ask VAYUMA TRIX AI</span><span class="va-ext-action__arrow" aria-hidden="true">→</span></a>
     </section>
     <section class="va-dash-panel va-ext-mission" aria-labelledby="extension-mission-title">
-      <h2 id="extension-mission-title">VAYUMA Mission</h2>
+      <h2 id="extension-mission-title">VAYUMA TRIX Mission</h2>
       <p>Help connect agricultural knowledge with farmers so they can make better, climate-smart and profitable decisions.</p>
     </section>
   </div>

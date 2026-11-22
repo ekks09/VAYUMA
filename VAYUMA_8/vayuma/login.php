@@ -52,15 +52,15 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
 
         <div class="login-card">
 
-            <section class="login-brand" aria-label="VAYUMA Smart Ecosystem">
-                <a class="auth-brand-link" href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA home">
+            <section class="login-brand" aria-label="VAYUMA TRIX AGRITECH INNOVATIONS KENYA">
+                <a class="auth-brand-link" href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA TRIX home">
                     <img
-                        src="assets/images/vayuma-logo.jpg"
-                        alt="VAYUMA"
+                        src="assets/images/brand/shield-source.png"
+                        alt="VAYUMA TRIX"
                         class="login-brand-logo"
                     >
                 </a>
-                <p class="login-brand-kicker">VAYUMA SMART ECOSYSTEM</p>
+                <p class="login-brand-kicker">VAYUMA TRIX AGRITECH INNOVATIONS KENYA</p>
                 <h2><?= htmlspecialchars(t('login_brand_title'), ENT_QUOTES, 'UTF-8') ?></h2>
                 <p class="login-brand-copy">
                     <?= htmlspecialchars(t('login_brand_copy'), ENT_QUOTES, 'UTF-8') ?>

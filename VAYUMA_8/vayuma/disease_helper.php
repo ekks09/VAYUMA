@@ -30,7 +30,7 @@ $full_name = $_SESSION["full_name"] ?? "Farmer";
     content="width=device-width, initial-scale=1.0"
 >
 
-<title>VAYUMA Health Helper</title>
+<title>VAYUMA TRIX Health Helper</title>
 
 <link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
@@ -76,7 +76,7 @@ $full_name = $_SESSION["full_name"] ?? "Farmer";
 
 <header class="header">
 
-    <h1><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg> VAYUMA</h1>
+    <h1><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg> VAYUMA TRIX</h1>
 
     <p>
         Smart Farming Ecosystem
@@ -95,7 +95,7 @@ $full_name = $_SESSION["full_name"] ?? "Farmer";
     <div class="page-title">
 
         <h2>
-            <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg> VAYUMA Health Helper
+            <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg> VAYUMA TRIX Health Helper
         </h2>
 
         <p>

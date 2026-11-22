@@ -19,7 +19,7 @@ $countyOptions[]='Marsabit';$countyOptions=array_values(array_unique($countyOpti
 $error=$_SESSION['profile_error']??'';unset($_SESSION['profile_error']);
 function eh($v){return htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8');}
 ?>
-<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Extension Officer Profile | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css?v=20261110">
+<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Extension Officer Profile | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css?v=20261110">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css?v=20261110">
 <link rel="stylesheet" href="frontend/css/layout.css">
@@ -55,7 +55,7 @@ function eh($v){return htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8');}
   .va-profile-full { grid-column: auto; }
 }
 </style></head><body class="va-profile-document">
-<?php require __DIR__ . '/includes/profile_navigation.php'; ?><main class="va-profile-page"><div class="va-profile-brand">VAYUMA<small>SMART ECOSYSTEM</small></div><section class="hero"><h1>Agricultural Extension Officer</h1><p>Share your professional background, technical focus and the areas where you can support farmers.</p></section><section class="va-profile-card"><?php if($error):?><div class="va-profile-error"><?=eh($error)?></div><?php endif;?><form method="post" action="auth/save_extension.php"><?= vayuma_csrf_field() ?><div class="va-profile-form-grid">
+<?php require __DIR__ . '/includes/profile_navigation.php'; ?><main class="va-profile-page"><div class="va-profile-brand">VAYUMA TRIX<small>AGRITECH INNOVATIONS KENYA</small></div><section class="hero"><h1>Agricultural Extension Officer</h1><p>Share your professional background, technical focus and the areas where you can support farmers.</p></section><section class="va-profile-card"><?php if($error):?><div class="va-profile-error"><?=eh($error)?></div><?php endif;?><form method="post" action="auth/save_extension.php"><?= vayuma_csrf_field() ?><div class="va-profile-form-grid">
 <div><label class="va-profile-label-field" for="extension-organization">Organisation / employer *</label><input id="extension-organization" class="va-profile-input" name="organization" required maxlength="200" value="<?=eh($profile['organization']??'')?>" placeholder="County Department of Agriculture"></div>
 <div><label class="va-profile-label-field" for="extension-county">County of work base *</label><select id="extension-county" class="va-profile-input" name="county" required><option value="">Select county</option><?php foreach($countyOptions as $c):?><option value="<?=eh($c)?>" <?=strcasecmp((string)($profile['county']??''),$c)===0?'selected':''?>><?=eh($c)?></option><?php endforeach;?></select></div>
 <div><label class="va-profile-label-field" for="extension-sub_county">Sub-county / local office</label><input id="extension-sub_county" class="va-profile-input" name="sub_county" maxlength="100" value="<?=eh($profile['sub_county']??'')?>" placeholder="Optional"></div>

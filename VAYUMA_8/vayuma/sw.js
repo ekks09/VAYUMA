@@ -1,10 +1,12 @@
 /* Only the offline document and explicitly listed public files may be cached. */
-const CACHE = 'vayuma-public-v16';
+const CACHE = 'vayuma-public-v18';
 const ROOT = new URL('./', self.registration.scope);
 const OFFLINE = new URL('offline.html', ROOT).href;
 const PUBLIC_FILES = new Map([
   ['assets/css/dashboard-layout.css', 'text/css'],
   ['assets/css/vayuma-ui.css', 'text/css'],
+  ['assets/css/brand.css', 'text/css'],
+  ['assets/images/brand/shield-source.png', 'image/png'],
   ['frontend/css/agriculture-tools.css', 'text/css'],
   ['frontend/css/extension-workspace.css', 'text/css'],
   ['frontend/css/profile_forms.css', 'text/css'],
@@ -31,6 +33,12 @@ const PUBLIC_FILES = new Map([
   ['frontend/js/profile-photo.js', 'javascript'],
   ['frontend/js/vayuma-ui.js', 'javascript'],
   ['frontend/images/icons.svg', 'image/svg+xml'],
+  ['assets/images/brand/app-icon-192.png', 'image/png'],
+  ['assets/images/brand/app-icon-512.png', 'image/png'],
+  ['assets/images/brand/maskable-192.png', 'image/png'],
+  ['assets/images/brand/maskable-512.png', 'image/png'],
+  ['assets/images/brand/apple-touch-icon.png', 'image/png'],
+  // Transitional aliases for previously cached pages; files contain the new brand.
   ['assets/images/vayuma-logo.jpg', 'image/jpeg'],
   ['frontend/images/vayuma-logo.jpg', 'image/jpeg'],
   ['frontend/images/pwa/icon-192.png', 'image/png'],

@@ -65,9 +65,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && $config !== null) {
 <?php vayuma_language_selector(); ?>
 <main class="login-page">
     <div class="login-card">
-        <section class="login-brand" aria-label="VAYUMA Smart Ecosystem">
-            <a class="auth-brand-link" href="welcome.php" aria-label="VAYUMA home"><img src="assets/images/vayuma-logo.jpg" alt="VAYUMA" class="login-brand-logo"></a>
-            <p class="login-brand-kicker">VAYUMA SMART ECOSYSTEM</p>
+        <section class="login-brand" aria-label="VAYUMA TRIX AGRITECH INNOVATIONS KENYA">
+            <a class="auth-brand-link" href="welcome.php" aria-label="VAYUMA TRIX home"><img src="assets/images/brand/shield-source.png" alt="VAYUMA TRIX" class="login-brand-logo"></a>
+            <p class="login-brand-kicker">VAYUMA TRIX AGRITECH INNOVATIONS KENYA</p>
             <h2><?= $h($sw ? 'Ufikiaji salama wa akaunti yako' : 'Secure access to your account') ?></h2>
             <p class="login-brand-copy"><?= $h($sw ? 'Tunalinda akaunti yako wakati wa kurejesha ufikiaji.' : 'Protecting your account while restoring access.') ?></p>
         </section>

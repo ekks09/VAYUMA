@@ -26,7 +26,7 @@ $role = $_SESSION["role"] ?? "";
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Profile Complete | VAYUMA</title>
+    <title>Profile Complete | VAYUMA TRIX</title>
 
     <link
         rel="stylesheet"

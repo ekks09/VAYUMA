@@ -34,7 +34,7 @@ $failed = in_array($status, ['failed', 'cancelled'], true);
 <head><?php require __DIR__ . '/includes/pwa.php'; ?>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>M-Pesa subscription | VAYUMA</title>
+  <title>M-Pesa subscription | VAYUMA TRIX</title>
   <link rel="stylesheet" href="frontend/css/tokens.css">
   <link rel="stylesheet" href="frontend/css/components.css">
   <link rel="stylesheet" href="frontend/css/components_addition.css?v=20261110-nav">

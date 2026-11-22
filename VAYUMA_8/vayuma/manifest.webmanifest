@@ -1,37 +1,37 @@
 {
   "id": "./",
-  "name": "VAYUMA Smart Ecosystem",
-  "short_name": "VAYUMA",
-  "description": "Connecting agriculture, empowering every harvest.",
+  "name": "VAYUMA TRIX AGRITECH INNOVATIONS KENYA",
+  "short_name": "VAYUMA TRIX",
+  "description": "VAYUMA TRIX AGRITECH INNOVATIONS KENYA connects agriculture and empowers every harvest.",
   "start_url": "./welcome.php",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#087d42",
+  "background_color": "#064e3b",
+  "theme_color": "#064e3b",
   "icons": [
     {
-      "src": "frontend/images/pwa/icon-192.png",
+      "src": "assets/images/brand/app-icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "frontend/images/pwa/icon-512.png",
+      "src": "assets/images/brand/app-icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "frontend/images/pwa/maskable-192.png",
+      "src": "assets/images/brand/maskable-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
-      "src": "frontend/images/pwa/maskable-512.png",
+      "src": "assets/images/brand/maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ]
 }

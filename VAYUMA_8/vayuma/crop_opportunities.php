@@ -187,7 +187,7 @@ usort($crops, function ($a, $b) {
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
-<title>Crop Opportunities | VAYUMA</title>
+<title>Crop Opportunities | VAYUMA TRIX</title>
 
 <link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
@@ -232,7 +232,7 @@ usort($crops, function ($a, $b) {
 
 <header class="header">
 
-    <h1>🌾 VAYUMA</h1>
+    <h1>🌾 VAYUMA TRIX</h1>
 
     <p>Smart Farming Ecosystem</p>
 

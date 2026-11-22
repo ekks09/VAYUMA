@@ -1,7 +1,7 @@
 <header class="va-topbar">
-  <a class="va-topbar--brand" href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA home">
-    <img src="frontend/images/pwa/icon-192.png" alt="VAYUMA">
-    <strong>VAYUMA</strong>
+  <a class="va-topbar--brand" href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA TRIX home">
+    <img src="assets/images/brand/app-icon-192.png" alt="">
+    <span><strong>VAYUMA TRIX</strong><small>AGRITECH INNOVATIONS KENYA</small></span>
   </a>
 
   <?php if ($showSidebarMenu): ?>

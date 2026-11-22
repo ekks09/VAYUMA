@@ -1,14 +1,16 @@
 <?php // Shared PWA metadata. Paths are relative to the application document root. ?>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#087d42">
+<link rel="manifest" href="manifest.json?v=brand-1">
+<link rel="icon" href="assets/images/brand/favicon.ico" sizes="any">
+<link rel="stylesheet" href="assets/css/brand.css?v=1">
+<meta name="theme-color" content="#064e3b">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="VAYUMA">
-<link rel="apple-touch-icon" href="frontend/images/pwa/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="VAYUMA TRIX">
+<link rel="apple-touch-icon" href="assets/images/brand/apple-touch-icon.png">
 <link rel="stylesheet" href="assets/css/vayuma-ui.css?v=3">
 <link rel="stylesheet" href="frontend/css/pwa-install.css?v=install-1">
-<script src="frontend/js/pwa.js?v=install-2" defer></script>
+<script src="frontend/js/pwa.js?v=install-3" defer></script>
 <link rel="stylesheet" href="frontend/css/user-menu.css?v=3">
 <script src="frontend/js/user-menu.js?v=1" defer></script>
 <script src="frontend/js/feedback.js?v=1" defer></script>
@@ -19,5 +21,5 @@ if (($_SESSION['logged_in'] ?? false) === true && isset($_SESSION['user_id']) &&
 ?>
 <meta name="vayuma-ai-csrf" content="<?= htmlspecialchars($_SESSION['vayuma_csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
 <link rel="stylesheet" href="frontend/css/ai-chat.css?v=3">
-<script src="frontend/js/ai-chat.js?v=3" defer></script>
+<script src="frontend/js/ai-chat.js?v=4" defer></script>
 <?php endif; ?>

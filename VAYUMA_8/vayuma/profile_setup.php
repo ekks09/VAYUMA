@@ -46,7 +46,7 @@ $email = $_SESSION['email'] ?? '';
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Farmer Profile | VAYUMA</title>
+    <title>Farmer Profile | VAYUMA TRIX</title>
 
     <link rel="stylesheet" href="frontend/css/tokens.css?v=20261110">
 <link rel="stylesheet" href="frontend/css/components.css">
@@ -95,12 +95,12 @@ $email = $_SESSION['email'] ?? '';
 
     <div class="logo-area">
 
-        <img src="frontend/images/pwa/icon-192.png"
+        <img src="assets/images/brand/app-icon-192.png"
              alt="" width="48" height="48">
 
         <div>
-            <h2>VAYUMA</h2>
-            <small>SMART ECOSYSTEM</small>
+            <h2>VAYUMA TRIX</h2>
+            <small>AGRITECH INNOVATIONS KENYA</small>
         </div>
 
     </div>

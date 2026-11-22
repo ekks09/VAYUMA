@@ -13,5 +13,5 @@ test('manifest, icon formats and iOS metadata are coherent',()=>{
    const bytes=fs.readFileSync(path.join(root,icon.src)); assert.equal(bytes.subarray(0,8).toString('hex'),'89504e470d0a1a0a'); assert.equal(bytes.readUInt32BE(16),size); assert.equal(bytes.readUInt32BE(20),size);
  }
  const head=fs.readFileSync(path.join(root,'includes/pwa.php'),'utf8'); assert.match(head,/manifest\.json/); assert.match(head,/apple-mobile-web-app-capable/); assert.match(head,/name="mobile-web-app-capable"/); assert.match(head,/apple-touch-icon/);
- const icon=fs.readFileSync(path.join(root,'frontend/images/pwa/apple-touch-icon.png')); assert.equal(icon.readUInt32BE(16),180);assert.equal(icon.readUInt32BE(20),180);
+ const icon=fs.readFileSync(path.join(root,'assets/images/brand/apple-touch-icon.png')); assert.equal(icon.readUInt32BE(16),180);assert.equal(icon.readUInt32BE(20),180);
 });

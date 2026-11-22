@@ -27,7 +27,7 @@ $full_name = $_SESSION["full_name"] ?? "Farmer";
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Budget Planner | VAYUMA</title>
+<title>Budget Planner | VAYUMA TRIX</title>
 
 <link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
@@ -72,7 +72,7 @@ $full_name = $_SESSION["full_name"] ?? "Farmer";
 
 <header class="header">
 
-    <h1><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg> VAYUMA</h1>
+    <h1><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg> VAYUMA TRIX</h1>
 
     <p>Smart Farming Ecosystem</p>
 

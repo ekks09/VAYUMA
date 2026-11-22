@@ -202,7 +202,7 @@ $waterDisplay = trim((string)($profile['irrigation'] ?? '')) ?: 'Not provided';
     content="width=device-width, initial-scale=1.0"
 >
 
-<title>Farming Score | VAYUMA</title>
+<title>Farming Score | VAYUMA TRIX</title>
 
 <link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">

@@ -40,7 +40,7 @@ $navLinks = [
     'My Produce' => 'my_produce.php',
     'My Orders' => 'my_orders.php',
     'Produce Requests' => 'seller_orders.php',
-    'VAYUMA AI' => 'feature_access.php?feature=ai',
+    'VAYUMA TRIX AI' => 'feature_access.php?feature=ai',
     'Profile & Settings' => 'profile.php?return_to=farmer_dashboard.php',
 ];
 
@@ -85,7 +85,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
             <h1 class="va-section--title">Farmer Dashboard</h1>
             <p class="va-section--sub">Good day, <?= h($full_name) ?>. Manage your farm business with VAYUMA.</p>
           </div>
-          <a href="feature_access.php?feature=ai" class="va-btn va-btn--primary va-btn--sm"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg> Ask VAYUMA AI</a>
+          <a href="feature_access.php?feature=ai" class="va-btn va-btn--primary va-btn--sm"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg> Ask VAYUMA TRIX AI</a>
         </div>
       </div>
 
@@ -180,7 +180,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
 
       <section class="farmer-services-note va-mb-6" aria-label="Service availability">
         <strong>More ways to get help</strong>
-        <p>Voice support and SMS / USSD are not available yet. You can use VAYUMA AI Support when enabled.</p>
+        <p>Voice support and SMS / USSD are not available yet. You can use VAYUMA TRIX AI Support when enabled.</p>
         <a href="feature_access.php?feature=ai">Open the text assistant →</a>
       </section>
 
@@ -206,13 +206,13 @@ require_once __DIR__ . '/includes/ui_simple.php';
       <div class="va-card va-card--p va-mb-6" style="background:linear-gradient(120deg,#059669,#047857);color:#ffffff;border:none;border-radius:var(--va-radius-lg);">
         <div class="va-d-flex va-justify-between va-items-center va-mb-4">
           <div class="va-flex-1">
-            <div class="va-text-xs va-text-primary va-font-semibold va-text-uppercase va-mb-1">VAYUMA AI ASSISTANT</div>
+            <div class="va-text-xs va-text-primary va-font-semibold va-text-uppercase va-mb-1">VAYUMA TRIX AI ASSISTANT</div>
             <div class="va-text-xl va-font-bold">Have a farming question?</div>
             <div class="va-text-sm va-text-primary va-opacity-90">Ask VAYUMA about crops, diseases, weather, soil, markets or farm management.</div>
           </div>
           <div class="va-avatar" style="width:64px;height:64px;font-size:2rem;"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg></div>
         </div>
-        <a href="feature_access.php?feature=ai" class="va-btn va-btn--primary va-btn--lg va-w-full">Ask VAYUMA AI →</a>
+        <a href="feature_access.php?feature=ai" class="va-btn va-btn--primary va-btn--lg va-w-full">Ask VAYUMA TRIX AI →</a>
       </div>
 
     </div>

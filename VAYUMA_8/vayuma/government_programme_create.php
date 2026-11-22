@@ -15,7 +15,7 @@ $stmt=$conn->prepare("INSERT INTO government_programmes(created_by,institution_n
 $stmt->bind_param('issssssssssssssss',$uid,$institution,$title,$type,$summary,$desc,$elig,$county,$sub,$ward,$venue,$start,$end,$deadline,$visibility,$status,$token);
 if($stmt->execute()){$stmt->close();header('Location: government_programme_manage.php');exit;}else{$error='Could not save the programme. Please try again later.'; error_log('VAYUMA programme save failed');$stmt->close();}
 }}
-?><!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Create Programme | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
+?><!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Create Programme | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">

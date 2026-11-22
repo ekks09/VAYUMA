@@ -18,10 +18,13 @@ $platformHomeUrl = vayuma_platform_home_route();
 
     <meta
         name="description"
-        content="VAYUMA Smart Ecosystem - Smart agriculture for every stakeholder."
+        content="VAYUMA TRIX AGRITECH INNOVATIONS KENYA connects farmers, buyers and agricultural partners in one smart ecosystem."
     >
+    <meta property="og:title" content="Welcome | VAYUMA TRIX AGRITECH INNOVATIONS KENYA">
+    <meta property="og:description" content="VAYUMA TRIX AGRITECH INNOVATIONS KENYA connects farmers, buyers and agricultural partners in one smart ecosystem.">
+    <meta property="og:type" content="website">
 
-    <title>Welcome | VAYUMA Smart Ecosystem</title>
+    <title>Welcome | VAYUMA TRIX AGRITECH INNOVATIONS KENYA</title>
 
     <link rel="stylesheet" href="frontend/css/tokens.css">
     <link rel="stylesheet" href="frontend/css/components_addition.css?v=account-nav-1">
@@ -43,15 +46,12 @@ $platformHomeUrl = vayuma_platform_home_route();
 
             <div class="welcome-left">
 
-                <a class="auth-brand-link" href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA home">
-                    <img
-                        src="assets/images/vayuma-logo.jpg"
-                        alt="VAYUMA Smart Ecosystem"
-                        class="welcome-logo"
-                    >
+                <a class="corporate-lockup" href="<?= htmlspecialchars($platformHomeUrl, ENT_QUOTES, 'UTF-8') ?>" aria-label="VAYUMA TRIX AGRITECH INNOVATIONS KENYA home">
+                    <img src="assets/images/brand/shield-source.png" alt="" class="corporate-lockup__mark" width="466" height="492">
+                    <span class="corporate-lockup__name">VAYUMA TRIX</span>
+                    <span class="corporate-lockup__descriptor">AGRITECH INNOVATIONS</span>
+                    <span class="corporate-lockup__country">KENYA</span>
                 </a>
-
-                <h1>VAYUMA</h1>
 
                 <p>
                     <?= htmlspecialchars(t('welcome_intro'), ENT_QUOTES, 'UTF-8') ?>
@@ -68,9 +68,9 @@ $platformHomeUrl = vayuma_platform_home_route();
                     <svg class="va-icon-lg" width="32" height="32"><use href="frontend/images/icons.svg#va-icon-crops"/></svg>
                 </span>
 
-                <h2>
+                <h1>
                     <?= htmlspecialchars(t('welcome_title'), ENT_QUOTES, 'UTF-8') ?>
-                </h2>
+                </h1>
 
                 <p class="welcome-description">
 
@@ -137,7 +137,7 @@ $platformHomeUrl = vayuma_platform_home_route();
                         </div>
 
                         <h3>
-                            VAYUMA AI
+                            VAYUMA TRIX AI
                         </h3>
 
                         <span>
@@ -194,6 +194,7 @@ $platformHomeUrl = vayuma_platform_home_route();
         </section>
 
     </main>
+    <footer class="welcome-footer">&copy; <?= date('Y') ?> VAYUMA TRIX AGRITECH INNOVATIONS KENYA. All rights reserved.</footer>
 
 </body>
 

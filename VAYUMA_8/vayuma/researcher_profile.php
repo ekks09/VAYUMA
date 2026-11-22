@@ -58,7 +58,7 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Researcher Profile | VAYUMA</title>
+    <title>Researcher Profile | VAYUMA TRIX</title>
 
     <link rel="stylesheet" href="frontend/css/tokens.css?v=20261110">
 <link rel="stylesheet" href="frontend/css/components.css">
@@ -106,9 +106,9 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
 
     <div class="va-profile-brand">
 
-        <h1>VAYUMA</h1>
+        <h1>VAYUMA TRIX</h1>
 
-        <p>SMART ECOSYSTEM</p>
+        <p>AGRITECH INNOVATIONS KENYA</p>
 
     </div>
 

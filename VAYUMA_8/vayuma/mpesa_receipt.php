@@ -70,7 +70,7 @@ $hasMpesaReceipt = $isPaid && !empty($receipt['mpesa_receipt_number']);
 
 if (!$receipt) {
     http_response_code(404);
-    echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Receipt not found | VAYUMA</title>';
+    echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Receipt not found | VAYUMA TRIX</title>';
     echo '<link rel="stylesheet" href="frontend/css/tokens.css"><link rel="stylesheet" href="frontend/css/components.css"><link rel="stylesheet" href="frontend/css/layout.css"><link rel="stylesheet" href="assets/css/vayuma-ui.css?v=2"><link rel="stylesheet" href="frontend/css/user-menu.css?v=3">';
     echo '<style>.va-receipt-notfound{max-width:640px;margin:3rem auto;padding:0 1rem}.va-receipt-notfound__card{padding:2rem;background:var(--va-surface);border:1px solid var(--va-border);border-radius:var(--va-radius-lg);box-shadow:var(--va-shadow-sm)}.va-receipt-notfound__card h1{color:var(--va-text-primary)}.va-receipt-notfound__card p{color:var(--va-text-secondary)}</style></head><body>';
     echo '<main class="va-receipt-notfound" id="va-main-content">';
@@ -87,7 +87,7 @@ $callbackAt = !empty($receipt['callback_received_at']) ? date('d M Y, h:i A', st
 <head><?php require __DIR__ . '/includes/pwa.php'; ?>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>M-Pesa Receipt | VAYUMA</title>
+<title>M-Pesa Receipt | VAYUMA TRIX</title>
 <link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css?v=20261110-nav">
