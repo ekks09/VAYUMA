@@ -83,7 +83,7 @@ if ($role === 'farmer' && getenv('VAYUMA_ONBOARDING_ENABLED') === '1' && getenv(
 }
 
 $pending = $_SESSION['pending_feature'] ?? '';
-if ($role !== '' && is_string($pending) && in_array($pending, ['climate', 'soil', 'ai'], true)) {
+if (is_string($pending) && ($pending === 'ai' || ($role !== '' && in_array($pending, ['climate', 'soil'], true)))) {
     header('Location: ../feature_access.php?feature=' . $pending);
 } else {
     header('Location: ' . ($role === '' ? '../role.php' : '../dashboard.php'));

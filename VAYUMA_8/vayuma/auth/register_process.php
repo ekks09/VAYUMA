@@ -321,7 +321,7 @@ try {
 
 
     if (!$stmt) throw new RuntimeException('Registration insert unavailable');
-    if (getenv('VAYUMA_ONBOARDING_ENABLED') === '1') {
+    if (getenv('VAYUMA_ONBOARDING_ENABLED') === '1' || (is_string(getenv('VAYUMA_STAFF_ONBOARD_KEY')) && getenv('VAYUMA_STAFF_ONBOARD_KEY') !== '')) {
         require_once __DIR__ . '/../includes/onboarding_lock.php';
         $registrationStage = 'phone_lock';
         vayuma_onboarding_lock_phone($conn, $phone_clean);

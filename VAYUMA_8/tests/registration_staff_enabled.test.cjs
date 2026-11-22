@@ -1,7 +1,7 @@
 const {test}=require('node:test'), assert=require('node:assert/strict');
 const fs=require('node:fs'),os=require('node:os'),path=require('node:path'),{spawnSync}=require('node:child_process');
 const php=process.env.VAYUMA_PHP||'php',root=path.resolve(__dirname,'../vayuma');
-test('signup with staff onboarding enabled preserves phone locking and fails closed (mock DB)',()=>{
+test('signup with staff key configured preserves phone locking and fails closed (mock DB)',()=>{
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'vayuma-reg-staff-'));
  try{
   for(const sub of ['auth','config','includes'])fs.mkdirSync(path.join(dir,sub));
@@ -14,7 +14,7 @@ class C{function prepare($q){return new S($q);}function begin_transaction(){retu
   const file=path.join(dir,'auth/register_process.php');fs.writeFileSync(file,fs.readFileSync(file,'utf8').replace(/\berror_log\(/g,'test_error_log('));
   const code=`function test_error_log($s){$GLOBALS['logs'][]=$s;} $_SERVER['REQUEST_METHOD']='POST';$_POST=['full_name'=>'Example Farmer','phone'=>'0712345678','email'=>'farmer@example.test','password'=>'private-test-password','confirm_password'=>'private-test-password','terms'=>'accepted'];register_shutdown_function(function(){echo json_encode(['success'=>$_SESSION['registration_success']??false,'error'=>$_SESSION['register_error']??'','commit'=>$GLOBALS['commit']??false,'rollback'=>$GLOBALS['rollback']??false,'logs'=>$GLOBALS['logs']??[]]);});require ${JSON.stringify(file)};`;
   for(const [mode,success,rollback] of [['ok',true,false],['lock_error',false,true],['reserved',false,true],['duplicate',false,false]]){
-   const r=spawnSync(php,['-d','display_errors=0','-r',code],{encoding:'utf8',env:{...process.env,MODE:mode,VAYUMA_ONBOARDING_ENABLED:'1'}});assert.equal(r.status,0,r.stderr);const result=JSON.parse(r.stdout);assert.equal(result.success,success,mode);assert.equal(result.commit,success,mode);assert.equal(result.rollback,rollback,mode);if(mode==='lock_error')assert.deepEqual(result.logs,['VAYUMA registration failed: phone_lock']);assert.doesNotMatch(JSON.stringify(result.logs),/sensitive|071234|farmer@example|private-test-password/);
+   const r=spawnSync(php,['-d','display_errors=0','-r',code],{encoding:'utf8',env:{...process.env,MODE:mode,VAYUMA_ONBOARDING_ENABLED:'0',VAYUMA_STAFF_ONBOARD_KEY:'test-secret'}});assert.equal(r.status,0,r.stderr);const result=JSON.parse(r.stdout);assert.equal(result.success,success,mode);assert.equal(result.commit,success,mode);assert.equal(result.rollback,rollback,mode);if(mode==='lock_error')assert.deepEqual(result.logs,['VAYUMA registration failed: phone_lock']);assert.doesNotMatch(JSON.stringify(result.logs),/sensitive|071234|farmer@example|private-test-password/);
   }
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });

@@ -1,5 +1,5 @@
 /* Only the offline document and explicitly listed public files may be cached. */
-const CACHE = 'vayuma-public-v15';
+const CACHE = 'vayuma-public-v16';
 const ROOT = new URL('./', self.registration.scope);
 const OFFLINE = new URL('offline.html', ROOT).href;
 const PUBLIC_FILES = new Map([

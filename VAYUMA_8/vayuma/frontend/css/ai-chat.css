@@ -34,3 +34,14 @@ body:has(.va-install-notice) .vayuma-ai-fab,body:has(.va-install-backdrop) .vayu
 .vai-message--assistant p:last-child { margin-bottom:0; }
 .vai-message--assistant ul { margin:.35em 0 .7em; padding-left:1.35em; }
 .vai-message--assistant ul:last-child { margin-bottom:0; }
+
+/* Keep the composer usable even when page-wide button rules set width:100%. */
+.vayuma-chat .vai-form textarea { flex:1 1 0; width:0; min-width:0; resize:none; }
+.vayuma-chat .vai-form button[type="submit"] { width:auto; max-width:none; flex:0 0 auto; }
+.vayuma-chat .vai-prompts { flex-wrap:wrap; overflow-x:visible; }
+.vayuma-chat .vai-prompts button { width:auto; max-width:100%; white-space:normal; }
+.vai-overlay { align-items:flex-end; }
+.vayuma-chat--drawer { height:auto; max-height:100dvh; }
+.vayuma-chat--drawer .vai-main { flex:0 1 auto; min-height:0; }
+.vayuma-chat--drawer .vai-messages { flex:0 1 auto; min-height:0; max-height:45dvh; }
+.vayuma-chat--drawer .vai-compose { flex:0 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; }

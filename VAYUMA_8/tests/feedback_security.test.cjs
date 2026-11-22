@@ -14,5 +14,5 @@ test('representative profile, saved-list and payment failures avoid raw exceptio
 });
 test('staff report distinguishes unavailable from empty while preserving the unlock gate',()=>{
  const source=read('onboarding.php');assert.match(source,/staffCountsAvailable/);assert.match(source,/recordsAvailable && !\$rows/);assert.match(source,/Staff report is temporarily unavailable/);
- assert.match(source,/vayuma_onboarding_authorized/);assert.match(source,/vayuma_onboarding_unlock_attempt/);assert.match(source,/staff-passphrase/);assert.match(source,/onboarding_unlocked_user_id/);
+ assert.doesNotMatch(source,/vayuma_onboarding_authorized/);assert.match(source,/vayuma_onboarding_unlock_attempt/);assert.match(source,/staff-passphrase/);assert.match(source,/onboarding_unlocked_user_id/);
 });
