@@ -4,7 +4,7 @@
 -- IF NOT EXISTS avoids repeat creation, but does not repair or validate existing schemas.
 -- Existing incompatible tables, columns, indexes or foreign keys require individual review.
 -- users.id must be INT; identity generated columns and unique indexes from 08 are prerequisites.
--- No password-recovery backend/schema exists yet; deliberately not created by this script.
+-- Password recovery uses the separate review-only schema 14_password_recovery_REVIEW.sql; it is not created by this script.
 USE `vayuma_db`;
 SELECT DATABASE() AS selected_database, VERSION() AS tidb_version;
 SELECT table_name, table_type FROM information_schema.tables

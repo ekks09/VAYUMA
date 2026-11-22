@@ -33,10 +33,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && vayuma_csrf_valid()) {
             $sort = (int)($_POST['sort_order'] ?? 0);
 
             if ($name === '' || $slug === '') {
-                throw new RuntimeException('Category name and slug are required.');
+                throw new DomainException('Category name and slug are required.');
             }
             if (!preg_match('/^#[0-9a-fA-F]{6}$/', $color)) {
-                throw new RuntimeException('Invalid colour format.');
+                throw new DomainException('Invalid colour format.');
             }
 
             $stmt = $conn->prepare('INSERT INTO produce_categories (name, slug, description, color_hex, sort_order) VALUES (?, ?, ?, ?, ?)');
@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && vayuma_csrf_valid()) {
             $sort = (int)($_POST['sort_order'] ?? 0);
 
             if ($id < 1 || $name === '' || $slug === '') {
-                throw new RuntimeException('Invalid category data.');
+                throw new DomainException('Invalid category data.');
             }
 
             $stmt = $conn->prepare('UPDATE produce_categories SET name=?, slug=?, description=?, color_hex=?, sort_order=?, updated_at=NOW() WHERE id=?');
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && vayuma_csrf_valid()) {
         } elseif ($action === 'toggle') {
             $id = (int)($_POST['id'] ?? 0);
             $isActive = (int)($_POST['is_active'] ?? 1);
-            if ($id < 1) throw new RuntimeException('Invalid category.');
+            if ($id < 1) throw new DomainException('Invalid category.');
 
             $stmt = $conn->prepare('UPDATE produce_categories SET is_active=?, updated_at=NOW() WHERE id=?');
             $stmt->bind_param('ii', $isActive, $id);
@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && vayuma_csrf_valid()) {
             $messageType = 'success';
         } elseif ($action === 'delete') {
             $id = (int)($_POST['id'] ?? 0);
-            if ($id < 1) throw new RuntimeException('Invalid category.');
+            if ($id < 1) throw new DomainException('Invalid category.');
 
             // Prevent deletion if listings reference this category
             $stmt = $conn->prepare('SELECT COUNT(*) AS cnt FROM produce_listings WHERE category_id=?');
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && vayuma_csrf_valid()) {
             $stmt->close();
 
             if ($cnt > 0) {
-                throw new RuntimeException('Cannot delete category with ' . $cnt . ' associated listing(s). Deactivate instead.');
+                throw new DomainException('Cannot delete category with ' . $cnt . ' associated listing(s). Deactivate instead.');
             }
 
             $stmt = $conn->prepare('DELETE FROM produce_categories WHERE id=?');
@@ -99,7 +99,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && vayuma_csrf_valid()) {
         $conn->commit();
     } catch (Throwable $e) {
         $conn->rollback();
-        $message = $e->getMessage();
+        $message = $e instanceof DomainException ? $e->getMessage() : 'Unable to update the category. Please try again.';
+        if (!($e instanceof DomainException)) error_log('VAYUMA category update unavailable.');
         $messageType = 'error';
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -159,6 +160,7 @@ $stmt->close();
 </head>
 <body>
 <?php vayuma_language_selector(); ?>
+<?php require __DIR__ . '/includes/workspace_back.php'; ?>
 
 <?php if ($message): ?>
 <div class="va-toast va-toast--<?= $messageType === 'error' ? 'error' : 'success' ?>" id="vaToast"><?= cat_h($message) ?></div>

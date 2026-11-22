@@ -183,22 +183,20 @@ $role_groups = [
         <div class="role-topbar-locale"><?php vayuma_language_selector(); ?></div>
         <div class="role-account" aria-label="Your account">
             <?php require __DIR__ . '/includes/header_user_menu.php'; ?>
-            <span class="role-account-copy">
-                <strong><?= htmlspecialchars($roleAccountName, ENT_QUOTES, 'UTF-8') ?></strong>
-                <small><?= htmlspecialchars($roleAccountEmail !== '' ? $roleAccountEmail : 'Account setup', ENT_QUOTES, 'UTF-8') ?></small>
-            </span>
-            <a class="role-logout" href="auth/logout.php">Log out</a>
+
         </div>
     </header>
     <main class="role-page">
         <section class="role-card">
+            <?php $workspaceBackMenu = false; require __DIR__ . '/includes/workspace_back.php'; ?>
             <div class="role-header">
                 <div class="step-badge">STEP 2 OF 3</div>
                 <h1>Choose Your Role</h1>
+                <p><a href="onboarding.php">Staff Access — farmer onboarding</a></p><p>Authorized staff can open the onboarding workspace without an active subscription. Sign in and enter the staff passphrase.</p>
                 <p>Welcome, <strong><?= htmlspecialchars($roleAccountName, ENT_QUOTES, 'UTF-8') ?></strong></p>
                 <span>Tell us how you will use VAYUMA so we can personalize your experience. A different category cannot be selected while a paid subscription is active; you can change it after the subscription expires.</span>
                 <?php if (vayuma_role_route((string)($_SESSION['role'] ?? ''), 'dashboard')): ?>
-                    <p><a href="<?= htmlspecialchars(vayuma_dashboard_return_route(), ENT_QUOTES, 'UTF-8') ?>">← Back to your dashboard</a> · <a href="subscription.php">View subscription</a></p>
+                    <p><a href="subscription.php">View subscription</a></p>
                 <?php endif; ?>
             </div>
 

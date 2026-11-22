@@ -108,13 +108,13 @@ require_once __DIR__ . '/includes/ui_simple.php';
             WHERE pl.status = 'available'
             ORDER BY pl.created_at DESC
             LIMIT 4";
-        $listingsResult = $conn->query($listingsSql);
+        try { $listingsResult = $conn->query($listingsSql); if (!$listingsResult) throw new RuntimeException('Listings query failed'); } catch (Throwable $e) { error_log('Consumer listings unavailable: '.$e->getMessage()); $listingsResult=false; }
         $hasListings = false;
         if ($listingsResult) {
             while ($row = $listingsResult->fetch_assoc()) {
                 $hasListings = true;
                 ?>
-                <div class="va-card va-card--p va-mb-4" style="cursor:pointer;" onclick="window.location.href='produce_details.php?id=<?= (int)$row['id'] ?>'">
+                <div class="va-card va-card--p va-mb-4">
                   <?php if (!empty($row['image'])): ?>
                     <img src="<?= h($row['image']) ?>" alt="<?= h($row['produce_name']) ?>" style="width:100%;height:140px;object-fit:cover;border-radius:var(--va-radius);margin-bottom:var(--va-space-3);background:#edf4ed;">
                   <?php else: ?>
@@ -127,7 +127,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
                   <?php endif; ?>
                   <div class="va-font-semibold va-text-primary va-text-lg"><?= h($row['produce_name']) ?></div>
                   <div class="va-text-muted va-text-sm"><?= h($row['quantity']) ?> <?= h($row['unit']) ?> · KSh <?= number_format((float)$row['price_per_unit'], 2) ?>/<?= h($row['unit']) ?></div>
-                  <a href="produce_details.php?id=<?= (int)$row['id'] ?>" class="va-btn va-btn--outline va-btn--sm va-w-full va-mt-3">View</a>
+                  <a href="produce_details.php?id=<?= (int)$row['id'] ?>" class="va-btn va-btn--outline va-btn--sm va-w-full va-mt-3" aria-label="View <?= h($row['produce_name']) ?> details">View details</a>
                 </div>
                 <?php
             }
@@ -135,8 +135,8 @@ require_once __DIR__ . '/includes/ui_simple.php';
         if (!$hasListings): ?>
             <div class="va-empty">
               <div class="va-empty--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg></div>
-              <div class="va-empty--title">No produce available</div>
-              <div class="va-empty--desc">No produce is currently available.</div>
+              <div class="va-empty--title"><?= $listingsResult ? 'No produce available' : 'Produce listings unavailable' ?></div>
+              <div class="va-empty--desc"><?= $listingsResult ? 'No produce is currently available.' : 'Please try again later.' ?></div>
               <a href="market_connect.php" class="va-btn va-btn--primary va-btn--sm">Open Market Connect</a>
             </div>
         <?php endif; ?>

@@ -41,6 +41,7 @@ $role = $_SESSION["role"] ?? "";
     <main class="complete-page">
 
         <div class="complete-card">
+            <?php require __DIR__ . '/includes/workspace_back.php'; ?>
 
             <div class="success-circle">
                 ✓

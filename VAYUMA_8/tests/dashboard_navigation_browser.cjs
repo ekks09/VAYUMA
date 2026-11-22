@@ -5,7 +5,7 @@ const puppeteer = require('puppeteer-core');
 const root = path.join(__dirname, '../vayuma');
 (async () => {
   const source = fs.readFileSync(path.join(root, 'extension_dashboard.php'), 'utf8');
-  const aside = source.match(/<aside class="va-dash-sidebar" id="vaDashSidebar">[\s\S]*?<\/aside>/)[0].replace(/<\?php[\s\S]*?\?>/g,'').replace(/<\?=[\s\S]*?\?>/g,'');
+  const aside = source.match(/<aside class="va-dash-sidebar" id="vaDashSidebar"[^>]*>[\s\S]*?<\/aside>/)[0].replace(/<\?php[\s\S]*?\?>/g,'').replace(/<\?=[\s\S]*?\?>/g,'');
   assert.match(source, /class="va-mobile-menu-btn" aria-controls="vaDashSidebar"/);
   assert.match(source, /frontend\/js\/vayuma-ui\.js/);
   const browser = await puppeteer.launch({executablePath:process.env.VAYUMA_CHROMIUM_PATH,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});

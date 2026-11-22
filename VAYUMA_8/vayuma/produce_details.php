@@ -47,6 +47,7 @@ $navLinks = [
 
 <main class="va-page-main" id="va-main-content">
   <div class="va-container">
+    <?php $workspaceBackMenu = false; require __DIR__ . '/includes/workspace_back.php'; ?>
     <?php if ($orderError !== ''): ?>
       <div class="va-alert va-alert--error" role="alert"><?= h($orderError) ?></div>
     <?php endif; ?>

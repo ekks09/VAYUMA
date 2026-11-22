@@ -88,7 +88,7 @@ $full_name = $_SESSION['full_name'] ?? 'Financial Institution User';
 </head>
 
 <body class="va-profile-document">
-<?php vayuma_language_selector(); require __DIR__ . '/includes/profile_navigation.php'; ?>
+<?php require __DIR__ . '/includes/profile_navigation.php'; ?>
 
 <div class="va-profile-page">
 

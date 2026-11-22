@@ -16,7 +16,7 @@ $shopping=trim($_POST['shopping_preference']??'');$frequency=trim($_POST['shoppi
 $delivery=trim($_POST['preferred_delivery']??'');$favorites=trim($_POST['favorite_products']??'');
 if($fullName===''||$location===''||$countyId<1||$preferred===''||$shopping===''){http_response_code(422);exit('Please complete all required consumer profile fields.');}
 $c=$conn->prepare("SELECT name FROM administrative_units WHERE id=? AND unit_type='county' AND is_active=1 LIMIT 1");
-if(!$c){http_response_code(500);exit('Could not validate county: '.$conn->error);}
+if(!$c){http_response_code(503);error_log('VAYUMA profile county validation unavailable.');exit('Unable to check the county right now. Please return to your profile and try again.');}
 $c->bind_param('i',$countyId);$c->execute();$countyRow=$c->get_result()->fetch_assoc();$c->close();
 if(!$countyRow){http_response_code(422);exit('Please select a valid county.');}
 $county=$countyRow['name'];
@@ -37,4 +37,4 @@ try{
  $stmt->close();
  $_SESSION['full_name']=$fullName;
  header('Location: ../consumer_dashboard.php?profile=saved');exit;
-}catch(Throwable $e){http_response_code(500);error_log('VAYUMA consumer profile save: '.$e->getMessage());exit('Unable to save consumer profile. Please check the server error log or contact support.');}
+}catch(Throwable $e){http_response_code(500);error_log('VAYUMA consumer profile save unavailable.');exit('Unable to save consumer profile. Please check the server error log or contact support.');}

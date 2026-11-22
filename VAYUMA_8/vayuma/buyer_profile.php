@@ -66,7 +66,7 @@ function oldv($profile,$key,$fallback=''){return htmlspecialchars((string)($prof
   .va-profile-full { grid-column: auto; }
 }
 </style></head><body class="va-profile-document">
-<?php vayuma_language_selector(); require __DIR__ . '/includes/profile_navigation.php'; ?>
+<?php require __DIR__ . '/includes/profile_navigation.php'; ?>
 <div class="page"><div class="va-profile-page">
 <div class="header"><h1>Buyer Profile</h1><p>Tell farmers and suppliers what your business or organisation needs.</p></div>
 <div class="va-profile-card"><form action="auth/save_buyer.php" method="POST"><?= vayuma_csrf_field() ?>

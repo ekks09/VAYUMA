@@ -43,8 +43,10 @@ try {
     if (!$cooperativeResult) {
         throw new mysqli_sql_exception('Unable to count verified cooperative partners.');
     }
-    $verifiedCooperatives = $cooperativeResult->fetch_assoc()['total'] ?? null;
-} catch (mysqli_sql_exception $exception) {
+    $row = $cooperativeResult->fetch_assoc();
+    if (!$row || !array_key_exists('total', $row)) throw new RuntimeException('Cooperative count unavailable');
+    $verifiedCooperatives = $row['total'];
+} catch (Throwable $exception) {
     error_log('Verified cooperative count unavailable to finance dashboard: ' . $exception->getMessage());
 }
 
@@ -177,13 +179,18 @@ try {
     </a>
 
 
-    <a class="va-dash-sidebar--nav-item" href="auth/logout.php" class="nav-item">
-        <span class="va-dash-sidebar--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-logout"/></svg></span>
-        Logout
-    </a>
+
 
 
     <?php vayuma_language_selector(); ?>
+
+    <div class="va-sidebar--bottom" aria-label="Account utilities">
+      <a class="va-dash-sidebar--nav-item" href="subscription.php"><svg class="va-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-subscription"/></svg> <span>Subscription</span></a>
+      <a class="va-dash-sidebar--nav-item" href="auth/logout.php">
+        <span class="va-dash-sidebar--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-logout"/></svg></span>
+        Logout
+    </a>
+    </div>
 </aside>
 
 
@@ -198,7 +205,7 @@ try {
 
 
         <div class="va-dash-search">
-            <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg> &nbsp; Search VAYUMA
+            <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg> &nbsp; Search VAYUMA · Planned
         </div>
 
 
@@ -296,7 +303,7 @@ try {
             </h3>
 
             <div class="number"><?= $verifiedCooperatives === null ? '—' : number_format((int)$verifiedCooperatives) ?></div>
-            <div class="description"><?= $verifiedCooperatives === null ? 'Partner data is unavailable' : 'Verified cooperative partners' ?></div>
+            <div class="description"><?= $verifiedCooperatives === null ? 'Partner data is unavailable' : 'Verified cooperatives on VAYUMA' ?></div>
 
         </div>
 
@@ -313,7 +320,7 @@ try {
 
 
             <h2>
-                Agricultural Finance Services
+                Agricultural Finance Services · Planned
             </h2>
 
 
@@ -435,7 +442,7 @@ try {
                 </h3>
 
                 <p>
-                    The financial layer of VAYUMA is designed
+                    These financing and insurance tools are not available yet. VAYUMA is designed
                     to connect farmers and agricultural
                     organizations with appropriate financing,
                     insurance and financial services.

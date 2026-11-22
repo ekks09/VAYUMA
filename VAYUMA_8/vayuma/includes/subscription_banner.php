@@ -37,7 +37,13 @@ function render_subscription_banner(mysqli $conn, int $userId): string
     }
     </style>';
 
-    $sub = ensure_user_subscription($conn, $userId, '');
+    try {
+        // The guard manages plan assignment; this banner only reads current status.
+        $sub = subscription_for_user($conn, $userId);
+    } catch (Throwable $exception) {
+        error_log('Subscription banner unavailable: ' . $exception->getMessage());
+        return implode("\n", $ob) . '<div class="va-sub-banner va-sub-banner--info" role="status">Subscription status is temporarily unavailable.</div>';
+    }
     if (!$sub) {
         $ob[] = '<div class="va-sub-banner va-sub-banner--info">';
         $ob[] = '  <div class="va-sub-banner--content">';

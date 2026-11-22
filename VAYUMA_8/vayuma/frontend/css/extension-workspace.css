@@ -23,3 +23,13 @@
   .va-extension-workspace .formgrid { grid-template-columns:minmax(0,1fr); }
   .va-extension-workspace .field.full { grid-column:auto; }
 }
+
+/* Consistent compact, keyboard-visible links and pagination. */
+.va-extension-workspace .va-profile-card > a,
+.va-extension-workspace .va-profile-card p > a,
+.va-extension-workspace .page-link { display:inline-flex; align-items:center; min-height:44px; color:var(--va-primary); font-weight:600; }
+.va-extension-workspace .page-link { padding:0 12px; border:1px solid var(--va-border); border-radius:var(--va-radius-md); margin:4px 6px 4px 0; }
+.va-extension-workspace :is(a,button,input,select,textarea):focus-visible { outline:3px solid var(--va-primary); outline-offset:2px; }
+.va-extension-workspace .report + .report { margin-top:var(--va-space-3); }
+.va-extension-workspace .filters label { flex-basis:100%; font-weight:600; }
+.va-extension-workspace .inline { display:flex; gap:8px; align-items:center; }

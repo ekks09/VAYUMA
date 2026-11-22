@@ -37,12 +37,17 @@ if (!isset($dashboards[$role])) {
 [$role_name, $icon, $intro, $cards] = $dashboards[$role];
 $user_id = (int) $_SESSION["user_id"];
 $profile = null;
-$stmt = $conn->prepare("SELECT organization_name, county, service_focus FROM stakeholder_profiles WHERE user_id = ? LIMIT 1");
-if ($stmt) {
+try {
+    $stmt = $conn->prepare("SELECT organization_name, county, service_focus FROM stakeholder_profiles WHERE user_id = ? LIMIT 1");
+    if (!$stmt) throw new RuntimeException('Partner profile prepare failed');
     $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $profile = $stmt->get_result()->fetch_assoc();
+    if (!$stmt->execute() || !($result = $stmt->get_result())) throw new RuntimeException('Partner profile lookup failed');
+    $profile = $result->fetch_assoc();
     $stmt->close();
+} catch (Throwable $exception) {
+    error_log('Strategic partner profile unavailable: ' . $exception->getMessage());
+    http_response_code(503);
+    exit('Your dashboard is temporarily unavailable. Please try again later.');
 }
 
 if (!$profile) {
@@ -73,7 +78,7 @@ $full_name = $_SESSION["full_name"] ?? "Member";
 $dashboardLinks = ['Dashboard' => 'stakeholder_dashboard.php', 'Marketplace' => 'market_connect.php', 'Exchange' => 'stakeholder_offers.php', 'Requests' => 'stakeholder_requests.php', 'Edit profile' => 'stakeholder_profile.php?from=stakeholder_dashboard.php'];
 require __DIR__ . '/includes/dashboard_generic_sidebar.php'; ?>
     <main class="shell va-generic-main">
-        <header class="top vy-user-menu__stakeholder-header"><button type="button" class="va-mobile-menu-btn" aria-controls="vaDashSidebar" aria-expanded="false" aria-label="Open navigation">Menu</button><div class="brand">VAYUMA<small>SMART ECOSYSTEM</small></div><nav><a class="va-dash-sidebar--nav-item" href="market_connect.php">Marketplace</a> &nbsp; <a class="va-dash-sidebar--nav-item" href="auth/logout.php">Logout</a></nav><?php require __DIR__ . '/includes/header_user_menu.php'; ?></header>
+        <header class="top vy-user-menu__stakeholder-header"><button type="button" class="va-mobile-menu-btn" aria-controls="vaDashSidebar" aria-expanded="false" aria-label="Open navigation">Menu</button><div class="brand">VAYUMA<small>SMART ECOSYSTEM</small></div><?php require __DIR__ . '/includes/header_user_menu.php'; ?></header>
         <section class="hero"><small><?php echo htmlspecialchars(strtoupper($role_name), ENT_QUOTES, "UTF-8"); ?> DASHBOARD</small><h1>Welcome, <?php echo htmlspecialchars($full_name, ENT_QUOTES, "UTF-8"); ?> <?php echo $icon; ?></h1><p><?php echo htmlspecialchars($intro, ENT_QUOTES, "UTF-8"); ?></p></section>
         <section class="profile"><div><h2><?php echo htmlspecialchars($profile["organization_name"], ENT_QUOTES, "UTF-8"); ?></h2><p><?php echo htmlspecialchars($profile["county"], ENT_QUOTES, "UTF-8"); ?><?php echo $profile["service_focus"] ? " · " . htmlspecialchars($profile["service_focus"], ENT_QUOTES, "UTF-8") : ""; ?></p></div><a class="va-dash-sidebar--nav-item button" href="stakeholder_profile.php?from=stakeholder_dashboard.php">Edit Profile</a></section>
         <h2 class="section-title">Your workspace</h2>

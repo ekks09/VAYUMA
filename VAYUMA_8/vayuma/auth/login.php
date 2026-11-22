@@ -70,6 +70,7 @@ $_SESSION["phone"] = $user["phone"];
 $_SESSION["email"] = $user["email"];
 $_SESSION["role"] = $role;
 $_SESSION["logged_in"] = true;
+$_SESSION["vayuma_auth_fingerprint"] = hash('sha256', 'vayuma-session-password-v1:' . $user['password']);
 
 // Claimed farmers complete their own profile before subscription/dashboard routing.
 if ($role === 'farmer' && getenv('VAYUMA_ONBOARDING_ENABLED') === '1' && getenv('VAYUMA_CLAIM_ENABLED') === '1') {

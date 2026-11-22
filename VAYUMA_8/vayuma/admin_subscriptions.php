@@ -24,8 +24,8 @@ if (!is_vayuma_admin((int)$_SESSION['user_id'])) {
     ?>
     <!doctype html>
     <html lang="<?= htmlspecialchars($current_language, ENT_QUOTES, 'UTF-8') ?>">
-    <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Access denied | VAYUMA</title></head>
-    <body><main><h1>Access denied</h1><p>This account is not authorised to manage subscription plans.</p><a href="dashboard.php">Return to dashboard</a></main></body>
+    <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Access denied | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css"><link rel="stylesheet" href="assets/css/vayuma-ui.css?v=2"><link rel="stylesheet" href="frontend/css/user-menu.css?v=3"></head>
+    <body class="vy-denied-page"><?php require __DIR__ . '/includes/workspace_back.php'; ?><main class="vy-unavailable"><h1>Access denied</h1><p>This account is not authorised to manage subscription plans.</p><a href="dashboard.php">Return to dashboard</a></main></body>
     </html>
     <?php
     exit;
@@ -281,7 +281,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
       <?php $dashboardIconPartial = 'dashboard_farmer_icon.php'; require __DIR__ . '/includes/dashboard_sidebar.php'; ?>
     <?php endif; ?>
 
-    <div class="va-main--content">
+    <div class="va-main--content"><?php $workspaceBackMenu = false; require __DIR__ . '/includes/workspace_back.php'; ?>
       <?php if ($successMessage !== ''): ?>
         <div class="va-toast va-toast--success" role="alert" aria-live="polite">
           <div class="va-toast--title">Success</div>

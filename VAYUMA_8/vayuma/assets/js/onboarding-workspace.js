@@ -14,6 +14,17 @@
     role.addEventListener('change', updateFields);
     updateFields();
   }
+  const reveal = document.getElementById('onboard-show-key');
+  const passphrase = document.getElementById('staff-passphrase');
+  if (reveal && passphrase) {
+    reveal.hidden = false;
+    reveal.addEventListener('click', () => {
+      const show = passphrase.type === 'password';
+      passphrase.type = show ? 'text' : 'password';
+      reveal.setAttribute('aria-pressed', String(show));
+      reveal.textContent = show ? 'Hide passphrase' : 'Show passphrase';
+    });
+  }
   const button = document.getElementById('copy-claim-code');
   const code = document.getElementById('staff-claim-code');
   const status = document.getElementById('copy-claim-status');

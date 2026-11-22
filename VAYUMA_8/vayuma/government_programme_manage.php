@@ -1,11 +1,11 @@
 <?php
-session_start(); require_once __DIR__.'/config/db.php';
+session_start(); require_once __DIR__.'/config/db.php'; require_once __DIR__.'/includes/workspace_notice.php';
 if(!isset($_SESSION['user_id'])||($_SESSION['logged_in']??false)!==true){header('Location: login.php');exit;}
-if(strtolower(trim($_SESSION['role']??''))!=='government_officer'){http_response_code(403);exit('Government officer access only.');}
+if(strtolower(trim($_SESSION['role']??''))!=='government_officer'){vayuma_workspace_denied('Government officer access only.');}
 $uid=(int)$_SESSION['user_id'];
 $stmt=$conn->prepare("SELECT organization_name,verification_status FROM stakeholder_profiles WHERE user_id=? AND role='government_officer' LIMIT 1");$stmt->bind_param('i',$uid);$stmt->execute();$profile=$stmt->get_result()->fetch_assoc();$stmt->close();
-if(!$profile){http_response_code(403);exit('Complete your government officer profile first.');}
-if(($profile['verification_status']??'pending')!=='verified'){http_response_code(403);exit('Only verified government officers can publish official programmes. Your profile verification is currently pending or not approved.');}
+if(!$profile){vayuma_workspace_denied('Complete your government officer profile first.');}
+if(($profile['verification_status']??'pending')!=='verified'){vayuma_workspace_denied('Only verified government officers can publish official programmes. Your profile verification is currently pending or not approved.');}
 function gm_h($v){return htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8');}
 $stmt=$conn->prepare("SELECT p.*, (SELECT COUNT(*) FROM government_programme_registrations r WHERE r.programme_id=p.id) registrations FROM government_programmes p WHERE created_by=? ORDER BY created_at DESC");$stmt->bind_param('i',$uid);$stmt->execute();$rows=$stmt->get_result();
 ?><!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Manage Programmes | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css">
@@ -42,4 +42,4 @@ $stmt=$conn->prepare("SELECT p.*, (SELECT COUNT(*) FROM government_programme_reg
   .va-form-grid { grid-template-columns: 1fr; }
   .va-form-full { grid-column: auto; }
 }
-</style></head><body><main class="wrap"><h1>Government Programmes Workspace</h1><p>Institution: <?=gm_h($profile['organization_name'])?> · Verified publisher</p><p><a class="btn" href="government_programme_create.php">＋ Create programme / event</a> <a href="government_officer_dashboard.php">Back to dashboard</a></p><section class="va-form-card"><h2>Your published and draft programmes</h2><table><tr><th>Programme</th><th>Visibility</th><th>Status</th><th>Registrations</th><th>Public link</th></tr><?php while($r=$rows->fetch_assoc()):?><tr><td><?=gm_h($r['title'])?></td><td><?=gm_h($r['visibility'])?></td><td><?=gm_h($r['status'])?></td><td><?=gm_h($r['registrations'])?></td><td><?php if($r['status']==='published'):?><a target="_blank" href="government_programmes.php?token=<?=urlencode($r['public_token'])?>">Open / Share</a><?php endif;?></td></tr><?php endwhile;?></table></section></main></body></html>
+</style></head><body><main class="wrap"><?php require __DIR__ . '/includes/workspace_back.php'; ?><h1>Government Programmes Workspace</h1><p>Institution: <?=gm_h($profile['organization_name'])?> · Verified publisher</p><p><a class="btn" href="government_programme_create.php">＋ Create programme / event</a></p><section class="va-form-card"><h2>Your published and draft programmes</h2><table><tr><th>Programme</th><th>Visibility</th><th>Status</th><th>Registrations</th><th>Public link</th></tr><?php while($r=$rows->fetch_assoc()):?><tr><td><?=gm_h($r['title'])?></td><td><?=gm_h($r['visibility'])?></td><td><?=gm_h($r['status'])?></td><td><?=gm_h($r['registrations'])?></td><td><?php if($r['status']==='published'):?><a target="_blank" href="government_programmes.php?token=<?=urlencode($r['public_token'])?>">Open / Share</a><?php endif;?></td></tr><?php endwhile;?></table></section></main></body></html>

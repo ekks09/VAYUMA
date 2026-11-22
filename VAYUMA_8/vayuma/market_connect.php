@@ -107,6 +107,7 @@ $navLinks = [
     <?php endif; ?>
 
     <div class="va-main--content<?= $dashboardShell ? '' : ' va-market-guest-content' ?>">
+      <?php $workspaceBackMenu = false; require __DIR__ . '/includes/workspace_back.php'; ?>
       <?php if ($orderError !== ''): ?>
         <div class="va-alert va-alert--error" role="alert"><?= vayuma_market_h($orderError) ?></div>
       <?php endif; ?>

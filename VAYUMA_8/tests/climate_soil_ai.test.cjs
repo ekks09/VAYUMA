@@ -15,6 +15,6 @@ test('weather distinguishes current and forecast, requires confirmation and avoi
  assert.match(php,/precipitation_probability_max/); assert.match(php,/countryCode.*KE/); assert.match(php,/kenya_coordinates/); assert.match(php,/private, no-store/);
  assert.match(js,/forecast rain/); assert.match(js,/Current conditions|current\.rainfall/); assert.match(js,/Phone GPS location/); assert.match(js,/Unavailable/); assert.match(ui,/Confirm the matched place/);
 });
-test('external AI is opt-in and gated, with CSRF and no invented reviewed library',()=>{
- const php=read('ai_chat_api.php'), ui=read('ai_advisor.php'); assert.match(php,/HTTP_X_CSRF_TOKEN/); assert.match(php,/VAYUMA_AI_EXTERNAL_ENABLED/); assert.match(php,/external_consent/); assert.match(php,/rule_based/); assert.match(php,/not independently verified/); assert.match(php,/vayuma_reserve_ai_request/); assert.match(read('includes/nvidia_advisor.php'),/No reviewed crop advice/); assert.match(ui,/externalConsent/); assert.match(ui,/shareWeather/); assert.match(ui,/shareSoil/);
+test('external AI is gated, discloses third-party use and minimizes selected data',()=>{
+ const php=read('ai_chat_api.php'), ui=read('frontend/js/ai-chat.js'); assert.match(php,/HTTP_X_CSRF_TOKEN/); assert.match(php,/VAYUMA_AI_EXTERNAL_ENABLED/); assert.match(php,/not independently verified/); assert.match(php,/vayuma_reserve_ai_request/); assert.match(ui,/external AI service/); assert.match(ui,/share_weather/); assert.match(ui,/share_soil/); assert.doesNotMatch(ui,/externalConsent|rule_based/);
 });

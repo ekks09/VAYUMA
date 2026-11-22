@@ -4,7 +4,7 @@ const fs=require('node:fs'), os=require('node:os'), path=require('node:path'), {
 const root=path.join(__dirname,'../vayuma'), php=process.env.VAYUMA_PHP||'php';
 function prepare(){const dir=fs.mkdtempSync(path.join(os.tmpdir(),'vayuma-agri-'));fs.cpSync(root,dir,{recursive:true});return dir;}
 function run(code,env={}){return spawnSync(php,['-d','display_errors=0','-r',code],{encoding:'utf8',env:{...process.env,...env}});}
-test('AI requires CSRF, defaults to free local guidance and keeps external service gated',()=>{
+test('AI requires CSRF and fails clearly when the external service is disabled',()=>{
  const dir=prepare(); try {
   fs.writeFileSync(path.join(dir,'includes/feature_access_policy.php'), `<?php function vayuma_feature_access_decision($c,$s){return 'allow';}`);
   fs.writeFileSync(path.join(dir,'config/db.php'), `<?php $conn=new stdClass();`);
@@ -12,8 +12,9 @@ test('AI requires CSRF, defaults to free local guidance and keeps external servi
   function ask(payload,csrf='ok',session=true){ const code=`session_start(); $_SESSION=${session?"['user_id'=>1,'logged_in'=>true,'vayuma_csrf_token'=>'ok']":"[]"}; $_SERVER['REQUEST_METHOD']='POST'; $_SERVER['HTTP_X_CSRF_TOKEN']=${JSON.stringify(csrf)}; require ${JSON.stringify(file)};`;const out=run(code,{TEST_JSON:JSON.stringify(payload),VAYUMA_AI_EXTERNAL_ENABLED:'0',OPENAI_API_KEY:''});assert.equal(out.status,0,out.stderr);return JSON.parse(out.stdout); }
   assert.match(ask({question:'soil'},'wrong').error,/session expired/i);
   assert.match(ask({question:'soil'},'ok',false).error,/log in/i);
-  const local=ask({question:'soil',crop:'maize'});assert.equal(local.mode,'rule_based');assert.match(local.answer,/not AI/);assert.match(local.context_used.join(' '),/maize.*user supplied/);
-  assert.match(ask({question:'soil',external_consent:true}).error,/not enabled/i);
+  assert.match(ask({question:'soil',crop:'maize'}).error,/not available/i);
+  assert.match(ask({question:'soil'}).error,/not available/i);
+  assert.match(ask({question:'soil',external_consent:false}).error,/not sent/i);
   assert.match(ask({question:' '}).error,/Enter a question/);
  } finally {fs.rmSync(dir,{recursive:true,force:true});}
 });

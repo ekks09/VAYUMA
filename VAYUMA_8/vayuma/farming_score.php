@@ -244,6 +244,7 @@ $waterDisplay = trim((string)($profile['irrigation'] ?? '')) ?: 'Not provided';
 
 <body>
 <?php vayuma_language_selector(); ?>
+<?php require __DIR__ . '/includes/workspace_back.php'; ?>
 
 <div class="va-profile-page">
 

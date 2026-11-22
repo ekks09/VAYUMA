@@ -86,3 +86,86 @@
 /* These dashboards already have prominent AI links; avoid a floating overlay on content. */
 .va-simple-dashboard .va-ai-shortcut { display:none; }
 .va-simple-dashboard .va-main--content :is(a,button).va-btn { min-height:44px; }
+
+/* Extension officer workspace — scoped to avoid changing other dashboards. */
+.va-extension-dashboard .va-dash-layout > .va-dash-main { padding-bottom:max(96px,env(safe-area-inset-bottom)) !important; }
+.va-extension-dashboard .va-dash-sidebar { display:flex; flex-direction:column; }
+.va-extension-dashboard .va-dash-sidebar > nav { display:flex; flex-direction:column; }
+.va-extension-dashboard .va-ext-sidebar-footer { margin-top:auto; padding-top:20px; }
+.va-extension-dashboard .va-ext-sidebar-footer .va-language-selector { padding:8px 0; }
+.va-extension-dashboard .va-ext-sidebar-footer .va-dash-sidebar--section { margin:12px 12px 4px; }
+.va-extension-dashboard .va-sidebar--bottom { display:flex; flex-direction:column; gap:2px; }
+.va-extension-dashboard .va-dash-sidebar--nav-item { min-height:44px; gap:12px; padding:9px 12px; margin:1px 0; }
+.va-extension-dashboard .va-dash-sidebar--nav-item:focus-visible,
+.va-extension-dashboard :is(.va-ext-actions a,.va-ext-stat a,.va-ext-action):focus-visible { outline:3px solid #dfb93f; outline-offset:2px; }
+.va-extension-dashboard .va-ext-icon { width:20px; height:20px; flex:none; display:block; color:currentColor; }
+.va-extension-dashboard .va-dash-topbar { display:flex; flex-wrap:nowrap; align-items:center; gap:12px; margin-bottom:16px; }
+.va-extension-dashboard .va-ext-search { display:flex; align-items:center; gap:9px; width:min(340px,100%); min-width:0; min-height:44px; }
+.va-extension-dashboard .va-ext-search span { overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+.va-extension-dashboard .va-ext-search small { margin-left:auto; font-size:.7rem; color:var(--va-text-secondary); }
+.va-extension-dashboard .va-dash-topbar .vy-account-controls { margin-left:auto; }
+.va-extension-dashboard .va-ext-actions { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 24px; }
+.va-extension-dashboard .va-ext-actions a { display:inline-flex; align-items:center; min-height:44px; padding:8px 12px; border:1px solid var(--va-border); border-radius:999px; background:var(--va-surface); color:var(--va-primary); font-size:.875rem; font-weight:700; line-height:1.3; text-decoration:none; }
+.va-extension-dashboard .va-ext-actions a:hover { background:var(--va-primary-light); border-color:#a4d5b3; }
+.va-extension-dashboard .va-ext-stats { align-items:stretch; gap:12px; }
+.va-extension-dashboard .va-dash-layout .va-ext-stat { display:flex; flex-direction:column; gap:7px; padding:16px; }
+.va-extension-dashboard .va-ext-stat__heading { display:flex; align-items:center; gap:9px; width:100%; }
+.va-extension-dashboard .va-ext-stat__icon { display:grid; place-items:center; width:36px; height:36px; flex:none; border-radius:10px; background:var(--va-primary-light); color:var(--va-primary); }
+.va-extension-dashboard .va-ext-stat h3 { margin:0; color:var(--va-text-secondary); line-height:1.3; }
+.va-extension-dashboard .va-ext-stat__value { color:var(--va-primary); font-size:1.65rem; font-weight:700; line-height:1; }
+.va-extension-dashboard .va-ext-stat p { margin:0; color:var(--va-text-secondary); font-size:.8rem; line-height:1.35; }
+.va-extension-dashboard .va-ext-stat a { display:inline-flex; align-items:center; gap:5px; min-height:44px; margin-top:auto; color:var(--va-primary); font-size:.82rem; font-weight:700; text-decoration:none; }
+.va-extension-dashboard .va-ext-stat a:hover { text-decoration:underline; }
+.va-extension-dashboard .va-ext-content-grid { grid-template-columns:minmax(0,1.4fr) minmax(0,1fr); gap:16px; align-items:start; }
+.va-extension-dashboard .va-ext-content-grid .va-dash-panel { min-width:0; padding:20px; }
+.va-extension-dashboard .va-ext-content-grid h2 { margin:0 0 12px; font-size:1.1rem; }
+.va-extension-dashboard .va-dash-feature { align-items:flex-start; }
+.va-extension-dashboard .va-dash-feature-icon { flex:none; }
+.va-extension-dashboard .va-ext-quick { display:flex; flex-direction:column; gap:8px; }
+.va-extension-dashboard .va-ext-action { min-height:44px; margin:0; }
+.va-extension-dashboard .va-ext-action__arrow { margin-left:auto; }
+.va-extension-dashboard .va-ext-mission { grid-column:1 / -1; background:var(--va-primary-light); }
+.va-extension-dashboard .va-ext-mission p { margin:0; color:var(--va-text-secondary); line-height:1.55; }
+@media(max-width:767px) {
+  .va-extension-dashboard .va-dash-topbar { flex-wrap:nowrap; }
+  .va-extension-dashboard .va-dash-topbar .va-ext-search { display:flex; width:auto; flex:1 1 auto; padding:8px; }
+  .va-extension-dashboard .va-ext-search small { display:none; }
+  .va-extension-dashboard .va-ext-content-grid { grid-template-columns:minmax(0,1fr); }
+  .va-extension-dashboard .va-ext-mission { grid-column:auto; }
+}
+@media(max-width:390px) { .va-extension-dashboard .va-ext-search span { font-size:.72rem; } }
+/* Keep an unobstructed rail for the fixed launcher beside lower workspace cards. */
+.va-extension-dashboard .va-ext-content-grid { padding-right:76px; }
+@media(max-width:767px) {
+  .va-extension-dashboard .va-ext-content-grid { padding-right:38px; }
+  .va-extension-dashboard .vayuma-ai-fab { width:44px; height:44px; right:8px; }
+  .va-extension-dashboard .vayuma-ai-fab svg { width:24px; height:24px; }
+}
+.va-extension-dashboard .va-ext-sidebar-footer .va-language-selector span { flex-basis:100%; }
+/* Summary cards can also scroll behind the fixed assistant, not only lower panels. */
+.va-extension-dashboard .va-ext-stats { padding-right:76px; }
+@media(max-width:767px) { .va-extension-dashboard .va-ext-stats { padding-right:38px; } }
+
+/* Restore the shared card hierarchy for research and transport workspaces. */
+.va-dash-main .research-item { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; border-bottom:1px solid var(--va-border-light); }
+.va-dash-main .research-info { display:flex; align-items:center; gap:12px; min-width:0; }
+.va-dash-main .research-info strong, .va-dash-main .research-info span { display:block; }
+.va-dash-main .research-info span { color:var(--va-text-secondary); font-size:var(--va-font-size-xs); }
+.va-dash-main .research-item .status { flex:none; color:var(--va-text-muted); font-size:var(--va-font-size-xs); }
+.va-dash-main .research-icon { width:40px; height:40px; flex:none; display:grid; place-items:center; border-radius:var(--va-radius-md); background:var(--va-primary-light); }
+.va-transport-welcome { margin-bottom:24px; }
+.va-transport-welcome small { color:var(--va-primary); font-weight:700; letter-spacing:.08em; }
+.va-transport-welcome h2 { margin:8px 0; font-size:var(--va-font-size-3xl); }
+.va-transport-cards p { color:var(--va-text-secondary); line-height:1.5; margin:8px 0; }
+.va-transport-cards a { color:var(--va-primary); display:inline-flex; align-items:center; min-height:44px; font-weight:700; }
+.va-dash-main .service-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr)); gap:16px; margin-top:16px; }
+.va-dash-main .service { min-width:0; padding:20px; border:1px solid var(--va-border); background:var(--va-surface); border-radius:var(--va-radius-lg); }
+.va-dash-main .service h3 { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.va-dash-main .service p { color:var(--va-text-secondary); line-height:1.5; }
+.va-dash-main .va-dash-action small, .va-dash-sidebar--nav-item small { white-space:nowrap; flex:none; }
+.va-dash-main .va-dash-action { min-width:0; flex-wrap:wrap; overflow-wrap:anywhere; }
+@media (max-width:480px) {
+  .va-dash-main .research-item { flex-wrap:wrap; gap:6px; }
+  .va-dash-main .research-info { flex:1 1 100%; align-items:flex-start; }
+  .va-dash-main .research-item .status { margin-left:52px; }
+}

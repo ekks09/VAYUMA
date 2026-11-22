@@ -164,7 +164,7 @@ $locationLabel = $locationParts ? implode(", ", $locationParts) : "Your farm loc
     <h1><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg> VAYUMA</h1>
     <p>Smart Farming Ecosystem</p>
 </header>
-<main class="container">
+<main class="container"><?php require __DIR__ . '/includes/workspace_back.php'; ?>
     <div class="page-title">
         <h2><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg> Crop Calendar</h2>
         <p>Hello <?php echo htmlspecialchars((string)$full_name, ENT_QUOTES, "UTF-8"); ?>. Use this guide to plan key activities throughout the growing season.</p>

@@ -15,10 +15,10 @@ if (isset($_SESSION['user_id']) && ($_SESSION['logged_in'] ?? false) === true):
     $vyHasAvatar = ($vyUser['avatar_url'] ?? '') === $vyAvatarKey && (vayuma_avatar_uses_tidb()
         ? vayuma_avatar_tidb_exists($conn ?? null, (int)$_SESSION['user_id'])
         : $vyAvatarDir !== null && is_file($vyAvatarDir . '/' . $vyAvatarKey) && !is_link($vyAvatarDir . '/' . $vyAvatarKey));
-    require_once __DIR__ . '/onboarding_policy.php';
-    $vyCanOnboard = getenv('VAYUMA_ONBOARDING_ENABLED') === '1' && vayuma_onboarding_authorized($conn ?? null, (int)$_SESSION['user_id'], (string)(getenv('VAYUMA_ONBOARDING_PHONES') ?: ''));
     $vyH = static fn($v) => htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
 ?>
+<div class="vy-account-controls">
+<a class="vy-staff-entry" href="onboarding.php">Staff Access</a>
 <details class="vy-user-menu">
   <summary class="vy-user-menu__trigger" aria-label="Open account menu" aria-expanded="false">
     <?php if ($vyHasAvatar): ?><img class="vy-user-menu__avatar" src="avatar.php" alt=""><?php else: ?><span class="vy-user-menu__avatar vy-user-menu__initials"><?= $vyH(vayuma_user_initials($vyName)) ?></span><?php endif; ?>
@@ -31,8 +31,9 @@ if (isset($_SESSION['user_id']) && ($_SESSION['logged_in'] ?? false) === true):
     <a class="vy-user-menu__link" href="<?= $vyH($vyProfile) ?>">Profile &amp; Settings</a>
     <a class="vy-user-menu__link" href="feature_access.php?feature=ai">VAYUMA AI</a>
     <a class="vy-user-menu__link" href="role.php">Change account category</a>
-    <?php if ($vyCanOnboard): ?><a class="vy-user-menu__link" href="onboarding.php">Staff Access</a><?php endif; ?>
+    <a class="vy-user-menu__link" href="onboarding.php">Staff Access</a>
     <a class="vy-user-menu__link" href="auth/logout.php">Sign out</a>
   </div>
 </details>
+</div>
 <?php endif; ?>

@@ -27,6 +27,6 @@ try {
         $targetUser=(int)$profile['user_id'];$log->bind_param('iiisss',$profileId,$targetUser,$adminId,$oldStatus,$newStatus,$note);$log->execute();$log->close();
     }
     $conn->commit();
-} catch(Throwable $e){$conn->rollback();http_response_code(500);exit('Could not save verification decision. Confirm that database/migrations/phase7_admin_verification.sql has been imported. Details: '.htmlspecialchars($e->getMessage(),ENT_QUOTES,'UTF-8'));}
+} catch(Throwable $e){$conn->rollback();http_response_code(500);error_log('VAYUMA verification decision save unavailable.');exit('The verification decision could not be saved. Please return to the verification centre and try again.');}
 $role=$_POST['return_role']??'';
 header('Location: ../admin_verification.php?role='.urlencode($role).'&status=all&updated=1');exit;

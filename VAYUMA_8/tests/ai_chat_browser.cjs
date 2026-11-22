@@ -1,0 +1,20 @@
+// Synthetic prerendered fixtures and intercepted provider responses; no live auth or AI.
+const assert=require('node:assert/strict'),puppeteer=require('puppeteer-core');
+const base=process.env.VAYUMA_AI_FIXTURE_URL;if(!base)throw new Error('Set VAYUMA_AI_FIXTURE_URL');
+(async()=>{const browser=await puppeteer.launch({executablePath:process.env.VAYUMA_CHROMIUM_PATH,args:['--no-sandbox','--disable-dev-shm-usage']});try{
+ const page=await browser.newPage(),requests=[];await page.setRequestInterception(true);page.on('request',r=>{if(r.url().endsWith('/ai_chat_api.php')){requests.push(JSON.parse(r.postData()));return r.respond({status:200,contentType:'application/json',body:JSON.stringify({success:true,answer:'Example answer',context_used:[]})});}r.continue();});
+ for(const width of [320,390,768,1024,1280]){
+  await page.setViewport({width,height:850});await page.goto(base+'/dashboard.html',{waitUntil:'load'});
+  const header=await page.evaluate(()=>{const a=document.querySelector('.vy-staff-entry').getBoundingClientRect(),b=document.querySelector('.vy-user-menu__trigger').getBoundingClientRect();return{scroll:document.documentElement.scrollWidth,staff:{left:a.left,right:a.right,height:a.height},menu:{left:b.left,right:b.right,height:b.height}}});
+  assert.ok(header.scroll<=width+1&&header.staff.left>=0&&header.staff.right<=width&&header.staff.height>=44&&header.menu.height>=44,`header ${width}: ${JSON.stringify(header)}`);
+  assert.equal(await page.$eval('.vy-staff-entry',e=>e.getAttribute('href')),'onboarding.php');
+  await page.click('.vayuma-ai-fab');await page.waitForFunction(()=>document.querySelector('.vayuma-chat--drawer').getBoundingClientRect().right<=innerWidth+1);const drawer=await page.evaluate(()=>{const e=document.querySelector('.vayuma-chat--drawer'),r=e.getBoundingClientRect();return{scroll:document.documentElement.scrollWidth,width:r.width,left:r.left,right:r.right,visible:!document.querySelector('.vai-overlay').hidden,inputFont:parseFloat(getComputedStyle(e.querySelector('textarea')).fontSize)}});
+  assert.ok(drawer.visible&&drawer.scroll<=width+1&&drawer.right<=width+1&&drawer.left>=-1&&drawer.width<=400.5&&drawer.inputFont>=16,`drawer ${width}: ${JSON.stringify(drawer)}`);
+  await page.click('.vai-close');assert.equal(await page.$eval('.vai-overlay',e=>e.hidden),true);
+  await page.goto(base+'/ai.html',{waitUntil:'load'});const direct=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,hasPage:!!document.querySelector('.vayuma-chat--page'),hasFab:!!document.querySelector('.vayuma-ai-fab')}));assert.ok(direct.hasPage&&!direct.hasFab&&direct.scroll<=width+1,`page ${width}: ${JSON.stringify(direct)}`);
+ }
+ await page.goto(base+'/dashboard.html',{waitUntil:'load'});await page.click('.vayuma-ai-fab');await page.click('.vai-context summary');await page.type('[name=crop]','Maize');await page.type('[name=location]','Nairobi');await page.click('[name=share_soil]');await page.type('textarea','How should I prepare?');await page.keyboard.press('Enter');await page.waitForFunction(()=>document.querySelector('.vai-message--assistant')?.textContent==='Example answer');
+ assert.equal(requests.length,1);assert.equal(requests[0].crop,'Maize');assert.equal(requests[0].location,'Nairobi');assert.equal(requests[0].share_soil,true);assert.equal(requests[0].share_weather,false);assert.equal(requests[0].external_consent,undefined);
+ await page.click('.vai-lang');assert.match(await page.$eval('.vai-welcome',e=>e.textContent),/Habari/);await page.click('.vai-clear');assert.equal(await page.$eval('[name=crop]',e=>e.value),'');assert.equal(await page.$eval('[name=share_soil]',e=>e.checked),false);assert.equal(await page.$$('.vai-message').then(a=>a.length),0);
+ await page.keyboard.press('Escape');assert.equal(await page.$eval('.vai-overlay',e=>e.hidden),true);console.log('PASS synthetic staff header and shared AI page/drawer at 320–1280px; context, send, language and reset');
+ }finally{await browser.close()}})().catch(e=>{console.error(e);process.exitCode=1});

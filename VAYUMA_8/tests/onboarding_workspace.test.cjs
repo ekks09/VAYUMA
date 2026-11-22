@@ -52,8 +52,8 @@ class C {function begin_transaction(){return true;}function commit(){return true
     for(let i=1;i<=5;i++){r=run();assert.equal(r.result.unlocked,null);assert.equal(+fs.readFileSync(state,'utf8'),i);}
     r=run({pass:'custom-secret'});assert.equal(r.result.status,429);assert.equal(r.result.unlocked,null);
     r=run({pass:'custom-secret',expired:'1'});assert.equal(r.result.unlocked,7);assert.equal(+fs.readFileSync(state,'utf8'),0);
-    r=run({pass:'+254vayuma',envKey:null});assert.equal(r.result.unlocked,7);assert.doesNotMatch(r.output,/\+254vayuma/);
-    r=run({pass:'+254vayuma',envKey:''});assert.equal(r.result.status,503);assert.equal(r.result.unlocked,null);
+    r=run({pass:'wrong',envKey:null});assert.equal(r.result.status,503);assert.equal(r.result.unlocked,null);
+    r=run({pass:'wrong',envKey:''});assert.equal(r.result.status,503);assert.equal(r.result.unlocked,null);
     assert.match(fs.readFileSync(path.join(root,'includes/header_user_menu.php'),'utf8'),/Staff Access/);
   } finally {fs.rmSync(dir,{recursive:true,force:true});}
 });

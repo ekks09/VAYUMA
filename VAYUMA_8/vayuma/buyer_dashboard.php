@@ -40,6 +40,8 @@ $navLinks = [
 
 // ── Saved items ──
 $savedItems = [];
+$savedAvailable = true;
+try {
 $stmt = $conn->prepare(
     'SELECT si.id, si.created_at, pl.id AS listing_id, pl.produce_name, pl.category,
             pl.price_per_unit, pl.unit, pl.location, pl.image, u.full_name AS farmer_name
@@ -50,17 +52,22 @@ $stmt = $conn->prepare(
      ORDER BY si.created_at DESC
      LIMIT 6'
 );
+if (!$stmt) throw new RuntimeException('Dashboard query prepare failed');
 $stmt->bind_param('i', $user_id);
-$stmt->execute();
+if (!$stmt->execute()) throw new RuntimeException('Dashboard query failed');
 $savedResult = $stmt->get_result();
+if (!$savedResult) throw new RuntimeException('Saved items unavailable');
 while ($row = $savedResult->fetch_assoc()) {
     $savedItems[] = $row;
 }
 $stmt->close();
-$savedCount = count($savedItems);
+} catch (Throwable $e) { error_log('Buyer saved items unavailable: '.$e->getMessage()); $savedItems=[]; $savedAvailable=false; }
+$savedCount = $savedAvailable ? count($savedItems) : null;
 
 // ── Recent orders with timeline ──
 $recentOrders = [];
+$ordersAvailable = true;
+try {
 $stmt = $conn->prepare(
     'SELECT o.id, o.produce_listing_id, o.quantity, o.unit, o.price_per_unit, o.total_amount,
             o.status, o.created_at, pl.produce_name, pl.image,
@@ -72,13 +79,17 @@ $stmt = $conn->prepare(
      ORDER BY o.created_at DESC
      LIMIT 5'
 );
+if (!$stmt) throw new RuntimeException('Orders prepare failed');
 $stmt->bind_param('i', $user_id);
-$stmt->execute();
+if (!$stmt->execute()) throw new RuntimeException('Orders query failed');
 $ordersResult = $stmt->get_result();
+if (!$ordersResult) throw new RuntimeException('Orders results unavailable');
 while ($row = $ordersResult->fetch_assoc()) {
     $recentOrders[] = $row;
 }
 $stmt->close();
+
+} catch (Throwable $e) { error_log('Buyer orders unavailable: '.$e->getMessage()); $recentOrders=[]; $ordersAvailable=false; }
 
 require_once __DIR__ . '/includes/ui_simple.php';
 ?>
@@ -128,7 +139,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
             <div><div class="va-stat-card--label">My Orders</div></div>
             <div class="va-stat-card--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-orders"/></svg></div>
           </div>
-          <div class="va-stat-card--value">Track</div>
+          <div class="va-stat-card--value">View</div>
           <div class="va-stat-card--sub">Your purchases</div>
         </div>
         <div class="va-stat-card">
@@ -136,8 +147,8 @@ require_once __DIR__ . '/includes/ui_simple.php';
             <div><div class="va-stat-card--label">Deliveries</div></div>
             <div class="va-stat-card--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-transport"/></svg></div>
           </div>
-          <div class="va-stat-card--value">Track</div>
-          <div class="va-stat-card--sub">Your deliveries</div>
+          <div class="va-stat-card--value">View</div>
+          <div class="va-stat-card--sub">Accepted buyer orders; live tracking unavailable</div>
         </div>
         <div class="va-stat-card">
           <div class="va-stat-card--header">
@@ -152,7 +163,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
             <div><div class="va-stat-card--label">Saved Items</div></div>
             <div class="va-stat-card--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg></div>
           </div>
-          <div class="va-stat-card--value"><?= $savedCount ?></div>
+          <div class="va-stat-card--value"><?= $savedCount === null ? 'Unavailable' : $savedCount ?></div>
           <div class="va-stat-card--sub">Recent saved listings shown (up to 6)</div>
         </div>
       </div>
@@ -171,13 +182,13 @@ require_once __DIR__ . '/includes/ui_simple.php';
             WHERE pl.status = 'available'
             ORDER BY pl.created_at DESC
             LIMIT 4";
-        $listingsResult = $conn->query($listingsSql);
+        try { $listingsResult = $conn->query($listingsSql); if (!$listingsResult) throw new RuntimeException('Listings query failed'); } catch (Throwable $e) { error_log('Buyer listings unavailable: '.$e->getMessage()); $listingsResult=false; }
         $hasListings = false;
         if ($listingsResult) {
             while ($row = $listingsResult->fetch_assoc()) {
                 $hasListings = true;
                 ?>
-                <div class="va-card va-card--p va-mb-4" style="cursor:pointer;" onclick="window.location.href='produce_details.php?id=<?= (int)$row['id'] ?>'">
+                <div class="va-card va-card--p va-mb-4">
                   <?php if (!empty($row['image'])): ?>
                     <img src="<?= h($row['image']) ?>" alt="<?= h($row['produce_name']) ?>" style="width:100%;height:140px;object-fit:cover;border-radius:var(--va-radius);margin-bottom:var(--va-space-3);background:#edf4ed;">
                   <?php else: ?>
@@ -190,7 +201,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
                   <?php endif; ?>
                   <div class="va-font-semibold va-text-primary va-text-lg"><?= h($row['produce_name']) ?></div>
                   <div class="va-text-muted va-text-sm"><?= h($row['quantity']) ?> <?= h($row['unit']) ?> · KSh <?= number_format((float)$row['price_per_unit'], 2) ?>/<?= h($row['unit']) ?></div>
-                  <a href="produce_details.php?id=<?= (int)$row['id'] ?>" class="va-btn va-btn--outline va-btn--sm va-w-full va-mt-3">View</a>
+                  <a href="produce_details.php?id=<?= (int)$row['id'] ?>" class="va-btn va-btn--outline va-btn--sm va-w-full va-mt-3" aria-label="View <?= h($row['produce_name']) ?> details">View details</a>
                 </div>
                 <?php
             }
@@ -198,17 +209,18 @@ require_once __DIR__ . '/includes/ui_simple.php';
         if (!$hasListings): ?>
             <div class="va-empty">
               <div class="va-empty--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg></div>
-              <div class="va-empty--title">No produce available</div>
-              <div class="va-empty--desc">No produce is currently available.</div>
+              <div class="va-empty--title"><?= $listingsResult ? 'No produce available' : 'Produce listings unavailable' ?></div>
+              <div class="va-empty--desc"><?= $listingsResult ? 'No produce is currently available.' : 'Please try again later.' ?></div>
               <a href="market_connect.php" class="va-btn va-btn--primary va-btn--sm">Open Market Connect</a>
             </div>
         <?php endif; ?>
       </div>
 
+      <?php if (!$savedAvailable): ?><p role="status">Saved items are temporarily unavailable.</p><?php endif; ?>
       <?php if ($savedCount > 0): ?>
       <div class="va-section va-mb-6">
         <h2 class="va-section--title">Saved Items</h2>
-        <p class="va-text-muted va-text-sm">Your saved produce listings. Click any item to view details.</p>
+        <p class="va-text-muted va-text-sm">Your saved produce listings. Use View to open a listing.</p>
       </div>
       <div class="va-d-grid va-gap-4 va-mb-6" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr));">
         <?php foreach ($savedItems as $saved): ?>
@@ -224,9 +236,9 @@ require_once __DIR__ . '/includes/ui_simple.php';
             <?= vayuma_csrf_field() ?>
             <input type="hidden" name="produce_listing_id" value="<?= (int)$saved['listing_id'] ?>">
             <input type="hidden" name="action" value="remove">
-            <button type="submit" class="va-btn va-btn--outline va-btn--sm va-w-full va-mt-3" onclick="return confirm('Remove this saved item?')">Remove</button>
+            <button type="submit" class="va-btn va-btn--outline va-btn--sm va-w-full va-mt-3" aria-label="Remove <?= h($saved['produce_name']) ?> from saved items" onclick="return confirm('Remove this saved item?')">Remove</button>
           </form>
-          <a href="produce_details.php?id=<?= (int)$saved['listing_id'] ?>" class="va-btn va-btn--primary va-btn--sm va-w-full va-mt-2">View</a>
+          <a href="produce_details.php?id=<?= (int)$saved['listing_id'] ?>" class="va-btn va-btn--primary va-btn--sm va-w-full va-mt-2" aria-label="View <?= h($saved['produce_name']) ?> details">View details</a>
         </div>
         <?php endforeach; ?>
       </div>
@@ -238,7 +250,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
       <div class="va-d-grid va-gap-3 va-mb-6" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));">
         <a href="market_connect.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-marketplace"/></svg> Browse Marketplace</a>
         <a href="my_orders.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-orders"/></svg> My Orders</a>
-        <a href="deliveries.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-transport"/></svg> Track Delivery</a>
+        <a href="deliveries.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-transport"/></svg> View accepted orders</a>
         <a href="buyer_profile.php?from=buyer_dashboard.php" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-profile"/></svg> My Profile</a>
         <a href="feature_access.php?feature=ai" class="va-btn va-btn--outline va-btn--sm va-w-full"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-ai"/></svg> Ask VAYUMA AI</a>
       </div>
@@ -249,7 +261,8 @@ require_once __DIR__ . '/includes/ui_simple.php';
         <p class="va-text-muted va-text-sm">Your order history and status timeline.</p>
       </div>
       <div class="va-card va-card--p va-mb-6">
-        <?php if (empty($recentOrders)): ?>
+        <?php if (!$ordersAvailable): ?><p role="status">Recent orders are temporarily unavailable.</p>
+        <?php elseif (empty($recentOrders)): ?>
         <div class="va-empty">
           <div class="va-empty--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-orders"/></svg></div>
           <div class="va-empty--title">No orders yet</div>

@@ -75,7 +75,7 @@ const roles = {farmer:'farmer_dashboard.php',buyer:'buyer_dashboard.php',consume
           if (['farmer','buyer','consumer'].includes(role) && viewport < 768) {
             const bad=await page.$$eval('.va-main--content a.va-btn, .va-main--content button.va-btn, .farmer-quick-links nav a, .dashboard-quick-links nav a',links=>links.filter(e=>e.getBoundingClientRect().height>0&&e.getBoundingClientRect().height<43.5).map(e=>e.textContent.trim()));
             assert.deepEqual(bad,[],`small dashboard tap targets: ${bad.join(', ')}`);
-            assert.equal(await page.$eval('.va-ai-shortcut',e=>getComputedStyle(e).display),'none','floating AI obscures dashboard content');
+            assert.ok(await page.$('.vayuma-ai-fab'), 'floating AI launcher is missing');
           }
           if (viewport < 768) { const target=await page.$eval('.va-mobile-menu-btn',e=>{const r=e.getBoundingClientRect();return {width:r.width,height:r.height};}); assert.ok(target.width >= 44 && target.height >= 44, `menu touch target ${JSON.stringify(target)}`); }
           assert.equal(layout.toggleVisible, viewport < 768, `incorrect menu breakpoint ${JSON.stringify(layout)}`);

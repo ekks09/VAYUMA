@@ -41,6 +41,7 @@ if (!isset($roles_needing_profiles[$role])) {
 <?php vayuma_language_selector(); ?>
     <main class="role-page">
         <section class="role-card" style="max-width: 720px; text-align: center;">
+            <?php require __DIR__ . '/includes/workspace_back.php'; ?>
             <div class="role-header">
                 <div style="font-size: 54px; margin-bottom: 14px;"><?php echo $icon; ?></div>
                 <div class="step-badge">PROFILE SETUP</div>

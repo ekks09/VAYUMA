@@ -88,7 +88,6 @@ $email = $_SESSION['email'] ?? '';
 </head>
 
 <body class="va-profile-document">
-<?php vayuma_language_selector(); ?>
 <?php require __DIR__ . '/includes/profile_navigation.php'; ?>
 
 

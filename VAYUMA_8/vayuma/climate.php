@@ -90,6 +90,7 @@ $full_name = $_SESSION['full_name'] ?? 'Farmer';
 
 <body class="va-climate-tool">
 <?php vayuma_language_selector(); ?>
+<?php require __DIR__ . '/includes/workspace_back.php'; ?>
 
 
 <div class="container">
