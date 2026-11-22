@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $avatarBytes = vayuma_avatar_compress($_FILES['avatar']);
         }
         $conn->begin_transaction(); $transactionStarted = true;
-        if (getenv('VAYUMA_ONBOARDING_ENABLED') === '1') {
+        if (getenv('VAYUMA_ONBOARDING_ENABLED') === '1' || (is_string(getenv('VAYUMA_STAFF_ONBOARD_KEY')) && getenv('VAYUMA_STAFF_ONBOARD_KEY') !== '')) {
             require_once __DIR__ . '/includes/onboarding_lock.php';
             vayuma_onboarding_lock_phone($conn, $phone);
             // Do not let a profile edit take a phone reserved by someone else's intake.

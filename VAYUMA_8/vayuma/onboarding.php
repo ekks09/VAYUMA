@@ -4,26 +4,19 @@ header('Cache-Control: private, no-store, max-age=0');
 header('X-Robots-Tag: noindex, nofollow');
 require_once __DIR__ . '/includes/onboarding_policy.php';
 require_once __DIR__ . '/includes/login_identity.php';
-function vayuma_staff_access_denied(): void {
-    http_response_code(403);
-    ?><!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Staff Access | VAYUMA</title><link rel="stylesheet" href="assets/css/vayuma-ui.css?v=1"><link rel="stylesheet" href="frontend/css/tokens.css"><link rel="stylesheet" href="frontend/css/onboarding.css?v=4"></head><body><main class="onboard"><?php require __DIR__ . '/includes/workspace_back.php'; ?><header class="onboard-header"><div><h1>Staff Access</h1><p>VAYUMA onboarding workspace</p></div></header><section class="onboard-card"><h2>Staff authorization required</h2><p>Onboarding access is not enabled for this account. Contact your VAYUMA administrator to confirm your registered phone and staff authorization.</p></section></main></body></html><?php
-    exit;
-}
 if (($_SESSION['logged_in'] ?? false) !== true || !isset($_SESSION['user_id'])) { header('Location: login.php'); exit; }
 $staffId = (int)$_SESSION['user_id'];
-if (getenv('VAYUMA_ONBOARDING_ENABLED') !== '1') {
-    vayuma_staff_access_denied();
-}
+$vayumaDbReadinessProbe = true;
 require_once __DIR__ . '/config/db.php';
-if (!vayuma_onboarding_authorized($conn ?? null, $staffId, (string)(getenv('VAYUMA_ONBOARDING_PHONES') ?: ''))) {
-    unset($_SESSION['onboarding_unlocked_user_id']);
-    vayuma_staff_access_denied();
-}
 require_once __DIR__ . '/includes/csrf.php';
 require_once __DIR__ . '/includes/language.php';
 require_once __DIR__ . '/includes/onboarding_lock.php';
-// The passphrase supplements, never replaces, the account allowlist above.
-if (($_SESSION['onboarding_unlocked_user_id'] ?? null) !== $staffId) {
+// Unlock is scoped to the signed-in account and invalidated if the configured key changes.
+$staffKey = getenv('VAYUMA_STAFF_ONBOARD_KEY');
+$keyFingerprint = is_string($staffKey) && $staffKey !== '' ? hash('sha256', $staffKey) : '';
+unset($staffKey);
+if (($_SESSION['onboarding_unlocked_user_id'] ?? null) !== $staffId || $keyFingerprint === '' || !is_string($_SESSION['onboarding_key_fingerprint'] ?? null) || !hash_equals($keyFingerprint, $_SESSION['onboarding_key_fingerprint'])) {
+    unset($_SESSION['onboarding_unlocked_user_id'], $_SESSION['onboarding_key_fingerprint']);
     $unlockError = '';
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         if (!vayuma_csrf_valid()) { http_response_code(403); $unlockError = 'Your session expired. Refresh and try again.'; }
@@ -35,6 +28,7 @@ if (($_SESSION['onboarding_unlocked_user_id'] ?? null) !== $staffId) {
                 if ($result === 'ok') {
                     if (!session_regenerate_id(true)) throw new RuntimeException('Session unavailable');
                     $_SESSION['onboarding_unlocked_user_id'] = $staffId;
+                    $_SESSION['onboarding_key_fingerprint'] = $keyFingerprint;
                     header('Location: onboarding.php'); exit;
                 }
                 if ($result === 'limited') { http_response_code(429); $unlockError = 'Too many attempts. Try again after 15 minutes.'; }

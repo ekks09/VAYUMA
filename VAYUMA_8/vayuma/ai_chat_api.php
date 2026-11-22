@@ -37,14 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $token = (string)($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
 if ($token === '' || empty($_SESSION['vayuma_csrf_token']) || !hash_equals($_SESSION['vayuma_csrf_token'], $token)) respond(403, ['success'=>false,'error'=>'Your session expired. Refresh and try again.']);
-require_once __DIR__ . '/includes/feature_access_policy.php';
-$vayumaDbReadinessProbe = true;
-require_once __DIR__ . '/config/db.php';
-try {
-    if (!isset($conn) || !$conn) throw new RuntimeException('Database unavailable');
-    $decision = vayuma_feature_access_decision($conn, $_SESSION);
-    if ($decision !== 'allow') respond(403, ['success'=>false,'error'=>'Complete your profile and subscription before using VAYUMA AI.']);
-} catch (Throwable $ignored) { respond(503, ['success'=>false,'error'=>'Unable to check account setup. Please try again later.']); }
 $now = time();
 $_SESSION['ai_requests'] = array_values(array_filter($_SESSION['ai_requests'] ?? [], static fn($t) => is_int($t) && $t > $now - 3600));
 if (count($_SESSION['ai_requests']) >= 20) respond(429, ['success'=>false,'error'=>'Session limit reached. Please try again later.']);
