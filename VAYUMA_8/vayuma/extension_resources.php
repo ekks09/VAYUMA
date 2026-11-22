@@ -39,7 +39,7 @@ function h($v){return htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8');}
   .va-profile-form-grid { grid-template-columns: 1fr; }
   .va-profile-full { grid-column: auto; }
 }
-</style><link rel="stylesheet" href="frontend/css/extension-workspace.css?v=1"></head><body class="va-extension-workspace"><div class="wrap"><div class="top"><div><h1>Farming Resources</h1><p class="muted">Quick access to VAYUMA's agricultural guidance tools.</p></div><a class="btn" href="extension_dashboard.php">← Dashboard</a></div><div class="va-profile-form-grid">
+</style><link rel="stylesheet" href="frontend/css/extension-workspace.css?v=2"></head><body class="va-extension-workspace"><div class="wrap"><?php $workspaceBackLanguage = true; require __DIR__ . '/includes/workspace_back.php'; ?><div class="top"><div><h1>Farming Resources</h1><p class="muted">Quick access to VAYUMA's agricultural guidance tools.</p></div></div><div class="va-profile-form-grid">
 <div class="va-profile-card"><h2>Crop guidance</h2><p class="muted">Use the AI assistant to explore crop selection, planting practices, nutrient management and other farm questions.</p><a href="ai_advisor.php">Open VAYUMA AI →</a></div>
 <div class="va-profile-card"><h2>Climate guidance</h2><p class="muted">Review climate and weather guidance available through the platform.</p><a href="climate.php">Open climate guidance →</a></div>
 <div class="va-profile-card"><h2>Disease and pest support</h2><p class="muted">Open the disease helper for crop and animal health information and precautions.</p><a href="disease_helper.php">Open disease helper →</a></div>

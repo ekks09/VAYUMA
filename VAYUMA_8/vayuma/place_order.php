@@ -56,16 +56,16 @@ try {
     $stmt->close();
 
     if (!$listing) {
-        throw new RuntimeException('Produce listing not found.');
+        throw new DomainException('Produce listing not found.');
     }
     if ((int)$listing['farmer_id'] === $buyerId) {
-        throw new RuntimeException('You cannot purchase your own listing.');
+        throw new DomainException('You cannot purchase your own listing.');
     }
     if ($listing['status'] !== 'available') {
-        throw new RuntimeException('This produce is no longer available.');
+        throw new DomainException('This produce is no longer available.');
     }
     if ($quantity > (float)$listing['quantity']) {
-        throw new RuntimeException('Requested quantity is greater than the available quantity.');
+        throw new DomainException('Requested quantity is greater than the available quantity.');
     }
 
     $total = $quantity * (float)$listing['price_per_unit'];
@@ -93,15 +93,15 @@ try {
     $conn->commit();
     $transactionStarted = false;
 } catch (Throwable $exception) {
-    error_log('Produce order request failed: ' . $exception->getMessage());
+    error_log('VAYUMA produce order request unavailable.');
     if ($transactionStarted) {
         try {
             $conn->rollback();
         } catch (Throwable $rollbackException) {
-            error_log('Produce order rollback failed: ' . $rollbackException->getMessage());
+            error_log('VAYUMA produce order rollback unavailable.');
         }
     }
-    $message = $exception instanceof RuntimeException
+    $message = $exception instanceof DomainException
         ? $exception->getMessage()
         : 'Your produce request could not be submitted right now. Please try again.';
     vayuma_fail_order_request($message, $listingId);

@@ -73,6 +73,7 @@ if ($phonePrefill === '') {
 // All subscription navigation is provided below the heading, for every access
 // state. Avoid repeating it in the header, where it collides on small screens.
 $showNav = false;
+$hideWorkspaceBack = true;
 
 require_once __DIR__ . '/includes/ui_simple.php';
 ?>
@@ -97,7 +98,9 @@ require_once __DIR__ . '/includes/ui_simple.php';
     <a href="<?= h($profileUrl) ?>" class="va-btn va-btn--outline va-btn--sm">← Back to your profile</a>
     <a href="role.php" class="va-btn va-btn--outline va-btn--sm">Choose stakeholder type</a>
   <?php endif; ?>
+  <a href="onboarding.php" class="va-btn va-btn--outline va-btn--sm">Staff Access</a>
 </nav>
+<p class="va-text-muted va-text-sm">Authorized onboarding staff can enter Staff Access without an active subscription.</p>
 
 <?php if ($subscriptionError !== ''): ?>
   <div class="va-toast va-toast--error va-mb-4" role="alert" aria-live="polite">

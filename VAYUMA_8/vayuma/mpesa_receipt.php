@@ -71,9 +71,11 @@ $hasMpesaReceipt = $isPaid && !empty($receipt['mpesa_receipt_number']);
 if (!$receipt) {
     http_response_code(404);
     echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Receipt not found | VAYUMA</title>';
-    echo '<link rel="stylesheet" href="frontend/css/tokens.css"><link rel="stylesheet" href="frontend/css/components.css"><link rel="stylesheet" href="frontend/css/layout.css">';
+    echo '<link rel="stylesheet" href="frontend/css/tokens.css"><link rel="stylesheet" href="frontend/css/components.css"><link rel="stylesheet" href="frontend/css/layout.css"><link rel="stylesheet" href="assets/css/vayuma-ui.css?v=2"><link rel="stylesheet" href="frontend/css/user-menu.css?v=3">';
     echo '<style>.va-receipt-notfound{max-width:640px;margin:3rem auto;padding:0 1rem}.va-receipt-notfound__card{padding:2rem;background:var(--va-surface);border:1px solid var(--va-border);border-radius:var(--va-radius-lg);box-shadow:var(--va-shadow-sm)}.va-receipt-notfound__card h1{color:var(--va-text-primary)}.va-receipt-notfound__card p{color:var(--va-text-secondary)}</style></head><body>';
-    echo '<main class="va-receipt-notfound" id="va-main-content"><section class="va-receipt-notfound__card" role="alert"><h1>Receipt not found</h1><p>This payment receipt is unavailable or does not belong to your account.</p><a class="va-btn va-btn--primary" href="my_orders.php">Return to orders</a></section></main></body></html>';
+    echo '<main class="va-receipt-notfound" id="va-main-content">';
+    require __DIR__ . '/includes/workspace_back.php';
+    echo '<section class="va-receipt-notfound__card" role="alert"><h1>Receipt not found</h1><p>This payment receipt is unavailable or does not belong to your account.</p><a class="va-btn va-btn--primary" href="my_orders.php">Return to orders</a></section></main></body></html>';
     exit;
 }
 
@@ -117,7 +119,7 @@ $callbackAt = !empty($receipt['callback_received_at']) ? date('d M Y, h:i A', st
 <body>
 <?php vayuma_language_selector(); ?>
 <?php vayuma_payment_navigation('my_orders.php', 'My Orders'); ?>
-<main class="va-receipt-page" id="va-main-content">
+<main class="va-receipt-page" id="va-main-content"><?php require __DIR__ . '/includes/workspace_back.php'; ?>
 <div class="va-receipt-card">
   <div class="va-receipt-header">
     <h1>M-Pesa Payment Receipt</h1>

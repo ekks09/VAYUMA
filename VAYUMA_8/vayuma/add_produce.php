@@ -98,7 +98,7 @@ try {
 </header>
 
 
-<main class="container">
+<main class="container"><?php require __DIR__ . '/includes/workspace_back.php'; ?>
 
     <div class="page-title">
 

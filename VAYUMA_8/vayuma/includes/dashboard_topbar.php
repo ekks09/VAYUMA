@@ -26,6 +26,7 @@
   </nav>
   <?php endif; ?>
 
+  <?php if (!empty($topbarLanguage)) vayuma_language_selector(); ?>
   <div class="va-topbar--user">
     <?php if ($currentUserId > 0): ?>
       <?php require __DIR__ . '/header_user_menu.php'; ?>

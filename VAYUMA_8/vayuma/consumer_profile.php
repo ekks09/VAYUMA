@@ -48,7 +48,7 @@ function oldv($profile,$key,$fallback=''){return htmlspecialchars((string)($prof
   .va-profile-form-grid { grid-template-columns: 1fr; }
   .va-profile-full { grid-column: auto; }
 }
-</style></head><body class="va-profile-document"><?php vayuma_language_selector(); require __DIR__ . '/includes/profile_navigation.php'; ?>
+</style></head><body class="va-profile-document"><?php require __DIR__ . '/includes/profile_navigation.php'; ?>
 <div class="va-profile-page"><div class="header"><h1>Consumer Profile</h1><p>Set your food shopping interests and delivery preferences.</p></div>
 <div class="va-profile-card"><form action="auth/save_consumer.php" method="POST"><?= vayuma_csrf_field() ?>
 <div class="profile-extra"><h3>Your details</h3><div class="va-profile-form-grid">

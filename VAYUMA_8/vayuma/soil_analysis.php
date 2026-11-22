@@ -100,6 +100,7 @@ function soilOptionSelected(string $option, string $saved): string {
 
 <body class="va-soil-tool">
 <?php vayuma_language_selector(); ?>
+<?php require __DIR__ . '/includes/workspace_back.php'; ?>
 
 <div class="va-profile-page">
 

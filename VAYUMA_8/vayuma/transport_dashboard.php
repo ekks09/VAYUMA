@@ -67,7 +67,7 @@ $full_name = $_SESSION['full_name'] ?? "Transport Provider";
 <link rel="stylesheet" href="frontend/css/dashboard-shell-transitions.css">
 <style>
 </style>
-<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-4">
+<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-5">
 
 </head>
 
@@ -150,13 +150,18 @@ $full_name = $_SESSION['full_name'] ?? "Transport Provider";
             <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-profile"/></svg> My Profile
         </a>
 
-        <a class="va-dash-sidebar--nav-item" href="auth/logout.php">
-            <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-logout"/></svg> Logout
-        </a>
+
 
     </div>
 
     <?php vayuma_language_selector(); ?>
+
+    <div class="va-sidebar--bottom" aria-label="Account utilities">
+      <a class="va-dash-sidebar--nav-item" href="subscription.php"><svg class="va-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-subscription"/></svg> <span>Subscription</span></a>
+      <a class="va-dash-sidebar--nav-item" href="auth/logout.php">
+            <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-logout"/></svg> Logout
+        </a>
+    </div>
 </aside>
 
 
@@ -170,7 +175,7 @@ $full_name = $_SESSION['full_name'] ?? "Transport Provider";
     <button type="button" class="va-mobile-menu-btn" aria-controls="vaDashSidebar" aria-expanded="false" aria-label="Open navigation">Menu</button>
 
         <div class="va-dash-search">
-            <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg> Search VAYUMA
+            <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg> Search VAYUMA · Planned
         </div>
 
         <?php require __DIR__ . '/includes/header_user_menu.php'; ?>
@@ -178,7 +183,7 @@ $full_name = $_SESSION['full_name'] ?? "Transport Provider";
     </div>
 
 
-    <section class="welcome">
+    <section class="welcome va-transport-welcome">
 
         <small>
             TRANSPORT PROVIDER DASHBOARD
@@ -200,11 +205,11 @@ $full_name = $_SESSION['full_name'] ?? "Transport Provider";
 
     <!-- SUMMARY CARDS -->
 
-    <section class="cards">
+    <section class="va-dash-stats va-transport-cards">
 
-        <div class="card">
+        <div class="va-dash-stat">
 
-            <div class="icon">
+            <div class="va-dash-stat-icon">
                 <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-transport"/></svg>
             </div>
 
@@ -213,16 +218,16 @@ $full_name = $_SESSION['full_name'] ?? "Transport Provider";
             </h3>
 
             <p>
-                Find farmers and buyers who need
-                reliable transportation.
+                Browse available transport requests.
             </p>
+            <a href="transport_deliveries.php">View transport requests →</a>
 
         </div>
 
 
-        <div class="card">
+        <div class="va-dash-stat">
 
-            <div class="icon">
+            <div class="va-dash-stat-icon">
                 <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg>
             </div>
 
@@ -231,16 +236,15 @@ $full_name = $_SESSION['full_name'] ?? "Transport Provider";
             </h3>
 
             <p>
-                Track your current agricultural
-                deliveries.
+                Active delivery tracking is planned and not available yet.
             </p>
 
         </div>
 
 
-        <div class="card">
+        <div class="va-dash-stat">
 
-            <div class="icon">
+            <div class="va-dash-stat-icon">
                 <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-money"/></svg>
             </div>
 
@@ -249,8 +253,7 @@ $full_name = $_SESSION['full_name'] ?? "Transport Provider";
             </h3>
 
             <p>
-                Monitor your transportation
-                earnings and completed jobs.
+                Earnings and delivery history are planned and not available yet.
             </p>
 
         </div>

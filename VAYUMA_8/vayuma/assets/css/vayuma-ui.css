@@ -1,0 +1,106 @@
+/* Common workspace foundations; page-specific components retain their own layout. */
+:root {
+  --vy-ui-primary:#087d42; --vy-ui-primary-dark:#075d33;
+  --vy-ui-bg:#f3f7f4; --vy-ui-surface:#fff; --vy-ui-text:#193b2a;
+  --vy-ui-muted:#52685b; --vy-ui-border:#d9e6dd;
+  --vy-ui-space:16px; --vy-ui-radius:14px; --vy-ui-shadow:0 4px 18px rgb(19 65 38 / 6%);
+}
+.vy-workspace-back { margin:0 0 20px; }
+.vy-workspace-back a { display:inline-flex; min-height:44px; align-items:center; gap:8px; padding:8px 14px; border:1px solid var(--vy-ui-border); border-radius:999px; background:var(--vy-ui-surface); color:var(--vy-ui-primary-dark); text-decoration:none; font:600 0.9rem/1.3 system-ui,sans-serif; }
+.vy-workspace-back a:hover { background:#e8f5eb; border-color:var(--vy-ui-primary); }
+.vy-workspace-back a:focus-visible { outline:3px solid #65b782; outline-offset:3px; }
+/* Clearance applies after page-specific padding declarations, including mobile. */
+body main:not(.vayuma-ai-page-main) { padding-bottom:max(96px, env(safe-area-inset-bottom)) !important; }
+body .va-dash-layout .va-dash-stat, body .va-generic-main .va-dash-stat { display:flex; flex-direction:column; align-items:flex-start; gap:8px; }
+body .va-dash-stat strong, body .va-dash-stat span { display:block; line-height:1.3; }
+.vy-status-badge { display:inline-flex; align-items:center; padding:4px 10px; margin-top:8px; border:1px solid #e7d08b; border-radius:999px; background:#fff8df; color:#72520a; font-size:.8rem; font-weight:700; line-height:1.3; }
+.vy-status-badge--verified { border-color:#b8dfc5; background:#e9f7ec; color:#126333; }
+.vy-status-badge--rejected { border-color:#efcaca; background:#fff0f0; color:#922f2f; }
+/* The standalone exchange, directory and request pages historically used
+   generic class names without styles. Scope these rules to those containers. */
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) { box-sizing:border-box; width:100%; max-width:1050px; margin-inline:auto; }
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) :is(.grid,.stats) { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr)); gap:16px; margin:20px 0; }
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) :is(.card,.offer,.empty,.hero) { min-width:0; padding:20px; border:1px solid var(--vy-ui-border); border-radius:var(--vy-ui-radius); background:var(--vy-ui-surface); box-shadow:var(--vy-ui-shadow); overflow-wrap:anywhere; }
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) :is(.hero,.filters) { margin-bottom:20px; }
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) .filters { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) :is(.meta,.muted) { color:var(--vy-ui-muted); line-height:1.6; }
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) :is(.button,.btn,button:not([class])) { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:9px 16px; border:1px solid var(--vy-ui-primary); border-radius:9px; background:var(--vy-ui-primary); color:#fff; font:600 1rem/1.3 system-ui,sans-serif; text-decoration:none; cursor:pointer; }
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) :is(.button,.btn,button:not([class])):hover { background:var(--vy-ui-primary-dark); }
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) :is(.badge,.tag,.role) { display:inline-flex; padding:4px 10px; border-radius:999px; background:#e8f5eb; color:#145d33; font-size:.8rem; font-weight:700; }
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) .top { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:20px; }
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) .top nav { display:flex; flex-wrap:wrap; gap:12px; }
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) table { width:100%; border-collapse:collapse; }
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) :is(th,td) { text-align:left; padding:12px; border-bottom:1px solid var(--vy-ui-border); }
+@media(max-width:767px) {
+  body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) { padding-inline:16px; }
+  body main :is(input:not([type=checkbox]):not([type=radio]),select,textarea) { font-size:16px; max-width:100%; }
+  body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) .filters > :is(input,select) { flex:1 1 200px; min-width:0; }
+}
+body:has(> :is(main.va-form-page,main.va-profile-page,main.wrap)) { background:var(--vy-ui-bg); color:var(--vy-ui-text); font-family:system-ui,-apple-system,sans-serif; }
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) :is(.request,.form,.section,.notice) { min-width:0; margin:16px 0; padding:20px; border:1px solid var(--vy-ui-border); border-radius:var(--vy-ui-radius); background:var(--vy-ui-surface); overflow-wrap:anywhere; }
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) :is(.formgrid,.va-profile-form-grid) { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr)); gap:16px; }
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) .field.full { grid-column:1 / -1; }
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) :is(.field,.formgrid > div) { min-width:0; }
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) :is(.tabs,.actions) { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:16px 0; }
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) :is(.status,.badge) { display:inline-flex; padding:4px 10px; border-radius:999px; background:#fff8df; color:#72520a; font-size:.8rem; font-weight:700; }
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) :is(.card,.offer):hover { border-color:#a7d4b3; box-shadow:0 7px 22px rgb(19 65 38 / 10%); }
+body :is(main.va-form-page,main.va-profile-page,main.wrap):not(.va-generic-main) :is(.va-form-card,.va-profile-card) { overflow-x:auto; }
+@media print { body main:not(.vayuma-ai-page-main) { padding-bottom:0 !important; } .vy-workspace-back { display:none; } }
+
+.vy-denied-page { padding:clamp(20px,4vw,40px) 16px; font:16px/1.5 system-ui,sans-serif; }
+/* Shared feedback remains visible until the user resolves or navigates away. */
+body :is(.form-alert,.login-error,.va-profile-error,.va-form-error,.va-alert--error,.va-toast--error,.onboard-error,.notice.error) { border:1px solid #e8bfc0; border-radius:10px; background:#fff1f0; color:#842b2d; line-height:1.5; }
+body :is(.login-success,.va-alert--success,.va-toast--success,.onboard-notice,.notice.success) { border:1px solid #c1dfc8; border-radius:10px; background:#edf8f0; color:#1a6033; line-height:1.5; }
+
+/* Semantic platform tokens, shared by workspace and account screens. */
+:root {
+  --bg-canvas:#f3f7f4; --bg-surface:#fff; --bg-subtle:#eaf4ed;
+  --text-primary:#193b2a; --text-muted:#52685b; --border-subtle:#d9e6dd;
+  --brand-primary:#087d42; --status-warning:#916604; --status-success:#126333;
+}
+.vy-workspace-navigation { display:flex; align-items:center; justify-content:space-between; gap:12px; min-width:0; margin:0 0 20px; }
+.vy-workspace-navigation .vy-workspace-back { margin:0; }
+.vy-workspace-navigation .vy-account-controls { margin-left:auto; }
+body > .vy-workspace-navigation { max-width:1200px; margin:12px auto 20px; padding:0 16px; }
+.vayuma-ai-page-header .vy-workspace-navigation { width:100%; margin:0; }
+:is(.va-form-brand,.va-profile-brand,.brand,.role-brand) > small { display:block; margin-top:3px; line-height:1.3; letter-spacing:.08em; }
+.va-dash-sidebar { display:flex; flex-direction:column; min-height:100%; }
+.va-dash-sidebar > nav { display:flex; flex-direction:column; gap:4px; }
+.va-dash-sidebar--nav-item { display:flex; align-items:center; gap:10px; min-height:44px; }
+.va-dash-sidebar--nav-item[aria-current="page"] { background:#e4f5e9; color:#075d33; font-weight:700; }
+.va-dash-sidebar .va-sidebar--bottom { margin-top:auto; display:flex; flex-direction:column; gap:6px; }
+.va-profile-document :is(.va-form-input,.va-profile-input) { min-height:44px; font-size:16px; }
+.va-profile-document textarea:is(.va-form-input,.va-profile-input) { min-height:100px; }
+.va-profile-document :is(.va-form-grid,.va-profile-form-grid) { gap:16px; }
+.va-profile-document :is(.va-form-grid,.va-profile-form-grid) .field { display:flex; flex-direction:column; gap:6px; min-width:0; }
+.va-profile-document :is(.va-form-card,.va-profile-card) button[type="submit"] { min-height:44px; margin-top:20px; }
+body :is(.vy-status-badge,.va-user-menu__status,.badge,.status) { line-height:1.35; }
+@media(max-width:700px) {
+  .vy-workspace-navigation { flex-wrap:wrap; }
+  .va-profile-document :is(.va-form-grid,.va-profile-form-grid) { grid-template-columns:minmax(0,1fr); }
+  .va-profile-document :is(.va-form-grid,.va-profile-form-grid) .field.full { grid-column:auto; }
+}
+.vy-unavailable { max-width:680px; margin:clamp(24px,7vw,72px) auto; padding:28px; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:var(--vy-ui-radius); box-shadow:var(--vy-ui-shadow); }
+.vy-unavailable a { display:inline-flex; min-height:44px; align-items:center; color:var(--brand-primary); font-weight:700; }
+body.va-extension-workspace > .wrap { padding-bottom:max(96px,env(safe-area-inset-bottom)); }
+.vy-workspace-navigation .va-language-selector, .va-profile-navigation .va-language-selector, .va-topbar .va-language-selector { padding:0; z-index:auto; }
+@media(max-width:700px) {
+  .va-profile-navigation { flex-wrap:wrap; }
+  .va-profile-navigation > span { flex-basis:100%; order:3; }
+  .va-profile-navigation .va-language-selector, .vy-workspace-navigation .va-language-selector { order:4; }
+}
+/* Reserve a clear rail for the floating assistant alongside dashboard content. */
+body:has(.vayuma-ai-fab) .va-simple-dashboard-grid > .va-main--content,
+body:not(.va-extension-dashboard):has(.vayuma-ai-fab) .va-dash-layout > main { padding-right:96px; }
+body.va-extension-workspace:has(.vayuma-ai-fab) > .wrap { padding-right:96px; }
+@media(max-width:767px) {
+  body:not(.va-extension-dashboard):has(.vayuma-ai-fab) .vayuma-ai-fab { width:44px;height:44px;right:8px; }
+  body:not(.va-extension-dashboard):has(.vayuma-ai-fab) .vayuma-ai-fab svg { width:24px;height:24px; }
+  body:has(.vayuma-ai-fab) .va-simple-dashboard-grid > .va-main--content,
+  body:not(.va-extension-dashboard):has(.vayuma-ai-fab) .va-dash-layout > main { padding-right:44px; }
+  body.va-extension-workspace:has(.vayuma-ai-fab) > .wrap { padding-right:52px; }
+}
+body:has(.vayuma-ai-fab) main.container { padding-right:96px; }
+@media(max-width:767px) { body:has(.vayuma-ai-fab) main.container { padding-right:52px; } }
+body:has(.vayuma-ai-fab) main.va-profile-page { padding-right:96px; }
+@media(max-width:767px) { body:has(.vayuma-ai-fab) main.va-profile-page { padding-right:52px; } }

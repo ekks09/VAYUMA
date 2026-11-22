@@ -18,11 +18,17 @@ if (
     isset($_SESSION['user_id']) &&
     ($_SESSION['logged_in'] ?? false) === true
 ) {
-    $subscription = ensure_user_subscription(
-        $conn,
-        (int) $_SESSION['user_id'],
-        (string) ($_SESSION['role'] ?? '')
-    );
+    try {
+        $subscription = ensure_user_subscription(
+            $conn,
+            (int) $_SESSION['user_id'],
+            (string) ($_SESSION['role'] ?? '')
+        );
+    } catch (Throwable $exception) {
+        error_log('Subscription access check unavailable: ' . $exception->getMessage());
+        http_response_code(503);
+        exit('Subscription access is temporarily unavailable. Please try again later.');
+    }
 
     if (!$subscription || !subscription_is_accessible($subscription)) {
         header('Location: subscription.php');

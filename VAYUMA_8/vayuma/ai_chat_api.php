@@ -50,7 +50,7 @@ $_SESSION['ai_requests'] = array_values(array_filter($_SESSION['ai_requests'] ??
 if (count($_SESSION['ai_requests']) >= 20) respond(429, ['success'=>false,'error'=>'Session limit reached. Please try again later.']);
 $_SESSION['ai_requests'][] = $now;
 $raw = file_get_contents('php://input');
-if (strlen($raw) > 12000) respond(413, ['success'=>false,'error'=>'Request is too large.']);
+if (strlen($raw) > 40000) respond(413, ['success'=>false,'error'=>'Request is too large.']);
 $data = json_decode($raw, true);
 
 if (!is_array($data)) {
@@ -58,6 +58,11 @@ if (!is_array($data)) {
         'success' => false,
         'error' => 'Invalid request format.'
     ]);
+}
+// Older clients may still explicitly decline external processing. Never send
+// their message to a provider; the new disclosed chat omits this legacy field.
+if (array_key_exists('external_consent', $data) && $data['external_consent'] !== true) {
+    respond(400, ['success'=>false,'error'=>'Your message was not sent. Refresh to use the current AI chat.']);
 }
 
 if (!is_string($data['question'] ?? null) || !is_string($data['language'] ?? 'en')) respond(400, ['success'=>false,'error'=>'Invalid request format.']);
@@ -73,6 +78,15 @@ if ($question === '' || mb_strlen($question) > 2000) {
         'success' => false,
         'error' => 'Enter a question of up to 2000 characters.'
     ]);
+}
+
+// Only a short, client-held conversation is forwarded; no system/tool roles.
+$history = $data['history'] ?? [];
+if (!is_array($history) || !array_is_list($history) || count($history) > 6) respond(400, ['success'=>false,'error'=>'Conversation is too long. Clear chat and try again.']);
+foreach ($history as $turn) {
+    if (!is_array($turn) || !in_array($turn['role'] ?? null, ['user','assistant'], true) || !is_string($turn['content'] ?? null) || trim($turn['content']) === '' || mb_strlen($turn['content']) > 1000) {
+        respond(400, ['success'=>false,'error'=>'Invalid conversation. Clear chat and try again.']);
+    }
 }
 
 $context = []; $contextUsed = [];
@@ -100,27 +114,18 @@ if (($data['share_soil'] ?? false) === true) {
         else $contextUsed[]='No saved soil report available';
     } catch (Throwable $ignored) { $contextUsed[]='Soil history unavailable'; }
 }
-require_once __DIR__ . '/includes/agricultural_guidance.php';
-$rules = require __DIR__ . '/config/reviewed_crop_guidance.php';
-$evidence = vayuma_agricultural_explanation($context, $language, is_array($rules) ? $rules : []);
-require_once __DIR__ . '/includes/ai_platform_guide.php';
-$guide = vayuma_ai_guide($question, $language);
-if ($guide !== '') $evidence = ($language === 'sw' ? 'Mwongozo wa VAYUMA:' : 'VAYUMA platform guide:') . "\n" . $guide . "\n\n" . $evidence;
-if (($data['external_consent'] ?? false) !== true) {
-    respond(200,['success'=>true,'answer'=>$evidence,'language'=>$language,'mode'=>'rule_based','context_used'=>$contextUsed]);
-}
 $config = require __DIR__ . '/config/ai.php';
 $apiKey = trim((string)($config['api_key'] ?? ''));
 $model = trim((string)($config['model'] ?? ''));
-if (getenv('VAYUMA_AI_EXTERNAL_ENABLED') !== '1' || $apiKey === '' || $model === '') respond(503,['success'=>false,'error'=>'External AI is not enabled. Choose the rule-based helper to continue without external AI.']);
-if (!preg_match('/^[a-zA-Z0-9_.\/-]{1,150}$/D', $model) || preg_match('/[\r\n]/', $apiKey)) respond(503,['success'=>false,'error'=>'External AI configuration is invalid. Use the free helper or contact an administrator.']);
+if (getenv('VAYUMA_AI_EXTERNAL_ENABLED') !== '1' || $apiKey === '' || $model === '') respond(503,['success'=>false,'error'=>'VAYUMA AI is not available right now. Please try again later.']);
+if (!preg_match('/^[a-zA-Z0-9_.\/-]{1,150}$/D', $model) || preg_match('/[\r\n]/', $apiKey)) respond(503,['success'=>false,'error'=>'VAYUMA AI is not available right now. Please try again later.']);
 require_once __DIR__.'/includes/nvidia_advisor.php';
-try { $vayumaDbReadinessProbe = true; require_once __DIR__.'/config/db.php'; if (!isset($conn) || !$conn) throw new RuntimeException(); } catch (Throwable $ignored) { respond(503,['success'=>false,'error'=>'AI usage control is unavailable. Use the free helper.']); }
-if (!vayuma_reserve_ai_request($conn, (int)$_SESSION['user_id'])) respond(503,['success'=>false,'error'=>'AI daily limit reached or usage control is unavailable. Choose the rule-based helper to continue without external AI.']);
+try { $vayumaDbReadinessProbe = true; require_once __DIR__.'/config/db.php'; if (!isset($conn) || !$conn) throw new RuntimeException(); } catch (Throwable $ignored) { respond(503,['success'=>false,'error'=>'VAYUMA AI is temporarily unavailable. Please try again later.']); }
+if (!vayuma_reserve_ai_request($conn, (int)$_SESSION['user_id'])) respond(503,['success'=>false,'error'=>'AI daily limit reached or usage control is unavailable. Please try again later.']);
 // Close the session before network I/O; all context has already been selected and copied.
 session_write_close();
 $providerEvidence = vayuma_nvidia_minimized_evidence($context, $language);
-$payload = vayuma_nvidia_payload($model, $question, $language, $providerEvidence);
+$payload = vayuma_nvidia_payload($model, $question, $language, $providerEvidence, $history);
 $ch=curl_init('https://integrate.api.nvidia.com/v1/chat/completions');
 curl_setopt_array($ch,[CURLOPT_POST=>true,CURLOPT_RETURNTRANSFER=>true,CURLOPT_FOLLOWLOCATION=>false,CURLOPT_PROTOCOLS=>CURLPROTO_HTTPS,CURLOPT_HTTPHEADER=>['Content-Type: application/json','Authorization: Bearer '.$apiKey],CURLOPT_POSTFIELDS=>json_encode($payload,JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE),CURLOPT_CONNECTTIMEOUT=>8,CURLOPT_TIMEOUT=>(int)$config['timeout']]);
 $response=curl_exec($ch); $status=(int)curl_getinfo($ch,CURLINFO_HTTP_CODE); curl_close($ch);
@@ -128,8 +133,6 @@ $result = is_string($response) && strlen($response) <= 200000 ? json_decode($res
 $answer = ($status>=200 && $status<300) ? vayuma_nvidia_answer($result) : null;
 if ($answer === null) {
     error_log('VAYUMA NVIDIA AI unavailable or incomplete. HTTP status '.$status);
-    $notice = $language === 'sw' ? 'AI haipatikani kwa sasa. Huu ni mwongozo wa bure wa kanuni, si AI.' : 'AI is unavailable right now. The following is the free rule-based helper, not AI.';
-    respond(200,['success'=>true,'answer'=>$notice."\n\n".$evidence,'language'=>$language,'mode'=>'rule_based_fallback','context_used'=>$contextUsed]);
+    respond(503,['success'=>false,'error'=>'VAYUMA AI is temporarily unavailable. Please try again later.']);
 }
-$notice=$language==='sw' ? 'Jibu la AI linaweza kukosea. Halithibitishwi na halichukui nafasi ya mtaalamu. Angalia taarifa na vyanzo vilivyo hapa chini.' : 'AI can make mistakes. This answer is not verified and does not replace a professional. Check the evidence and sources below.';
-respond(200,['success'=>true,'answer'=>$notice."\n\n".$answer."\n\n".($language==='sw'?'Taarifa zilizochaguliwa na vyanzo:':'Selected evidence and sources:')."\n".$evidence,'language'=>$language,'mode'=>'ai_support','context_used'=>$contextUsed]);
+respond(200,['success'=>true,'answer'=>$answer,'language'=>$language,'mode'=>'ai_support','context_used'=>$contextUsed]);

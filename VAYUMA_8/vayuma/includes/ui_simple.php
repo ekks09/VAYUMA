@@ -39,11 +39,12 @@ $platformHomeUrl = $platformHomeUrl ?? vayuma_platform_home_route();
   <!-- Skip to content link for keyboard users -->
   <a href="#va-main-content" class="va-skip-link">Skip to main content</a>
 <?php require_once __DIR__ . '/language.php'; ?>
-<?php if (empty($dashboardShell)) vayuma_language_selector(); ?>
+<?php $topbarLanguage = empty($dashboardShell); ?>
 
 <?php require __DIR__ . '/dashboard_topbar.php'; ?>
 
 <?php if (!$simpleShellOnly): ?>
 <main class="va-page-main" id="va-main-content">
   <div class="va-container">
+  <?php if (empty($dashboardShell) && empty($hideWorkspaceBack)) { $workspaceBackMenu = false; require __DIR__ . '/workspace_back.php'; } ?>
 <?php endif; ?>

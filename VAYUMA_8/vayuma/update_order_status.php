@@ -42,14 +42,14 @@ try {
     $stmt->close();
 
     if (!$order) {
-        throw new RuntimeException('Order not found.');
+        throw new DomainException('Order not found.');
     }
     if ($order['status'] !== 'pending') {
-        throw new RuntimeException('This order has already been processed.');
+        throw new DomainException('This order has already been processed.');
     }
     if ($status === 'accepted') {
         if ($order['listing_status'] !== 'available' || (float)$order['quantity'] > (float)$order['available_quantity']) {
-            throw new RuntimeException('There is not enough produce available to accept this request.');
+            throw new DomainException('There is not enough produce available to accept this request.');
         }
 
         $stmt = $conn->prepare(
@@ -62,7 +62,7 @@ try {
         $listingUpdated = $stmt->affected_rows === 1;
         $stmt->close();
         if (!$listingUpdated) {
-            throw new RuntimeException('There is not enough produce available to accept this request.');
+            throw new DomainException('There is not enough produce available to accept this request.');
         }
     }
 
@@ -72,7 +72,7 @@ try {
     $orderUpdated = $stmt->affected_rows === 1;
     $stmt->close();
     if (!$orderUpdated) {
-        throw new RuntimeException('This order has already been processed.');
+        throw new DomainException('This order has already been processed.');
     }
 
     $conn->commit();
@@ -82,15 +82,15 @@ try {
         : 'The order request was declined.';
     $_SESSION['seller_order_notice_type'] = 'success';
 } catch (Throwable $exception) {
-    error_log('Seller order update failed: ' . $exception->getMessage());
+    error_log('VAYUMA seller order update unavailable.');
     if ($transactionStarted) {
         try {
             $conn->rollback();
         } catch (Throwable $rollbackException) {
-            error_log('Seller order rollback failed: ' . $rollbackException->getMessage());
+            error_log('VAYUMA seller order rollback unavailable.');
         }
     }
-    $_SESSION['seller_order_notice'] = $exception instanceof RuntimeException
+    $_SESSION['seller_order_notice'] = $exception instanceof DomainException
         ? $exception->getMessage()
         : 'The order could not be updated right now. Please try again.';
     $_SESSION['seller_order_notice_type'] = 'error';

@@ -21,8 +21,9 @@ test('dashboard shell and category navigation use the shared components', () => 
     assert.match(read(file), /dashboard_generic_sidebar\.php/);
   }
   assert.match(read('includes/header_user_menu.php'), /href="role\.php"/);
-  assert.match(read('includes/profile_navigation.php'), /href="role\.php"/);
-  assert.match(read('role.php'), /vayuma_dashboard_return_route\(\)/);
+  assert.match(read('includes/profile_navigation.php'), /header_user_menu\.php/);
+  assert.match(read('role.php'), /workspace_back\.php/);
+  assert.match(read('includes/workspace_back.php'), /vayuma_workspace_return_navigation/);
 });
 
 test('category change remains authenticated, CSRF protected and restricted during active paid access', () => {

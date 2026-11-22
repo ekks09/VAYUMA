@@ -22,7 +22,8 @@ if ($reference === '') {
 try {
     $data = paystack_verify($reference);
 } catch (Throwable $e) {
-    $_SESSION['paystack_error'] = 'Paystack verification failed: ' . $e->getMessage();
+    error_log('VAYUMA payment verification unavailable.');
+    $_SESSION['paystack_error'] = 'We could not confirm the payment. Check its status before trying again.';
     header('Location: payment.php?order_id=' . $orderId);
     exit;
 }
@@ -89,7 +90,8 @@ try {
     $conn->commit();
 } catch (Throwable $e) {
     $conn->rollback();
-    $_SESSION['paystack_error'] = 'Payment could not be finalized: ' . $e->getMessage();
+    error_log('VAYUMA payment finalization unavailable.');
+    $_SESSION['paystack_error'] = 'We could not finalize the payment. Check its status before trying again.';
     header('Location: payment.php?order_id=' . $orderId);
     exit;
 }

@@ -79,6 +79,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
                     <p><?= htmlspecialchars(t('login_intro'), ENT_QUOTES, 'UTF-8') ?></p>
                 </div>
 
+                <?php if (($_GET['reset'] ?? '') === '1'): ?><div class="login-success" role="status"><?= htmlspecialchars($current_language === 'sw' ? 'Nenosiri limebadilishwa. Tafadhali ingia.' : 'Your password was changed. Please sign in.', ENT_QUOTES, 'UTF-8') ?></div><?php endif; ?>
                 <?php if (!empty($_SESSION['registration_success'])): unset($_SESSION['registration_success']); ?>
                     <div class="login-success" role="status"><?= htmlspecialchars($current_language === 'sw' ? 'Akaunti imefunguliwa. Ingia ili kuchagua aina yako na kukamilisha wasifu.' : 'Account created. Sign in to choose your category and complete your profile.', ENT_QUOTES, 'UTF-8') ?></div>
                 <?php endif; ?>

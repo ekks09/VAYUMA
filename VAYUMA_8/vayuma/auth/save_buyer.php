@@ -36,7 +36,7 @@ if($fullName===''||$buyerType===''||$location===''||$countyId<1||$preferred===''
  header('Location: ../buyer_profile.php');exit;
 }
 $c=$conn->prepare("SELECT name FROM administrative_units WHERE id=? AND unit_type='county' AND is_active=1 LIMIT 1");
-if(!$c){http_response_code(500);exit('Could not validate county: '.$conn->error);}
+if(!$c){http_response_code(503);error_log('VAYUMA profile county validation unavailable.');exit('Unable to check the county right now. Please return to your profile and try again.');}
 $c->bind_param('i',$countyId);$c->execute();$countyRow=$c->get_result()->fetch_assoc();$c->close();
 if(!$countyRow){
  $_SESSION['buyer_profile_error']='Please select a valid county from the suggestions.';
@@ -68,4 +68,4 @@ try{
  $stmt->close();
  $_SESSION['full_name']=$fullName;
  header('Location: ../buyer_dashboard.php?profile=saved');exit;
-}catch(Throwable $e){http_response_code(500);error_log('VAYUMA buyer profile save: '.$e->getMessage());exit('Unable to save buyer profile. Please check the server error log or contact support.');}
+}catch(Throwable $e){http_response_code(500);error_log('VAYUMA buyer profile save unavailable.');exit('Unable to save buyer profile. Please check the server error log or contact support.');}

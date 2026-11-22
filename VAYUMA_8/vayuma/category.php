@@ -28,15 +28,14 @@ $stmt->execute();
 $category = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
-if (!$category) {
+if (!$category || !$category['is_active']) {
     http_response_code(404);
-    echo '<!doctype html><html><head><title>Category Not Found | VAYUMA</title></head><body><h1>Category Not Found</h1><p>The requested category does not exist.</p><a href="market_connect.php">Browse Marketplace</a></body></html>';
-    exit;
-}
-
-if (!$category['is_active']) {
-    http_response_code(404);
-    echo '<!doctype html><html><head><title>Category Unavailable | VAYUMA</title></head><body><h1>Category Unavailable</h1><p>This category is currently inactive.</p><a href="market_connect.php">Browse Marketplace</a></body></html>';
+    $message = !$category ? 'The requested category does not exist.' : 'This category is currently inactive.';
+    ?>
+    <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Category unavailable | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css"><link rel="stylesheet" href="assets/css/vayuma-ui.css?v=2"><link rel="stylesheet" href="frontend/css/user-menu.css?v=3"></head><body class="vy-denied-page">
+    <?php require __DIR__ . '/includes/workspace_back.php'; ?>
+    <main class="vy-unavailable"><h1>Category unavailable</h1><p><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></p><a href="market_connect.php">Browse Marketplace</a></main></body></html>
+    <?php
     exit;
 }
 
@@ -114,6 +113,7 @@ function cat_h($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
 </head>
 <body>
 <?php vayuma_language_selector(); ?>
+<?php require __DIR__ . '/includes/workspace_back.php'; ?>
 
 <div class="va-category-page">
     <header class="va-category-header">

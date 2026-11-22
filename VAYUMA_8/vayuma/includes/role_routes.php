@@ -69,3 +69,23 @@ function vayuma_profile_hub_return_route($candidate): string
     if ($candidate === 'subscription.php') return 'subscription.php';
     return $dashboard;
 }
+
+/** Resolve only explicitly allowed local pages; all pages retain their own access checks. */
+function vayuma_workspace_return_navigation($candidate): array
+{
+    $dashboard = vayuma_dashboard_return_route();
+    if ($dashboard === 'login.php') return [$dashboard, 'Back to login'];
+    $allowed = [
+        'subscription.php' => 'Back to subscription',
+        'profile.php' => 'Back to profile & settings',
+        'market_connect.php' => 'Back to marketplace',
+        'my_orders.php' => 'Back to my orders',
+        'stakeholder_offers.php' => 'Back to exchange',
+        'stakeholder_requests.php' => 'Back to requests',
+        'stakeholder_directory.php' => 'Back to directory',
+        'government_programmes.php' => 'Back to programmes',
+        'transport_deliveries.php' => 'Back to deliveries',
+    ];
+    if (is_string($candidate) && isset($allowed[$candidate])) return [$candidate, $allowed[$candidate]];
+    return [$dashboard, $dashboard === 'role.php' ? 'Back to account category' : 'Back to dashboard'];
+}

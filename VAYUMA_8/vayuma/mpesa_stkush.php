@@ -31,7 +31,8 @@ if ($orderId === false || $orderId === null) {
 try {
     $phone = normalize_mpesa_phone(trim((string)($_POST['phone'] ?? '')));
 } catch (Throwable $exception) {
-    $_SESSION['mpesa_error'] = $exception->getMessage();
+    error_log('VAYUMA payment request unavailable.');
+    $_SESSION['mpesa_error'] = 'We could not complete the payment request. Check its status before trying again.';
     header('Location: payment.php?order_id=' . $orderId);
     exit;
 }
@@ -112,7 +113,8 @@ try {
     if ($transactionOpen) {
         $conn->rollback();
     }
-    $_SESSION['mpesa_error'] = $exception->getMessage();
+    error_log('VAYUMA payment request unavailable.');
+    $_SESSION['mpesa_error'] = 'We could not complete the payment request. Check its status before trying again.';
     header('Location: payment.php?order_id=' . $orderId);
     exit;
 }
@@ -142,7 +144,7 @@ try {
     header('Location: mpesa_pending.php?order_id=' . $orderId);
     exit;
 } catch (Throwable $exception) {
-    $message = substr($exception->getMessage(), 0, 255);
+    $message = 'Payment request could not be completed. Check its status before trying again.';
     $stmt = $conn->prepare(
         "UPDATE payments SET status='failed', result_description=?
          WHERE id=? AND order_id=? AND status='pending'"
@@ -150,7 +152,8 @@ try {
     $stmt->bind_param('sii', $message, $paymentId, $orderId);
     $stmt->execute();
     $stmt->close();
-    $_SESSION['mpesa_error'] = $exception->getMessage();
+    error_log('VAYUMA payment request unavailable.');
+    $_SESSION['mpesa_error'] = 'We could not complete the payment request. Check its status before trying again.';
     header('Location: payment.php?order_id=' . $orderId);
     exit;
 }

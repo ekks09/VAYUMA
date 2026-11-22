@@ -66,7 +66,7 @@ function profile_value(array $profile, string $field, string $fallback = ""): st
   .va-form-full { grid-column: auto; }
 }
 </style></head><body class="va-profile-document">
-<?php vayuma_language_selector(); require __DIR__ . '/includes/profile_navigation.php'; ?><main class="va-form-page">
+<?php require __DIR__ . '/includes/profile_navigation.php'; ?><main class="va-form-page">
 <header class="topbar"><div class="va-form-brand">VAYUMA<small>SMART ECOSYSTEM</small></div></header>
 <section class="hero"><div class="role-icon"><svg class="va-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg#<?= htmlspecialchars($icon, ENT_QUOTES, "UTF-8") ?>"></use></svg></div><div><div class="eyebrow">STEP 3 OF 3 · PROFILE SETUP</div><h1><?= htmlspecialchars($role_name, ENT_QUOTES, "UTF-8") ?></h1><p><?= htmlspecialchars($tagline, ENT_QUOTES, "UTF-8") ?></p></div></section>
 <div class="layout"><aside class="steps"><h2>Your VAYUMA journey</h2><div class="step"><div class="number"><svg class="va-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-checkmark"></use></svg></div><div><strong>Create account</strong><span>Your VAYUMA account is ready.</span></div></div><div class="step"><div class="number"><svg class="va-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-checkmark"></use></svg></div><div><strong>Choose role</strong><span><?= htmlspecialchars($role_name, ENT_QUOTES, "UTF-8") ?></span></div></div><div class="step active"><div class="number">3</div><div><strong>Complete profile</strong><span>Tell partners how to connect with you.</span></div></div><div class="privacy">Your details support trusted VAYUMA connections.</div></aside>

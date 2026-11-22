@@ -34,7 +34,9 @@ $stmt->close();
 
 if (!$p) {
     http_response_code(404);
-    echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Receipt unavailable | VAYUMA</title></head><body><main><h1>Receipt unavailable</h1><p>This receipt is unavailable or does not belong to your account.</p><a href="subscription.php">Back to subscription</a></main></body></html>';
+    echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Receipt unavailable | VAYUMA</title><link rel="stylesheet" href="frontend/css/tokens.css"><link rel="stylesheet" href="assets/css/vayuma-ui.css?v=2"><link rel="stylesheet" href="frontend/css/user-menu.css?v=3"></head><body class="vy-denied-page">';
+    require __DIR__ . '/includes/workspace_back.php';
+    echo '<main class="vy-unavailable"><h1>Receipt unavailable</h1><p>This receipt is unavailable or does not belong to your account.</p><a href="subscription.php">Back to subscription</a></main></body></html>';
     exit;
 }
 
@@ -76,7 +78,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
     </aside>
     <?php endif; ?>
 
-    <div class="va-main--content">
+    <div class="va-main--content"><?php $workspaceBackMenu = false; require __DIR__ . '/includes/workspace_back.php'; ?>
       <div class="va-receipt va-mb-6">
         <div class="va-receipt--header">
           <div class="va-d-flex va-justify-between va-items-center va-mb-4">

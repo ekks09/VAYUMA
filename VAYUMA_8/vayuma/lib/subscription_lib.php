@@ -3,9 +3,10 @@
 function subscription_plan_for_role(mysqli $conn, string $role, bool $lock = false): ?array
 {
     $stmt = $conn->prepare('SELECT * FROM subscription_plans WHERE role_key=? AND is_active=1 LIMIT 1' . ($lock ? ' FOR UPDATE' : ''));
+    if (!$stmt) throw new RuntimeException('Subscription plan lookup unavailable');
     $stmt->bind_param('s', $role);
-    $stmt->execute();
-    $plan = $stmt->get_result()->fetch_assoc();
+    if (!$stmt->execute() || !($result = $stmt->get_result())) throw new RuntimeException('Subscription plan lookup unavailable');
+    $plan = $result->fetch_assoc();
     $stmt->close();
     return $plan ?: null;
 }
@@ -19,9 +20,10 @@ function subscription_for_user(mysqli $conn, int $userId): ?array
          INNER JOIN subscription_plans p ON p.id=s.plan_id
          WHERE s.user_id=? LIMIT 1'
     );
+    if (!$stmt) throw new RuntimeException('Subscription lookup unavailable');
     $stmt->bind_param('i', $userId);
-    $stmt->execute();
-    $row = $stmt->get_result()->fetch_assoc();
+    if (!$stmt->execute() || !($result = $stmt->get_result())) throw new RuntimeException('Subscription lookup unavailable');
+    $row = $result->fetch_assoc();
     $stmt->close();
 
     // Expiration and its history are one atomic transition. Re-check the
@@ -35,22 +37,25 @@ function subscription_for_user(mysqli $conn, int $userId): ?array
         if (!$conn->begin_transaction()) throw new RuntimeException('Subscription expiry transaction failed');
         try {
             $lock = $conn->prepare('SELECT status, expires_at, grace_period_ends_at FROM user_subscriptions WHERE id=? FOR UPDATE');
+            if (!$lock) throw new RuntimeException('Subscription expiry lookup unavailable');
             $lock->bind_param('i', $id);
-            $lock->execute();
-            $current = $lock->get_result()->fetch_assoc();
+            if (!$lock->execute() || !($result = $lock->get_result())) throw new RuntimeException('Subscription expiry lookup unavailable');
+            $current = $result->fetch_assoc();
             $lock->close();
             if (!$current) {
-                $conn->commit();
+                if (!$conn->commit()) throw new RuntimeException('Subscription expiry commit failed');
                 return null;
             }
             if ($current['status'] === $observedStatus && ($current[$deadlineField] ?? null) === $observedDeadline
                 && !empty($current[$deadlineField]) && strtotime($current[$deadlineField]) < time()) {
                 $update = $conn->prepare("UPDATE user_subscriptions SET status='expired', updated_at=NOW() WHERE id=? AND status=?");
+                if (!$update) throw new RuntimeException('Subscription expiry update unavailable');
                 $update->bind_param('is', $id, $observedStatus);
                 if (!$update->execute() || $update->affected_rows !== 1) throw new RuntimeException('Subscription expiry update failed');
                 $update->close();
                 $reason = $observedStatus === 'active' ? 'Subscription period ended.' : 'Subscription grace period ended unpaid.';
                 $history = $conn->prepare("INSERT INTO subscription_status_history (user_membership_id, old_status, new_status, reason, source) VALUES (?, ?, 'expired', ?, 'subscription_check')");
+                if (!$history) throw new RuntimeException('Subscription history unavailable');
                 $history->bind_param('iss', $id, $observedStatus, $reason);
                 if (!$history->execute()) throw new RuntimeException('Subscription expiry history failed');
                 $history->close();
@@ -72,7 +77,7 @@ function subscription_for_user(mysqli $conn, int $userId): ?array
 
 function ensure_user_subscription(mysqli $conn, int $userId, string $role): ?array
 {
-    $conn->begin_transaction();
+    if (!$conn->begin_transaction()) throw new RuntimeException('Subscription transaction unavailable');
     try {
         // Lock the plan first, in the same order as admin reconciliation.
         $plan = subscription_plan_for_role($conn, $role, true);
@@ -86,14 +91,15 @@ function ensure_user_subscription(mysqli $conn, int $userId, string $role): ?arr
              INNER JOIN subscription_plans p ON p.id=s.plan_id
              WHERE s.user_id=? LIMIT 1 FOR UPDATE'
         );
+        if (!$stmt) throw new RuntimeException('Subscription lookup unavailable');
         $stmt->bind_param('i', $userId);
-        $stmt->execute();
-        $current = $stmt->get_result()->fetch_assoc();
+        if (!$stmt->execute() || !($result = $stmt->get_result())) throw new RuntimeException('Subscription lookup unavailable');
+        $current = $result->fetch_assoc();
         $stmt->close();
 
 
         if ($current && ($current['role_key'] ?? '') === $role) {
-            $conn->commit();
+            if (!$conn->commit()) throw new RuntimeException('Subscription commit failed');
             return subscription_for_user($conn, $userId);
         }
 
@@ -111,6 +117,7 @@ function ensure_user_subscription(mysqli $conn, int $userId, string $role): ?arr
                      billing_interval=?, negotiated_approved=?, updated_at=NOW()
                  WHERE id=?'
             );
+            if (!$stmt) throw new RuntimeException('Subscription update unavailable');
             $stmt->bind_param('issii', $plan['id'], $status, $interval, $approved, $current['id']);
         } else {
             $stmt = $conn->prepare(
@@ -118,14 +125,15 @@ function ensure_user_subscription(mysqli $conn, int $userId, string $role): ?arr
                  (user_id, plan_id, status, billing_interval, negotiated_approved)
                  VALUES (?,?,?,?,?)'
             );
+            if (!$stmt) throw new RuntimeException('Subscription creation unavailable');
             $stmt->bind_param('iissi', $userId, $plan['id'], $status, $interval, $approved);
         }
-        $stmt->execute();
+        if (!$stmt->execute()) throw new RuntimeException('Subscription save failed');
         $stmt->close();
-        $conn->commit();
+        if (!$conn->commit()) throw new RuntimeException('Subscription commit failed');
         return subscription_for_user($conn, $userId);
     } catch (Throwable $e) {
-        $conn->rollback();
+        try { $conn->rollback(); } catch (Throwable $ignored) {}
         throw $e;
     }
 }

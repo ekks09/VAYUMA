@@ -83,7 +83,7 @@ function transport_h($value) { return htmlspecialchars((string)$value, ENT_QUOTE
 </style>
 </head>
 <body class="va-profile-document">
-<?php vayuma_language_selector(); require __DIR__ . '/includes/profile_navigation.php'; ?>
+<?php require __DIR__ . '/includes/profile_navigation.php'; ?>
 <main class="va-form-page">
 <div class="va-form-brand">VAYUMA<small>SMART ECOSYSTEM</small></div>
 <h1><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-transport"/></svg> Transport Provider Profile</h1>

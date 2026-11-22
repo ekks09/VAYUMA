@@ -88,7 +88,8 @@ try {
     if (!empty($transactionOpen)) {
         $conn->rollback();
     }
-    $_SESSION['subscription_error'] = $exception->getMessage();
+    error_log('VAYUMA subscription payment unavailable.');
+    $_SESSION['subscription_error'] = 'We could not complete the payment request. Check its status before trying again.';
     header('Location: subscription.php');
     exit;
 }
@@ -115,12 +116,13 @@ try {
     header('Location: subscription_pending.php?payment_id=' . $paymentId);
     exit;
 } catch (Throwable $exception) {
-    $message = substr($exception->getMessage(), 0, 255);
+    $message = 'Payment request could not be completed. Check its status before trying again.';
     $stmt = $conn->prepare("UPDATE subscription_payments SET status='failed', result_description=? WHERE id=? AND status='pending'");
     $stmt->bind_param('si', $message, $paymentId);
     $stmt->execute();
     $stmt->close();
-    $_SESSION['subscription_error'] = $exception->getMessage();
+    error_log('VAYUMA subscription payment unavailable.');
+    $_SESSION['subscription_error'] = 'We could not complete the payment request. Check its status before trying again.';
     header('Location: subscription.php');
     exit;
 }

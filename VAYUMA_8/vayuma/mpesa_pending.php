@@ -64,7 +64,7 @@ $reference = trim((string)($order['transaction_reference'] ?? ''));
 </head>
 <body>
 <?php vayuma_language_selector(); ?>
-<main class="va-payment-status" id="va-main-content">
+<main class="va-payment-status" id="va-main-content"><?php require __DIR__ . '/includes/workspace_back.php'; ?>
   <section class="va-payment-status__card" aria-live="polite">
     <?php if ($loadError): ?>
       <h1>Payment status unavailable</h1>

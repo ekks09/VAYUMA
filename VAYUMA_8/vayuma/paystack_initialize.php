@@ -126,7 +126,8 @@ try {
     $conn->commit();
 } catch (Throwable $e) {
     $conn->rollback();
-    $_SESSION['paystack_error'] = $e->getMessage();
+    error_log('VAYUMA payment initialization unavailable.');
+    $_SESSION['paystack_error'] = 'We could not complete that payment request. Check its status before trying again.';
     header('Location: paystack_payment.php?order_id=' . $orderId);
     exit;
 }
@@ -190,7 +191,8 @@ try {
     } catch (Throwable $e2) {
         $conn->rollback();
     }
-    $_SESSION['paystack_error'] = $e->getMessage();
+    error_log('VAYUMA payment initialization unavailable.');
+    $_SESSION['paystack_error'] = 'We could not complete that payment request. Check its status before trying again.';
     header('Location: paystack_payment.php?order_id=' . $orderId);
     exit;
 }

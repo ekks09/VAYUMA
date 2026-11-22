@@ -50,10 +50,11 @@ try {
         throw new mysqli_sql_exception('Unable to prepare cooperative dashboard metrics.');
     }
     $statsStmt->bind_param('iii', $userId, $userId, $userId);
-    $statsStmt->execute();
-    $cooperativeStats = $statsStmt->get_result()->fetch_assoc();
+    if (!$statsStmt->execute() || !($result = $statsStmt->get_result())) throw new RuntimeException('Cooperative metrics unavailable');
+    $cooperativeStats = $result->fetch_assoc();
+    if (!$cooperativeStats) throw new RuntimeException('Cooperative metrics unavailable');
     $statsStmt->close();
-} catch (mysqli_sql_exception $exception) {
+} catch (Throwable $exception) {
     error_log('Cooperative dashboard metrics unavailable: ' . $exception->getMessage());
 }
 
@@ -187,13 +188,18 @@ try {
     </a>
 
 
-    <a class="va-dash-sidebar--nav-item" href="auth/logout.php" class="nav-item">
-        <span class="va-dash-sidebar--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-logout"/></svg></span>
-        Logout
-    </a>
+
 
 
     <?php vayuma_language_selector(); ?>
+
+    <div class="va-sidebar--bottom" aria-label="Account utilities">
+      <a class="va-dash-sidebar--nav-item" href="subscription.php"><svg class="va-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-subscription"/></svg> <span>Subscription</span></a>
+      <a class="va-dash-sidebar--nav-item" href="auth/logout.php">
+        <span class="va-dash-sidebar--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-logout"/></svg></span>
+        Logout
+    </a>
+    </div>
 </aside>
 
 
@@ -208,7 +214,7 @@ try {
 
 
         <div class="va-dash-search">
-            <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg> &nbsp; Search VAYUMA
+            <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg> &nbsp; Search VAYUMA · Planned
         </div>
 
 
@@ -340,8 +346,7 @@ try {
                     </strong>
 
                     <span>
-                        Manage farmers and members associated
-                        with your cooperative.
+                        Member management is planned and not available yet.
                     </span>
 
                 </div>
@@ -362,8 +367,7 @@ try {
                     </strong>
 
                     <span>
-                        Record and manage agricultural produce
-                        available from cooperative members.
+                        Manage produce listings published by your account.
                     </span>
 
                 </div>
@@ -384,8 +388,7 @@ try {
                     </strong>
 
                     <span>
-                        Connect cooperative produce with verified
-                        buyers through VAYUMA.
+                        Explore the marketplace and connect with agricultural buyers.
                     </span>
 
                 </div>
@@ -406,8 +409,7 @@ try {
                     </strong>
 
                     <span>
-                        Organize transportation of produce from
-                        farms to markets and buyers.
+                        Transport coordination is planned and not available yet.
                     </span>
 
                 </div>
@@ -428,8 +430,7 @@ try {
                     </strong>
 
                     <span>
-                        Track production, members, sales and
-                        market performance.
+                        Cooperative reporting is planned and not available yet.
                     </span>
 
                 </div>
@@ -444,9 +445,7 @@ try {
                 </h3>
 
                 <p>
-                    VAYUMA helps cooperatives aggregate farmer
-                    produce, access markets, coordinate logistics
-                    and improve agricultural decision-making.
+                    Use Market Connect and your produce listings. Member, transport and reporting tools are planned.
                 </p>
 
             </div>

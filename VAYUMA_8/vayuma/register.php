@@ -123,8 +123,8 @@ if ($current_language === 'sw') {
 
                 <?php if (!empty($error)): ?>
 
-                    <div class="form-alert">
-                        <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg> <?php echo htmlspecialchars($error); ?>
+                    <div class="form-alert" role="alert">
+                        <?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?>
                     </div>
 
                 <?php endif; ?>

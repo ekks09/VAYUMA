@@ -6,15 +6,19 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="VAYUMA">
 <link rel="apple-touch-icon" href="frontend/images/pwa/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/css/vayuma-ui.css?v=3">
 <link rel="stylesheet" href="frontend/css/pwa-install.css?v=install-1">
 <script src="frontend/js/pwa.js?v=install-2" defer></script>
-<link rel="stylesheet" href="frontend/css/user-menu.css?v=2">
+<link rel="stylesheet" href="frontend/css/user-menu.css?v=3">
 <script src="frontend/js/user-menu.js?v=1" defer></script>
+<script src="frontend/js/feedback.js?v=1" defer></script>
 <?php
-// Only show the shortcut in signed-in workspaces, not authentication, admin or the assistant itself.
-$aiShortcutPages = ['dashboard.php','stakeholder_dashboard.php','farmer_dashboard.php','buyer_dashboard.php','consumer_dashboard.php','extension_dashboard.php','veterinary_officer_dashboard.php','agribusiness_dashboard.php','agricultural_service_provider_dashboard.php','cooperative_dashboard.php','finance_dashboard.php','government_officer_dashboard.php','input_supplier_dashboard.php','insurance_provider_dashboard.php','manufacturer_dashboard.php','ngo_partner_dashboard.php','researcher_dashboard.php','retailer_dashboard.php','transport_dashboard.php','warehouse_provider_dashboard.php','climate.php','soil_analysis.php','soil_records.php','market_connect.php','budget_planner.php'];
-if (($_SESSION['logged_in'] ?? false) === true && isset($_SESSION['user_id']) && in_array(basename($_SERVER['SCRIPT_NAME'] ?? ''), $aiShortcutPages, true)):
+// The launcher is available in signed-in workspaces; the API still enforces
+// profile and subscription access. The full AI page mounts its own instance.
+if (($_SESSION['logged_in'] ?? false) === true && isset($_SESSION['user_id']) && basename($_SERVER['SCRIPT_NAME'] ?? '') !== 'ai_advisor.php'):
+    require_once __DIR__ . '/csrf.php';
 ?>
-<link rel="stylesheet" href="frontend/css/ai-shortcut.css?v=1">
-<script src="frontend/js/ai-shortcut.js?v=1" defer></script>
+<meta name="vayuma-ai-csrf" content="<?= htmlspecialchars($_SESSION['vayuma_csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
+<link rel="stylesheet" href="frontend/css/ai-chat.css?v=2">
+<script src="frontend/js/ai-chat.js?v=2" defer></script>
 <?php endif; ?>

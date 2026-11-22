@@ -24,8 +24,8 @@ function vayuma_onboarding_lock_phone($conn, string $phone): void
 function vayuma_onboarding_unlock_attempt($conn, int $staffId, string $supplied): string
 {
     $configured = getenv('VAYUMA_STAFF_ONBOARD_KEY');
-    $expected = $configured === false ? '+254vayuma' : $configured;
-    if ($expected === '') throw new RuntimeException('Staff unlock unavailable');
+    if (!is_string($configured) || $configured === '') throw new RuntimeException('Staff unlock unavailable');
+    $expected = $configured;
     if (!$conn->begin_transaction()) throw new RuntimeException('Staff unlock unavailable');
     try {
         $stmt = $conn->prepare('INSERT INTO onboarding_unlock_limits (user_id, failures, window_started_at) VALUES (?, 0, UTC_TIMESTAMP()) ON DUPLICATE KEY UPDATE user_id=VALUES(user_id)');

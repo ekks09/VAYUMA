@@ -89,5 +89,6 @@ try {
 } catch (Throwable $e) {
     $conn->rollback();
     http_response_code(500);
-    echo json_encode(['ok' => false, 'error' => $e->getMessage()]);
+    error_log('VAYUMA saved item update unavailable.');
+    echo json_encode(['ok' => false, 'error' => 'Unable to update saved items. Please try again.']);
 }

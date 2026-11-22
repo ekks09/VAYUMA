@@ -1,9 +1,10 @@
 /* Only the offline document and explicitly listed public files may be cached. */
-const CACHE = 'vayuma-public-v8';
+const CACHE = 'vayuma-public-v15';
 const ROOT = new URL('./', self.registration.scope);
 const OFFLINE = new URL('offline.html', ROOT).href;
 const PUBLIC_FILES = new Map([
   ['assets/css/dashboard-layout.css', 'text/css'],
+  ['assets/css/vayuma-ui.css', 'text/css'],
   ['frontend/css/agriculture-tools.css', 'text/css'],
   ['frontend/css/extension-workspace.css', 'text/css'],
   ['frontend/css/profile_forms.css', 'text/css'],
@@ -11,6 +12,7 @@ const PUBLIC_FILES = new Map([
   ['frontend/css/dashboard-shell.css', 'text/css'],
   ['frontend/css/dashboard-shell-transitions.css', 'text/css'],
   ['frontend/css/user-menu.css', 'text/css'],
+  ['frontend/css/ai-chat.css', 'text/css'],
   ['frontend/css/profile-hub.css', 'text/css'],
   ['frontend/css/tokens.css', 'text/css'],
   ['frontend/css/components.css', 'text/css'],
@@ -22,6 +24,10 @@ const PUBLIC_FILES = new Map([
   ['frontend/js/climate-guidance.js', 'javascript'],
   ['frontend/js/pwa.js', 'javascript'],
   ['frontend/js/user-menu.js', 'javascript'],
+  ['frontend/js/feedback.js', 'javascript'],
+  ['frontend/js/ai-chat.js', 'javascript'],
+  ['assets/js/onboarding-workspace.js', 'javascript'],
+  ['frontend/css/onboarding.css', 'text/css'],
   ['frontend/js/profile-photo.js', 'javascript'],
   ['frontend/js/vayuma-ui.js', 'javascript'],
   ['frontend/images/icons.svg', 'image/svg+xml'],

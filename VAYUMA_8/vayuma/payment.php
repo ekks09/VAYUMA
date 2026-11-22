@@ -153,6 +153,7 @@ if ($phonePrefill === '') {
 
 <body>
 <?php vayuma_language_selector(); ?>
+<?php require __DIR__ . '/includes/workspace_back.php'; ?>
 
 <?php vayuma_payment_navigation('my_orders.php', 'My Orders'); ?>
 <div class="va-payment-page">

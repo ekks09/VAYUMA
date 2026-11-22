@@ -49,7 +49,7 @@ $failed = in_array($status, ['failed', 'cancelled'], true);
 <body>
 <?php vayuma_language_selector(); ?>
 <?php vayuma_payment_navigation('subscription.php', 'Back to subscription'); ?>
-<main class="va-payment-status" id="va-main-content">
+<main class="va-payment-status" id="va-main-content"><?php require __DIR__ . '/includes/workspace_back.php'; ?>
   <section class="va-payment-status__card" aria-live="polite">
     <?php if (!$payment): ?>
       <h1>Payment not found</h1>

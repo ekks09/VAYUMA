@@ -24,6 +24,6 @@ test('direct AI page and API enforce the same policy (mock database)',()=>{
   function exec(file,profile,access){const code=`function test_header($v){echo $v;} session_start();$_SESSION=['user_id'=>7,'logged_in'=>true,'role'=>'farmer','vayuma_csrf_token'=>'ok'];$_SERVER['REQUEST_METHOD']='POST';$_SERVER['HTTP_X_CSRF_TOKEN']='ok';require ${JSON.stringify(path.join(dir,file))};`;const r=spawnSync(php,['-d','display_errors=0','-r',code],{encoding:'utf8',env:{...process.env,PROFILE:profile,ACCESS:access,SUBSCRIPTION_ENFORCEMENT:'1',TEST_JSON:JSON.stringify({question:'soil'}),VAYUMA_AI_EXTERNAL_ENABLED:'0'}});assert.equal(r.status,0,r.stderr);return r.stdout;}
   assert.match(exec('ai_advisor.php','no','yes'),/Location: profile_setup.php/);assert.match(exec('ai_advisor.php','yes','no'),/Location: subscription.php/);
   assert.match(JSON.parse(exec('ai_chat_api.php','no','yes')).error,/profile and subscription/i);assert.match(JSON.parse(exec('ai_chat_api.php','yes','no')).error,/profile and subscription/i);
-  assert.equal(JSON.parse(exec('ai_chat_api.php','yes','yes')).mode,'rule_based');
+  assert.match(JSON.parse(exec('ai_chat_api.php','yes','yes')).error,/not available/i);
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });

@@ -6,20 +6,12 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['logged_in'] ?? false) !== true) 
 if (strtolower(trim($_SESSION['role'] ?? '')) !== 'extension_officer') { header('Location: dashboard.php'); exit; }
 
 function h($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
-$search = trim($_GET['q'] ?? '');
-$county = trim($_GET['county'] ?? '');
-$sql = "SELECT u.id, u.full_name, u.phone, u.email, fp.farm_name, fp.county, fp.sub_county, fp.farm_location, fp.main_crops
-        FROM users u LEFT JOIN farmer_profiles fp ON fp.user_id = u.id
-        WHERE LOWER(TRIM(u.role)) = 'farmer'";
-$params=[]; $types='';
-if ($county !== '') { $sql .= " AND fp.county = ?"; $types.='s'; $params[]=$county; }
-if ($search !== '') { $sql .= " AND (u.full_name LIKE ? OR fp.farm_name LIKE ? OR fp.main_crops LIKE ? OR fp.farm_location LIKE ?)"; $like='%'.$search.'%'; $types.='ssss'; array_push($params,$like,$like,$like,$like); }
-$sql .= " ORDER BY u.full_name ASC LIMIT 300";
-$stmt=$conn->prepare($sql);
-if ($types) $stmt->bind_param($types, ...$params);
-$stmt->execute(); $farmers=$stmt->get_result()->fetch_all(MYSQLI_ASSOC); $stmt->close();
-$counties=[]; $r=$conn->query("SELECT DISTINCT county FROM farmer_profiles WHERE county IS NOT NULL AND county<>'' ORDER BY county");
-if($r){while($row=$r->fetch_assoc())$counties[]=$row['county'];}
+require_once __DIR__.'/includes/extension_access.php';
+$search=is_string($_GET['q']??null)?trim($_GET['q']):'';
+$page=isset($_GET['page']) && is_string($_GET['page']) && ctype_digit($_GET['page']) ? min(max((int)$_GET['page'],1),10000) : 1;
+$farmers=[];$more=false;$available=true;
+try {$farmers=vayuma_extension_farmers($conn,(int)$_SESSION['user_id'],$search,($page-1)*50);$more=count($farmers)>50;if($more)array_pop($farmers);}
+catch(Throwable $e){error_log('Extension farmer directory failed: '.$e->getMessage());$available=false;http_response_code(503);}
 ?>
 <!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Farmers | VAYUMA Extension</title>
 <link rel="stylesheet" href="frontend/css/tokens.css">
@@ -56,9 +48,9 @@ if($r){while($row=$r->fetch_assoc())$counties[]=$row['county'];}
   .va-profile-form-grid { grid-template-columns: 1fr; }
   .va-profile-full { grid-column: auto; }
 }
-</style><link rel="stylesheet" href="frontend/css/extension-workspace.css?v=1"></head><body class="va-extension-workspace"><div class="wrap">
-<div class="top"><div><div class="va-profile-brand">VAYUMA · Farmers</div><p class="muted">Browse registered farmers and their published farm profile details.</p></div><a class="btn" href="extension_dashboard.php">← Dashboard</a></div>
-<div class="va-profile-card"><form method="get" class="filters"><input class="va-profile-input" name="q" value="<?=h($search)?>" placeholder="Search farmer, farm, crop or location"><select class="va-profile-input" name="county"><option value="">All counties</option><?php foreach($counties as $c):?><option value="<?=h($c)?>" <?=$county===$c?'selected':''?>><?=h($c)?></option><?php endforeach;?></select><button class="btn">Search</button><a class="btn" style="background:#647568" href="extension_farmers.php">Clear</a></form>
-<p class="muted" style="margin-top:14px"><?=count($farmers)?> farmer record(s) found. This page does not create farmer accounts; farmers register through the normal VAYUMA registration process.</p>
-<div class="va-profile-form-grid"><?php foreach($farmers as $f):?><article class="farmer"><h3><?=h($f['full_name'] ?: 'Farmer')?></h3><?php if($f['farm_name']):?><div class="tag"><?=h($f['farm_name'])?></div><?php endif;?><?php if($f['county']):?><div class="tag"><?=h($f['county'])?></div><?php endif;?><p class="muted"><?=h(trim(($f['sub_county']??'').' '.($f['farm_location']??'')))?></p><p><strong>Main crops:</strong> <?=h($f['main_crops'] ?: 'Not provided')?></p><?php if($f['phone']):?><p><strong>Phone:</strong> <?=h($f['phone'])?></p><?php endif;?></article><?php endforeach;?></div>
-<?php if(!$farmers):?><div class="empty">No registered farmers matched your search. Try clearing the county or search filters.</div><?php endif;?></div></div></body></html>
+</style><link rel="stylesheet" href="frontend/css/extension-workspace.css?v=2"></head><body class="va-extension-workspace"><div class="wrap"><?php $workspaceBackLanguage = true; require __DIR__ . '/includes/workspace_back.php'; ?>
+<div class="top"><div><div class="va-profile-brand">VAYUMA · Farmers</div><p class="muted">Browse farmers who have an accepted support relationship with you.</p></div></div>
+<div class="va-profile-card"><form method="get" class="filters"><label for="farmer-q">Search farmers, farms, crops or locations</label><input id="farmer-q" class="va-profile-input" name="q" value="<?=h($search)?>"><button class="btn">Search</button><a class="btn" href="extension_farmers.php">Clear</a></form>
+<p class="muted">Only farmers with an accepted, in-progress or completed extension support request to you are shown. This page does not create accounts.</p><?php if(!$available):?><p role="alert">Farmer records are temporarily unavailable.</p><?php else:?><p>Showing <?=count($farmers)?> records on page <?=$page?>.</p><?php endif;?>
+<div class="va-profile-form-grid"><?php foreach($farmers as $f):?><article class="farmer"><h3><?=h($f['full_name'] ?: 'Farmer')?></h3><?php if($f['farm_name']):?><div class="tag"><?=h($f['farm_name'])?></div><?php endif;?><?php if($f['county']):?><div class="tag"><?=h($f['county'])?></div><?php endif;?><p class="muted"><?=h(trim(($f['sub_county']??'').' '.($f['farm_location']??'')))?></p><p><strong>Main crops:</strong> <?=h($f['main_crops'] ?: 'Not provided')?></p></article><?php endforeach;?></div>
+<?php if($available && !$farmers):?><div class="empty">No eligible farmers matched your search. Clear the search or check your received support requests.</div><?php endif;?><p><a href="agricultural_support_requests.php?view=received&amp;type=extension">View received extension requests</a></p><nav aria-label="Farmer pages"><?php if($page>1):?><a href="?q=<?=urlencode($search)?>&amp;page=<?=$page-1?>" class="page-link">Previous</a><?php endif;?> <?php if($more):?><a href="?q=<?=urlencode($search)?>&amp;page=<?=$page+1?>" class="page-link">Next</a><?php endif;?></nav></div></div></body></html>

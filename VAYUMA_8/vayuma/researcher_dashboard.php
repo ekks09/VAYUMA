@@ -49,14 +49,13 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
 <link rel="stylesheet" href="frontend/css/dashboard-shell-transitions.css">
 <style>
 </style>
-<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-4">
+<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-5">
 
 </head>
 
 <body>
 <div class="va-dash-layout">
 
-<div class="dashboard">
 
 <div class="va-sidebar-overlay" id="vaSidebarOverlay"></div>
 <!-- SIDEBAR -->
@@ -67,7 +66,7 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
 
     <div class="nav-title">MAIN</div>
 
-    <a class="va-dash-sidebar--nav-item" href="researcher_dashboard.php" class="va-dash-sidebar--nav-item va-dash-sidebar--nav-item--active">
+    <a class="va-dash-sidebar--nav-item va-dash-sidebar--nav-item--active" href="researcher_dashboard.php" aria-current="page">
         <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-dashboard"/></svg> <span>Dashboard</span>
     </a>
 
@@ -120,11 +119,16 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
         <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-profile"/></svg> <span>My Profile</span>
     </a>
 
-    <a class="va-dash-sidebar--nav-item" href="auth/logout.php" class="nav-item">
-        <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-logout"/></svg> <span>Logout</span>
-    </a>
+
 
     <?php vayuma_language_selector(); ?>
+
+    <div class="va-sidebar--bottom" aria-label="Account utilities">
+      <a class="va-dash-sidebar--nav-item" href="subscription.php"><svg class="va-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg#va-icon-subscription"/></svg> <span>Subscription</span></a>
+      <a class="va-dash-sidebar--nav-item" href="auth/logout.php">
+        <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-logout"/></svg> <span>Logout</span>
+    </a>
+    </div>
 </aside>
 
 
@@ -137,7 +141,7 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
     <button type="button" class="va-mobile-menu-btn" aria-controls="vaDashSidebar" aria-expanded="false" aria-label="Open navigation">Menu</button>
 
         <div class="va-dash-search">
-            <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg> &nbsp; Search VAYUMA
+            <svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg> &nbsp; Search VAYUMA · Planned
         </div>
 
         <?php require __DIR__ . '/includes/header_user_menu.php'; ?>
@@ -145,11 +149,11 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
     </div>
 
 
-    <div class="page-label">
+    <div class="va-dash-role-label">
         RESEARCHER DASHBOARD
     </div>
 
-    <h1 class="heading">
+    <h1 class="va-dash-page-title">
         Good day, <?php echo htmlspecialchars($full_name); ?>
     </h1>
 
@@ -161,34 +165,34 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
 
     <!-- STATISTICS -->
 
-    <div class="cards">
+    <div class="va-dash-stats">
 
-        <div class="card">
-            <div class="card-icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg></div>
+        <div class="va-dash-stat">
+            <div class="va-dash-stat-icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg></div>
             <h3>Research Projects</h3>
-            <div class="card-value">—</div>
-            <div class="card-small">Research project tracking is not available yet</div>
+            <div class="va-dash-number">—</div>
+            <div class="va-dash-description">Research project tracking is not available yet</div>
         </div>
 
-        <div class="card">
-            <div class="card-icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg></div>
+        <div class="va-dash-stat">
+            <div class="va-dash-stat-icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg></div>
             <h3>Data Sets</h3>
-            <div class="card-value">—</div>
-            <div class="card-small">Research datasets are not connected yet</div>
+            <div class="va-dash-number">—</div>
+            <div class="va-dash-description">Research datasets are not connected yet</div>
         </div>
 
-        <div class="card">
-            <div class="card-icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg></div>
+        <div class="va-dash-stat">
+            <div class="va-dash-stat-icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg></div>
             <h3>Field Trials</h3>
-            <div class="card-value">—</div>
-            <div class="card-small">Field trial tracking is not available yet</div>
+            <div class="va-dash-number">—</div>
+            <div class="va-dash-description">Field trial tracking is not available yet</div>
         </div>
 
-        <div class="card">
-            <div class="card-icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg></div>
+        <div class="va-dash-stat">
+            <div class="va-dash-stat-icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-checkmark"/></svg></div>
             <h3>Reports</h3>
-            <div class="card-value">—</div>
-            <div class="card-small">Research report tracking is not available yet</div>
+            <div class="va-dash-number">—</div>
+            <div class="va-dash-description">Research report tracking is not available yet</div>
         </div>
 
     </div>
@@ -200,7 +204,7 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
 
         <div class="va-dash-panel">
 
-            <h2>Recent Research Activity</h2>
+            <h2>Example research areas</h2>
 
             <div class="research-item">
 
@@ -299,8 +303,6 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
     </div>
 
 </main>
-</div>
-
 </div>
 
 <script src="frontend/js/vayuma-ui.js" defer></script>

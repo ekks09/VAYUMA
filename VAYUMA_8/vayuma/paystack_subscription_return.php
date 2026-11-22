@@ -79,7 +79,7 @@ if ($reference === '') {
 </head>
 <body>
   <?php vayuma_payment_navigation('subscription.php', 'Back to subscription'); ?>
-  <main class="va-container" style="max-width:620px;padding-top:4rem">
+  <main class="va-container" style="max-width:620px;padding-top:4rem"><?php require __DIR__ . '/includes/workspace_back.php'; ?>
     <section class="va-card va-card--p">
       <h1>Payment status</h1>
       <p><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></p>

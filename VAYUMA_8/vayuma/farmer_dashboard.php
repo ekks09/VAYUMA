@@ -47,6 +47,7 @@ $navLinks = [
 // ── Category stats for farmer tabs ──
 $categoryStats = [];
 $totalListings = 0;
+try {
 $stmt = $conn->prepare(
     'SELECT pc.id, pc.name, pc.color_hex, pc.slug, COUNT(pl.id) AS listing_count
      FROM produce_categories pc
@@ -55,14 +56,18 @@ $stmt = $conn->prepare(
      GROUP BY pc.id
      ORDER BY pc.sort_order ASC, pc.name ASC'
 );
+if (!$stmt) throw new RuntimeException('Category prepare failed');
 $stmt->bind_param('i', $userId);
-$stmt->execute();
+if (!$stmt->execute()) throw new RuntimeException('Category query failed');
 $catResult = $stmt->get_result();
+if (!$catResult) throw new RuntimeException('Category results unavailable');
 while ($row = $catResult->fetch_assoc()) {
     $categoryStats[] = $row;
     $totalListings += (int)($row['listing_count'] ?? 0);
 }
 $stmt->close();
+
+} catch (Throwable $e) { error_log('Farmer listing metrics unavailable: '.$e->getMessage()); $categoryStats=[]; $totalListings=null; }
 
 require_once __DIR__ . '/includes/ui_simple.php';
 ?>
@@ -101,11 +106,11 @@ require_once __DIR__ . '/includes/ui_simple.php';
       <div class="va-dashboard-grid va-mb-6">
         <div class="va-stat-card">
           <div class="va-stat-card--header">
-            <div><div class="va-stat-card--label">Total Listings</div></div>
+            <div><div class="va-stat-card--label">Listings in active categories</div></div>
             <div class="va-stat-card--icon"><svg class="va-icon" width="20" height="20"><use href="frontend/images/icons.svg#va-icon-crops"/></svg></div>
           </div>
-          <div class="va-stat-card--value"><?= $totalListings ?></div>
-          <div class="va-stat-card--sub">Active produce listings</div>
+          <div class="va-stat-card--value"><?= $totalListings === null ? 'Unavailable' : $totalListings ?></div>
+          <div class="va-stat-card--sub"><?= $totalListings === null ? 'Listing counts temporarily unavailable' : 'Available listings in active categories' ?></div>
         </div>
         <?php foreach ($categoryStats as $catStat): ?>
         <div class="va-stat-card">
