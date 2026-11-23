@@ -6,7 +6,7 @@ test('AI page and global launcher share the compact chat component',()=>{
  const page=read('ai_advisor.php'),script=read('frontend/js/ai-chat.js'),css=read('frontend/css/ai-chat.css'),pwa=read('includes/pwa.php');
  assert.match(page,/data-ai-page/);assert.match(page,/ai-chat\.js/);assert.match(page,/ai-chat\.css/);assert.doesNotMatch(page,/YOUR TOOLKIT|Guidance you can check|externalConsent/);
  assert.match(pwa,/\$_SESSION\['logged_in'\]/);assert.match(pwa,/ai-chat\.js/);assert.match(pwa,/vayuma-ai-csrf/);
- for(const pattern of [/role="log"/,/role','dialog'/,/AbortController/,/requestId/,/share_soil/,/share_weather/,/Shift|shiftKey/,/external AI service/])assert.match(script,pattern);
+ for(const pattern of [/role="log"/,/role','dialog'/,/AbortController/,/requestId/,/Shift|shiftKey/,/external AI service/])assert.match(script,pattern);
  assert.match(css,/z-index:9999/);assert.match(css,/width:min\(400px,100%\)/);assert.match(css,/prefers-reduced-motion/);
  assert.doesNotMatch(script,/externalConsent|rule_based/);
 });

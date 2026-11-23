@@ -1,0 +1,14 @@
+// Synthetic DOM using real banner HTML rendered with a mocked subscription.
+const assert=require('node:assert/strict'),fs=require('node:fs'),os=require('node:os'),path=require('node:path'),{spawnSync}=require('node:child_process'),{JSDOM}=require('jsdom');
+const dir=fs.mkdtempSync(path.join(os.tmpdir(),'vayuma-free-banner-'));
+try{
+ fs.mkdirSync(path.join(dir,'includes'));fs.mkdirSync(path.join(dir,'lib'));
+ fs.copyFileSync(path.join(__dirname,'../vayuma/includes/subscription_banner.php'),path.join(dir,'includes/subscription_banner.php'));
+ fs.writeFileSync(path.join(dir,'lib/subscription_lib.php'),`<?php function subscription_for_user($c,$id){return ['plan_type'=>getenv('PLAN')?:'free','status'=>'free_account'];} function subscription_is_accessible($s){return true;}`);
+ const php=process.env.VAYUMA_PHP||'php';function render(plan='free',flag=true){const code=`class FakeDb extends mysqli {function __construct(){}} require ${JSON.stringify(path.join(dir,'includes/subscription_banner.php'))};echo render_subscription_banner(new FakeDb,7,${flag?'true':'false'});`;const r=spawnSync(php,['-r',code],{encoding:'utf8',env:{...process.env,PLAN:plan}});assert.equal(r.status,0,r.stderr);return r.stdout;}
+ const html=render();function load(stored,fail=false){const dom=new JSDOM('<!doctype html><body></body>',{url:'https://example.test',runScripts:'dangerously',beforeParse(w){if(stored)w.localStorage.setItem('vayuma_free_access_dismissed_7','1');if(fail)Object.defineProperty(w,'localStorage',{get(){throw Error('blocked')}})}});const body=dom.window.document.body;const temp=dom.window.document.createElement('div');temp.innerHTML=html;while(temp.firstChild){const n=temp.firstChild;if(n.tagName==='SCRIPT'){const script=dom.window.document.createElement('script');script.textContent=n.textContent;n.remove();body.appendChild(script);}else body.appendChild(n);}return dom;}
+ let dom=load(false),d=dom.window.document;assert.equal(d.querySelector('[data-free-banner]').hidden,false);assert.equal(d.querySelector('[data-dismiss-free-banner]').hidden,false);d.querySelector('[data-dismiss-free-banner]').click();assert.equal(d.querySelector('[data-free-banner]').hidden,true);assert.equal(dom.window.localStorage.getItem('vayuma_free_access_dismissed_7'),'1');dom.window.close();
+ dom=load(true);assert.equal(dom.window.document.querySelector('[data-free-banner]').hidden,true);dom.window.close();dom=load(false,true);dom.window.document.querySelector('[data-dismiss-free-banner]').click();assert.equal(dom.window.document.querySelector('[data-free-banner]').hidden,true);dom.window.close();
+ assert.doesNotMatch(render('negotiated'),/data-dismiss-free-banner/);assert.doesNotMatch(render('free',false),/data-dismiss-free-banner/);
+ console.log('PASS free banner dismissal, persistence, storage failure and scope');
+}finally{fs.rmSync(dir,{recursive:true,force:true});}

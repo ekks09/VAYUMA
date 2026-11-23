@@ -96,15 +96,15 @@ require_once __DIR__ . '/includes/ui_simple.php';
   <?php elseif ($subscription && !$paid): ?>
     <p>This category uses a <?= $subscription['plan_type'] === 'free' ? 'free' : 'negotiated' ?> plan rather than a paid-plan trial.</p>
   <?php elseif ($subscription): ?>
-    <p>The one-time trial is not available for this account or your access is already active.</p>
+    <p>Your plan details and current access status are shown below.</p>
   <?php else: ?>
     <p>Plan information is currently unavailable. Please try again later.</p>
   <?php endif; ?>
-  <p>After 30 days, trial access ends. There is no automatic charge; payments are not available yet, so please do not send payment. Plan pricing and access depend on your category.</p>
+  <p>Trial access ends after 30 days, with no automatic charges. Plan pricing and access depend on your category.</p>
 </section>
 <div class="vy-trial-cards" aria-label="Plan details">
   <section class="vy-trial-card"><h3>Your category plan</h3>
-    <?php if ($subscription && $paid): ?><p><strong>KSh <?= number_format((float)($subscription['monthly_price'] ?? 0), 2) ?></strong> / <?= h(str_replace('_', ' ', $billingInterval)) ?></p><p>Price from the configured plan; payment is currently disabled.</p>
+    <?php if ($subscription && $paid): ?><p><strong>KSh <?= number_format((float)($subscription['monthly_price'] ?? 0), 2) ?></strong> / <?= h(str_replace('_', ' ', $billingInterval)) ?></p><p>Your category’s configured plan price.</p>
     <?php elseif ($subscription && $subscription['plan_type'] === 'free'): ?><p><strong>Free plan</strong></p><p>No subscription payment required for this category.</p>
     <?php elseif ($subscription): ?><p><strong>Negotiated plan</strong></p><p>Access is subject to approval and agreed terms.</p>
     <?php else: ?><p>Plan details are unavailable.</p><?php endif; ?>
@@ -155,7 +155,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
     <?php if ($dashboardUrl !== null): ?><a href="<?= h($dashboardUrl) ?>" class="va-btn va-btn--primary">Open dashboard</a><?php endif; ?>
   <?php elseif ($paid && $status === 'trialing' && $dashboardAccessible): ?>
     <h2>30-day trial active</h2>
-    <p>Your trial ends <?= h($subscription['trial_ends_at']) ?>. Paybill payments are not yet available; please do not send payment.</p>
+    <p>Your trial ends <?= h($subscription['trial_ends_at']) ?>. There is no automatic charge when it ends.</p>
     <?php if ($dashboardUrl !== null): ?><a href="<?= h($dashboardUrl) ?>" class="va-btn va-btn--primary">Continue to dashboard</a><?php endif; ?>
   <?php elseif ($paid && $status === 'active' && $dashboardAccessible && $dashboardUrl !== null): ?>
     <div class="va-text-center va-py-8">
@@ -192,7 +192,7 @@ require_once __DIR__ . '/includes/ui_simple.php';
     <?php endif; ?>
     <?php if (!$freeDayUsed): ?><form method="post" action="claim_dashboard_day.php" class="va-mt-4"><?= vayuma_csrf_field() ?><button class="va-btn va-btn--outline" type="submit">Claim 24 hours of dashboard access this month</button></form><?php else: ?><p>This month’s free dashboard access has been used.</p><?php endif; ?>
     <p class="va-text-muted va-text-sm">One dashboard-only window per Nairobi calendar month; it does not unlock paid features.</p>
-    <p role="status">M-Pesa Paybill payments are not available yet. Please do not send payment. We will enable renewal once verification is ready.</p>
+    <p role="status">Online payment and renewal are currently disabled. Contact VAYUMA support for help with your plan.</p>
 
   <?php elseif ($subscription['plan_type'] === 'free'): ?>
     <div class="va-text-center va-py-8">

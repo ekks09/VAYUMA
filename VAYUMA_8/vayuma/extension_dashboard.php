@@ -44,7 +44,7 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
 <link rel="stylesheet" href="frontend/css/layout.css">
 <link rel="stylesheet" href="frontend/css/pages.css">
 <link rel="stylesheet" href="frontend/css/dashboard-shell.css">
-<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-6">
+<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-7">
 </head>
 <body class="va-extension-dashboard">
 <div class="va-dash-layout">
@@ -76,7 +76,7 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
     </div>
   </div>
 </aside>
-<main class="va-dash-main" id="va-main-content"><?php require_once __DIR__ . "/includes/subscription_banner.php"; echo render_subscription_banner($conn, (int)$_SESSION["user_id"]); ?>
+<main class="va-dash-main" id="va-main-content"><?php require_once __DIR__ . "/includes/subscription_banner.php"; echo render_subscription_banner($conn, (int)$_SESSION["user_id"], true); ?>
   <header class="va-dash-topbar vy-user-menu__dashboard-header">
     <button type="button" class="va-mobile-menu-btn" aria-controls="vaDashSidebar" aria-expanded="false" aria-label="Open navigation">Menu</button>
     <div class="va-dash-search va-ext-search" aria-label="Search VAYUMA: not available yet"><svg class="va-ext-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg?v=extension-1#va-ext-search"></use></svg><span>Search VAYUMA</span><small>Planned</small></div>

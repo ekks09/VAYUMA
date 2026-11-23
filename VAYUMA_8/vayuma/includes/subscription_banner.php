@@ -8,7 +8,7 @@
  */
 require_once __DIR__ . '/../lib/subscription_lib.php';
 
-function render_subscription_banner(mysqli $conn, int $userId): string
+function render_subscription_banner(mysqli $conn, int $userId, bool $dismissFree = false): string
 {
     $ob = [];
     $ob[] = '<style>
@@ -19,6 +19,7 @@ function render_subscription_banner(mysqli $conn, int $userId): string
         border: 1px solid var(--va-border); background: var(--va-surface);
         box-shadow: var(--va-shadow-sm);
     }
+    .va-sub-banner[hidden], .va-sub-banner [hidden] { display: none !important; }
     .va-sub-banner--active { background: #e4f6e9; border-color: #b7e4c7; }
     .va-sub-banner--payment-due { background: #fff4d6; border-color: #f3e3a8; }
     .va-sub-banner--expired { background: #fde7e7; border-color: #f3b7b7; }
@@ -76,7 +77,9 @@ function render_subscription_banner(mysqli $conn, int $userId): string
         $badgeText = 'Free Account';
         $title = 'Free Access';
         $subText = 'Your account does not require payment. Access is active.';
-        $action = '<a href="dashboard.php" class="va-btn va-btn--primary va-btn--sm">Continue to Dashboard</a>';
+        $action = $dismissFree
+            ? '<button type="button" class="va-btn va-btn--outline va-btn--sm" data-dismiss-free-banner hidden>Dismiss</button>'
+            : '<a href="dashboard.php" class="va-btn va-btn--primary va-btn--sm">Continue to Dashboard</a>';
     } elseif ($planType === 'negotiated') {
         $badgeClass = 'va-sub-banner--negotiated';
         $badgeText = 'Negotiated Plan';
@@ -118,7 +121,7 @@ function render_subscription_banner(mysqli $conn, int $userId): string
     elseif ($badgeClass === 'va-sub-banner--free') $badgeStyle = 'background:#059669;';
     elseif ($badgeClass === 'va-sub-banner--negotiated') $badgeStyle = 'background:#ca8a04;';
 
-    $ob[] = '<div class="va-sub-banner ' . $badgeClass . '">';
+    $ob[] = '<div class="va-sub-banner ' . $badgeClass . '"' . ($dismissFree && $planType === 'free' ? ' data-free-banner' : '') . '>';
     $ob[] = '  <div class="va-sub-banner--content">';
     $ob[] = '    <p class="va-sub-banner--title">' . htmlspecialchars($title) . '</p>';
     $ob[] = '    <p class="va-sub-banner--sub">' . htmlspecialchars($subText) . '</p>';
@@ -128,6 +131,11 @@ function render_subscription_banner(mysqli $conn, int $userId): string
     $ob[] = '    ' . $action;
     $ob[] = '  </div>';
     $ob[] = '</div>';
+    if ($dismissFree && $planType === 'free') {
+        // Per-account preference only; losing storage never changes subscription access.
+        $key = 'vayuma_free_access_dismissed_' . $userId;
+        $ob[] = '<script>(function(){var banner=document.currentScript.previousElementSibling,button=banner.querySelector("[data-dismiss-free-banner]"),key=' . json_encode($key) . ';if(!button)return;try{if(localStorage.getItem(key)==="1")banner.hidden=true;}catch(e){}button.hidden=false;button.addEventListener("click",function(){banner.hidden=true;try{localStorage.setItem(key,"1");}catch(e){}});}());</script>';
+    }
 
     return implode("\n", $ob);
 }

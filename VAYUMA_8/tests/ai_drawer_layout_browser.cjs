@@ -25,8 +25,7 @@ const root = path.resolve(__dirname, '../vayuma');
    assert.ok(metrics.scroll>=metrics.client && await page.$eval('.vai-prompts',e=>getComputedStyle(e).overflowX)==='auto',`${width} prompts should scroll within their row`);
    assert.ok(metrics.drawer.height<=height && (width<768 ? Math.abs(metrics.drawer.height-height)<2 : (height<700 || metrics.drawer.height<height*.95)),`${width} drawer size: ${JSON.stringify(metrics)}`);
    assert.ok(!metrics.disabled && metrics.placeholder);
-   await page.click('.vai-context summary');
-   assert.equal(await page.$eval('.vai-context',e=>e.open),true);
+   assert.equal(await page.$('.vai-context'),null);
    assert.ok(await page.$eval('.vai-compose',e=>e.scrollHeight>=e.clientHeight));
   }
   console.log('PASS synthetic AI drawer layout at 320–1280px');
