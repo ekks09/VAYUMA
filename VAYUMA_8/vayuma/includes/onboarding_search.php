@@ -18,7 +18,7 @@ function vayuma_onboarding_search_tokens(string $query): array {
     return $tokens;
 }
 function vayuma_onboarding_matches(array $row, array $tokens): bool {
-    $fields = ['full_name','county','farmer_location','location','stakeholder_role','current_role','activity','farm_size','farm_size_unit','preferred_language','farm_name','sub_county'];
+    $fields = ['full_name','county','farmer_location','location','stakeholder_role','current_role','activity','farm_size','farm_size_unit','preferred_language','farm_name','sub_county','staff_name','onboarded_by'];
     $text = implode(' ', array_map(static fn($key) => (string)($row[$key] ?? ''), $fields));
     $text = function_exists('mb_strtolower') ? mb_strtolower($text, 'UTF-8') : strtolower($text);
     $phone = preg_replace('/\D/', '', (string)($row['phone_identity'] ?? $row['phone'] ?? ''));

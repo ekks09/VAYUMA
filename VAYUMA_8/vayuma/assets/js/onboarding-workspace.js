@@ -19,42 +19,38 @@
   document.querySelectorAll('form[action="farmer_export.php"]').forEach(exportForm => exportForm.addEventListener('submit', event => {
     if (navigator.onLine === false) { event.preventDefault(); syncConnectivity(); offline?.scrollIntoView({block:'nearest'}); }
   }));
+  // Use a single editable county control when datalist is supported; retain the
+  // real select as a no-JS / unsupported-browser fallback.
   const county = document.getElementById('onboarding-county');
-  const countyFilter = document.getElementById('county-filter');
-  if (county && countyFilter) {
-    const search = document.getElementById('county-search');
-    const letters = document.getElementById('county-letters');
-    const status = document.getElementById('county-filter-status');
-    const options = Array.from(county.options);
-    const allowed = 'BEGHIKLMNSTUVW';
-    const available = new Set(options.slice(1).map(option => option.textContent.trim().charAt(0).toUpperCase()));
-    let activeLetter = '';
-    const filter = () => {
-      const selected = county.value;
-      const query = search.value.trim().toLocaleLowerCase();
-      let matches = 0;
-      options.forEach((option, index) => {
-        const name = option.textContent.trim();
-        const match = index > 0 && (!activeLetter || name.toUpperCase().startsWith(activeLetter)) && name.toLocaleLowerCase().includes(query);
-        if (match) matches++;
-        if (!index || match || (selected && option.value === selected)) county.appendChild(option);
-        else option.remove();
-      });
-      county.value = selected;
-      status.textContent = matches ? '' : status.dataset.empty;
-      letters.querySelectorAll('button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.letter === activeLetter)));
-    };
-    ['', ...Array.from(allowed).filter(letter => available.has(letter))].forEach(letter => {
-      const button = document.createElement('button');
-      button.type = 'button'; button.dataset.letter = letter; button.textContent = letter || letters.dataset.all;
-      button.setAttribute('aria-pressed', String(!letter));
-      button.addEventListener('click', () => { activeLetter = letter; if (!letter) search.value = ''; filter(); });
-      letters.appendChild(button);
-    });
-    search.addEventListener('input', filter);
-    county.addEventListener('change', filter);
-    countyFilter.hidden = false;
+  const countyFallback = document.getElementById('county-fallback');
+  if (county && countyFallback && 'list' in county && window.HTMLDataListElement) {
+    county.name = 'county'; county.disabled = false; county.required = true; county.hidden = false;
+    countyFallback.disabled = true; countyFallback.hidden = true;
+  } else if (countyFallback) {
+    const label = document.querySelector('label[for="onboarding-county"]');
+    if (label) label.htmlFor = 'county-fallback';
   }
+  // Navigation links remain usable as anchors without JavaScript.
+  const nav = document.querySelector('[data-workspace-nav]');
+  if (nav) {
+    const links = Array.from(nav.querySelectorAll('a[href^="#"]'));
+    const targets = links.map(link => document.getElementById(link.hash.slice(1)));
+    const activate = id => {
+      if (!targets.some(target => target && target.id === id)) id = 'add-person';
+      targets.forEach(target => { if (target) target.hidden = target.id !== id; });
+      links.forEach(link => { if (link.hash === '#' + id) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current'); });
+    };
+    const fromHash = () => location.hash.slice(1);
+    links.forEach(link => link.addEventListener('click', event => {
+      event.preventDefault();
+      if (location.hash !== link.hash) history.pushState(null, '', link.hash);
+      activate(link.hash.slice(1));
+    }));
+    window.addEventListener('popstate', () => activate(fromHash()));
+    window.addEventListener('hashchange', () => activate(fromHash()));
+    activate(nav.dataset.postTab || fromHash() || 'add-person');
+  }
+  let goIntakeStep = () => {};
   const role = document.getElementById('onboarding-role');
   const fields = document.querySelectorAll('[data-farmer-field]');
   if (role) {
@@ -69,7 +65,7 @@
     const focusDetails = () => {
       updateFields();
       const target = role.value === 'farmer' ? document.querySelector('[data-farmer-field]:not([hidden]) input') : intake?.querySelector('[name="preferred_language"]');
-      if (target) { target.scrollIntoView({block:'nearest'}); target.focus({preventScroll:true}); }
+      if (target) { goIntakeStep(1); target.scrollIntoView({block:'nearest'}); target.focus({preventScroll:true}); }
     };
     role.addEventListener('change', updateFields);
     role.addEventListener('dblclick', focusDetails);
@@ -92,6 +88,40 @@
       }
     });
     updateFields();
+  }
+  // Guided form: the complete form remains available when JavaScript is off.
+  if (intake) {
+    const steps = Array.from(intake.querySelectorAll('[data-intake-step]'));
+    const progress = intake.querySelector('.onboard-progress');
+    const next = intake.querySelector('.onboard-step-next');
+    const back = intake.querySelector('.onboard-step-back');
+    const submit = intake.querySelector('.onboard-submit');
+    if (steps.length === 2 && progress && next && back && submit) {
+      let active = 0;
+      goIntakeStep = index => {
+        active = index === 1 ? 1 : 0;
+        steps.forEach((step, i) => { step.hidden = i !== active; });
+        next.hidden = active !== 0; back.hidden = active !== 1; submit.hidden = active !== 1;
+        progress.hidden = false;
+        progress.querySelector('.onboard-progress-text').textContent = active ? progress.dataset.second : progress.dataset.first;
+        progress.classList.toggle('onboard-progress--second', active === 1);
+      };
+      next.addEventListener('click', () => {
+        const invalid = Array.from(steps[0].querySelectorAll('input,select,textarea')).find(input => !input.disabled && !input.checkValidity());
+        if (invalid) { invalid.reportValidity(); return; }
+        goIntakeStep(1); progress.scrollIntoView({block:'nearest'});
+        const first = Array.from(steps[1].querySelectorAll('input,select,textarea')).find(input => !input.disabled && !input.closest('[hidden]'));
+        if (first) first.focus({preventScroll:true});
+      });
+      back.addEventListener('click', () => { goIntakeStep(0); progress.scrollIntoView({block:'nearest'}); next.focus({preventScroll:true}); });
+      // Browser validation can find a field on a different step, including after
+      // navigating directly from the category control.
+      intake.addEventListener('invalid', event => {
+        const index = steps.findIndex(step => step.contains(event.target));
+        if (index !== -1 && index !== active) goIntakeStep(index);
+      }, true);
+      goIntakeStep(0);
+    }
   }
   const records = Array.from(document.querySelectorAll('.onboard-record'));
   const expand = document.getElementById('expand-records');
