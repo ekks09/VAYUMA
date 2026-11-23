@@ -36,6 +36,6 @@ if (($_SESSION['logged_in'] ?? false) === true && isset($_SESSION['user_id']) &&
     require_once __DIR__ . '/csrf.php';
 ?>
 <meta name="vayuma-ai-csrf" content="<?= htmlspecialchars($_SESSION['vayuma_csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
-<link rel="stylesheet" href="frontend/css/ai-chat.css?v=7">
-<script src="frontend/js/ai-chat.js?v=9" defer></script>
+<link rel="stylesheet" href="frontend/css/ai-chat.css?v=8">
+<script src="frontend/js/ai-chat.js?v=10" defer></script>
 <?php endif; ?>

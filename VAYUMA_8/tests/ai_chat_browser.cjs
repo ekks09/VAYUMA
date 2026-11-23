@@ -2,7 +2,7 @@
 const assert=require('node:assert/strict'),puppeteer=require('puppeteer-core');
 const base=process.env.VAYUMA_AI_FIXTURE_URL;if(!base)throw new Error('Set VAYUMA_AI_FIXTURE_URL');
 (async()=>{const browser=await puppeteer.launch({executablePath:process.env.VAYUMA_CHROMIUM_PATH,args:['--no-sandbox','--disable-dev-shm-usage']});try{
- const page=await browser.newPage(),requests=[];await page.setRequestInterception(true);page.on('request',r=>{if(r.url().endsWith('/ai_chat_api.php')){requests.push(JSON.parse(r.postData()));return r.respond({status:200,contentType:'application/json',body:JSON.stringify({success:true,answer:'Example answer',context_used:[]})});}r.continue();});
+ const page=await browser.newPage(),requests=[];await page.setRequestInterception(true);page.on('request',r=>{if(r.url().endsWith('/ai_chat_api.php')){const data=JSON.parse(r.postData());if(!data.action)requests.push(data);return r.respond({status:200,contentType:'application/json',body:JSON.stringify({success:true,answer:'Example answer',context_used:[],conversations:[]})});}r.continue();});
  for(const width of [320,390,768,1024,1280]){
   await page.setViewport({width,height:850});await page.goto(base+'/dashboard.html',{waitUntil:'load'});
   const header=await page.evaluate(()=>{const a=document.querySelector('.vy-staff-entry').getBoundingClientRect(),b=document.querySelector('.vy-user-menu__trigger').getBoundingClientRect();return{scroll:document.documentElement.scrollWidth,staff:{left:a.left,right:a.right,height:a.height},menu:{left:b.left,right:b.right,height:b.height}}});

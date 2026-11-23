@@ -1,6 +1,6 @@
 <?php
 /** NVIDIA requests use a fixed host, an output cap and a small curated description of VAYUMA. */
-function vayuma_nvidia_payload(string $model, string $question, string $language, string $evidence, array $history = [], string $role = ''): array
+function vayuma_nvidia_payload(string $model, string $question, string $language, string $evidence, array $history = [], string $role = '', string $mode = 'general'): array
 {
     $languageInstruction = $language === 'sw' ? 'Answer in clear Kiswahili.' : 'Answer in clear English.';
     require_once __DIR__.'/ai_platform_guide.php';
@@ -13,6 +13,9 @@ function vayuma_nvidia_payload(string $model, string $question, string $language
     $navigation = implode("\n", array_map(static fn($item) => $item['label'] . ': ' . $item['href'], $catalog));
     $system = "You are VAYUMA TRIX AI, a helpful general-purpose assistant in the VAYUMA agricultural platform in Kenya. $languageInstruction " .
       "Answer the user's actual question directly and helpfully, whether it is about farming, business, education, technology, everyday life, or VAYUMA. " .
+      ($mode === 'agri-pro' ? "For agricultural topics prioritize practical Kenyan agro-ecological context and suitable local practices, but still answer non-farming questions. " : "Answer general questions naturally; localize advice to Kenya when relevant. ") .
+      "Start with useful advice, not apologies or capability disclaimers. For farming, give Kenya-specific details when justified, without inventing local conditions or registered products. Kenya’s long rains generally occur March to May and short rains October to December, but timing and suitability vary by county and year; do not assume a current forecast. Give variety examples only where appropriate to the crop and location, such as Shangi or Unica for potatoes. End with one concise relevant follow-up question without withholding the answer. Format with short paragraphs, bold key points and lists. " .
+      "Refer to VAYUMA tools by display name, never raw filenames or URLs in your answer. Approved clickable links are displayed separately. " .
       "Use your general knowledge to give practical, relevant explanations, examples and steps; general crop and soil questions do not require a weather forecast, soil report, crop selection or location. " .
       "If a request is broad, provide useful general guidance first. Ask a brief follow-up only when it would materially improve the answer; do not refuse or demand context merely because optional farm data was not attached. " .
       "Differentiate general information from site-specific advice. Do not claim to know actual local weather, soil conditions, prices, field conditions, diagnosis or account details that were not supplied. " .

@@ -17,8 +17,8 @@ const root = path.resolve(__dirname, '../vayuma');
    await page.click('.vayuma-ai-fab');
    const metrics = await page.evaluate(() => {
     const rect=s=>document.querySelector(s).getBoundingClientRect().toJSON();
-    const input=rect('.vai-form textarea'),send=rect('.vai-form button'),form=rect('.vai-form'),drawer=rect('.vayuma-chat--drawer'),prompts=document.querySelector('.vai-prompts');
-    return {input,send,form,drawer,prompts:rect('.vai-prompts'),scroll:prompts.scrollWidth,client:prompts.clientWidth,disabled:document.querySelector('.vai-form button').disabled,placeholder:document.querySelector('textarea').placeholder};
+    const input=rect('.vai-form textarea'),send=rect('.vai-form button[type=submit]'),form=rect('.vai-form'),drawer=rect('.vayuma-chat--drawer'),prompts=document.querySelector('.vai-prompts');
+    return {input,send,form,drawer,prompts:rect('.vai-prompts'),scroll:prompts.scrollWidth,client:prompts.clientWidth,disabled:document.querySelector('.vai-form button[type=submit]').disabled,placeholder:document.querySelector('textarea').placeholder};
    });
    assert.ok(metrics.input.width>=140,`${width} input: ${JSON.stringify(metrics)}`);
    assert.ok(metrics.send.width<120 && metrics.input.right<=metrics.send.left && metrics.send.right<=metrics.form.right,`${width} send: ${JSON.stringify(metrics)}`);
