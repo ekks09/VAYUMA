@@ -26,14 +26,14 @@ $platformHomeUrl = $platformHomeUrl ?? vayuma_platform_home_route();
 <head>
 <?php require __DIR__ . '/pwa.php'; ?>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title><?= htmlspecialchars($pageTitle) ?> | VAYUMA TRIX</title>
 <link rel="stylesheet" href="frontend/css/tokens.css?v=20261110">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css?v=20261120-subscription-nav">
 <link rel="stylesheet" href="frontend/css/layout.css?v=mobile-header-2">
 <link rel="stylesheet" href="frontend/css/pages.css">
-<?php if (!empty($dashboardShell)): ?><link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-4"><?php endif; ?>
+<?php if (!empty($dashboardShell)): ?><link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-6"><?php endif; ?>
 </head>
 <body class="va-page<?= !empty($dashboardShell) ? ' va-simple-dashboard' : '' ?>">
   <!-- Skip to content link for keyboard users -->

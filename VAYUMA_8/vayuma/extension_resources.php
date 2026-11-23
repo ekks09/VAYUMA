@@ -5,7 +5,7 @@ if(!isset($_SESSION['user_id'])||($_SESSION['logged_in']??false)!==true){header(
 if(strtolower(trim($_SESSION['role']??''))!=='extension_officer'){header('Location: dashboard.php');exit;}
 function h($v){return htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8');}
 ?>
-<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Farming Resources | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css">
+<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1, interactive-widget=resizes-content"><title>Farming Resources | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">

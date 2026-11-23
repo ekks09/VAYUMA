@@ -31,3 +31,6 @@
 .vy-staff-entry{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 10px;border:1px solid #b9d8c3;border-radius:9px;color:#087d42;background:#f5fbf6;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap}
 .vy-staff-entry:hover,.vy-staff-entry:focus-visible{background:#e5f5e9;outline-offset:2px}
 @media(max-width:650px){.vy-user-menu__stakeholder-header .vy-account-controls{order:1}.vy-user-menu__dashboard-header .vy-account-controls{margin-left:auto}.vy-staff-entry{font-size:12px;padding-inline:8px}}
+
+/* Staff Access remains in the profile menu on compact screens. */
+@media(max-width:767px){.vy-staff-entry{display:none}.vy-account-controls{gap:0}}

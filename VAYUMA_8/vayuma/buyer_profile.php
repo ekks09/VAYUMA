@@ -28,7 +28,7 @@ $countySearch=(string)($formOld['county_search']??$profile['county']??'');
 function oldv($profile,$key,$fallback=''){return htmlspecialchars((string)($profile[$key]??$fallback),ENT_QUOTES,'UTF-8');}
 ?>
 <!DOCTYPE html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
 <title>Buyer Profile | VAYUMA TRIX</title>
 <link rel="stylesheet" href="frontend/css/tokens.css?v=20261110">
 <link rel="stylesheet" href="frontend/css/components.css">

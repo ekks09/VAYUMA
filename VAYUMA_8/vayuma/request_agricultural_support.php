@@ -9,7 +9,7 @@ $stmt->bind_param('is',$provider,$expected);$stmt->execute();$providerRow=$stmt-
 if(!$providerRow){http_response_code(404);exit('This service provider profile is not available.');}
 $error=$_SESSION['support_error']??'';unset($_SESSION['support_error']);require_once __DIR__.'/includes/csrf.php';function sh($v){return htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8');}
 ?>
-<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Request Agricultural Support | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css">
+<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1, interactive-widget=resizes-content"><title>Request Agricultural Support | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">

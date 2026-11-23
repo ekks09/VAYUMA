@@ -24,7 +24,7 @@ if (!is_vayuma_admin((int)$_SESSION['user_id'])) {
     ?>
     <!doctype html>
     <html lang="<?= htmlspecialchars($current_language, ENT_QUOTES, 'UTF-8') ?>">
-    <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Access denied | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css"><link rel="stylesheet" href="assets/css/vayuma-ui.css?v=2"><link rel="stylesheet" href="frontend/css/user-menu.css?v=3"></head>
+    <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content"><title>Access denied | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css"><link rel="stylesheet" href="assets/css/vayuma-ui.css?v=2"><link rel="stylesheet" href="frontend/css/user-menu.css?v=3"></head>
     <body class="vy-denied-page"><?php require __DIR__ . '/includes/workspace_back.php'; ?><main class="vy-unavailable"><h1>Access denied</h1><p>This account is not authorised to manage subscription plans.</p><a href="dashboard.php">Return to dashboard</a></main></body>
     </html>
     <?php

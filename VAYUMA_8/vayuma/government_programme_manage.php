@@ -8,7 +8,7 @@ if(!$profile){vayuma_workspace_denied('Complete your government officer profile 
 if(($profile['verification_status']??'pending')!=='verified'){vayuma_workspace_denied('Only verified government officers can publish official programmes. Your profile verification is currently pending or not approved.');}
 function gm_h($v){return htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8');}
 $stmt=$conn->prepare("SELECT p.*, (SELECT COUNT(*) FROM government_programme_registrations r WHERE r.programme_id=p.id) registrations FROM government_programmes p WHERE created_by=? ORDER BY created_at DESC");$stmt->bind_param('i',$uid);$stmt->execute();$rows=$stmt->get_result();
-?><!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Manage Programmes | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css">
+?><!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1, interactive-widget=resizes-content"><title>Manage Programmes | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">

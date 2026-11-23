@@ -61,7 +61,7 @@ try {
 
 <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content"
 >
 
 <title>Financial Dashboard | VAYUMA TRIX</title>
@@ -76,7 +76,7 @@ try {
 <link rel="stylesheet" href="frontend/css/dashboard-shell-transitions.css">
 <style>
 </style>
-<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-4">
+<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-6">
 
 </head>
 

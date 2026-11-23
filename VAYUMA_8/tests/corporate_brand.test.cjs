@@ -14,7 +14,7 @@ test('welcome presents responsive corporate lockup, translations and legal attri
 test('shared brand and offline cache use new assets',()=>{
  const name='VAYUMA TRIX AGRITECH INNOVATIONS KENYA',manifest=JSON.parse(read('manifest.json'));
  assert.equal(manifest.name,name);assert.equal(manifest.short_name,'VAYUMA TRIX');assert.deepEqual(manifest,JSON.parse(read('manifest.webmanifest')));
- for(const icon of manifest.icons){assert.ok(icon.src.startsWith('assets/images/brand/'));assert.ok(fs.existsSync(path.join(root,icon.src)));}
+ for(const icon of manifest.icons){assert.ok(icon.src.startsWith('assets/images/brand/'));assert.ok(fs.existsSync(path.join(root,icon.src.split('?')[0])));}
  const pwa=read('includes/pwa.php'),worker=read('sw.js');for(const f of ['favicon.ico','apple-touch-icon.png'])assert.ok(pwa.includes('assets/images/brand/'+f));
  for(const f of ['shield-source.png','app-icon-192.png','app-icon-512.png','maskable-192.png','maskable-512.png','apple-touch-icon.png'])assert.ok(worker.includes('assets/images/brand/'+f));
  assert.match(read('includes/dashboard_brand.php'),/VAYUMA TRIX/);assert.match(read('includes/dashboard_topbar.php'),/AGRITECH INNOVATIONS KENYA/);

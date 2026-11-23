@@ -44,7 +44,7 @@ try {
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+      content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
 
 <title>Add Produce | VAYUMA TRIX</title>
 

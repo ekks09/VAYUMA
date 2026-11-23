@@ -31,7 +31,7 @@ $auth = $data['authorization'] ?? null;
 <html lang="en">
 <head><?php require __DIR__ . '/includes/pwa.php'; ?>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1, interactive-widget=resizes-content">
 <title>Paystack Payment Details | VAYUMA TRIX</title>
 <link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">

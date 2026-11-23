@@ -169,3 +169,13 @@
   .va-dash-main .research-info { flex:1 1 100%; align-items:flex-start; }
   .va-dash-main .research-item .status { margin-left:52px; }
 }
+
+/* Room for the floating assistant and a usable compact top bar. */
+.va-dash-layout > .va-dash-main,.va-simple-dashboard-grid > .va-main--content,.va-dash-layout > .va-generic-main{padding-bottom:max(96px,env(safe-area-inset-bottom))}
+.va-dash-topbar .va-dash-search{flex:1 1 0;min-width:0}
+.va-extension-dashboard .va-ext-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.va-extension-dashboard .va-ext-actions a{display:flex;gap:9px;min-width:0;border-radius:12px;padding:10px 12px}
+.va-extension-dashboard .va-ext-actions svg{width:18px;height:18px;flex:none;color:#0f5132}
+@media(max-width:430px){.va-extension-dashboard .va-ext-actions{grid-template-columns:minmax(0,1fr)}}
+/* The bottom clearance replaces the old permanently reserved right rail. */
+.va-extension-dashboard .va-ext-content-grid,.va-extension-dashboard .va-ext-stats{padding-right:0}

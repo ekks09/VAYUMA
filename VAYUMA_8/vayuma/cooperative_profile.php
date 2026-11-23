@@ -58,7 +58,7 @@ $full_name = $_SESSION['full_name'] ?? 'Cooperative User';
 
 <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
+    content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content"
 >
 
 <title>Cooperative Profile | VAYUMA TRIX</title>

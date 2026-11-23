@@ -52,7 +52,7 @@ $full_name = $_SESSION['full_name'] ?? "Transport Provider";
 
 <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content"
 >
 
 <title>Transport Dashboard | VAYUMA TRIX</title>
@@ -67,7 +67,7 @@ $full_name = $_SESSION['full_name'] ?? "Transport Provider";
 <link rel="stylesheet" href="frontend/css/dashboard-shell-transitions.css">
 <style>
 </style>
-<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-5">
+<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-6">
 
 </head>
 

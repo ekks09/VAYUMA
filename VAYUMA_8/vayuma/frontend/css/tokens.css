@@ -6,9 +6,9 @@
 :root {
   color-scheme: light;
   /* Brand palette (authoritative) */
-  --va-primary: #087d42;
+  --va-primary: #0F5132;
   --va-primary-hover: #066a36;
-  --va-primary-light: #e5f5e9;
+  --va-primary-light: #EBF5F0;
   --va-secondary: #176b3a;
   --va-accent: #e2b93b;
   --va-surface-hover: #fbfefc;
@@ -18,7 +18,7 @@
   --va-surface: #ffffff;
 
   /* Text */
-  --va-text-primary: #173d2a;
+  --va-text-primary: #1A2E25;
   --va-text: var(--va-text-primary);
   --va-text-secondary: #69786e;
   --va-text-muted: #8c958e;
@@ -131,7 +131,7 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background: var(--va-bg);
   color: var(--va-text);
   line-height: 1.5;

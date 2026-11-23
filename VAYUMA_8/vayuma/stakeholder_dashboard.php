@@ -61,7 +61,7 @@ $full_name = $_SESSION["full_name"] ?? "Member";
 <html lang="en">
 <head><?php require __DIR__ . '/includes/pwa.php'; ?>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
     <title><?php echo htmlspecialchars($role_name, ENT_QUOTES, "UTF-8"); ?> Dashboard | VAYUMA TRIX</title>
     <link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
@@ -71,7 +71,7 @@ $full_name = $_SESSION["full_name"] ?? "Member";
 <link rel="stylesheet" href="frontend/css/dashboard-shell.css">
 <style>
 </style>
-<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-4">
+<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-6">
 </head>
 <body>
 <div class="va-dash-layout"><?php

@@ -20,7 +20,7 @@ const server=http.createServer((req,res)=>{
   old=false;await page.evaluate(async()=>{await (await navigator.serviceWorker.getRegistration()).update();});
   await page.waitForFunction(async()=>!!(await navigator.serviceWorker.getRegistration()).waiting,{timeout:10000});
   await page.close();page=await browser.newPage();await page.goto(url);
-  await page.waitForFunction(async()=>{const keys=await caches.keys();return keys.includes('vayuma-public-v18')&&!keys.includes('vayuma-public-v16');},{timeout:15000});
+  await page.waitForFunction(async()=>{const keys=await caches.keys();return keys.includes('vayuma-public-v19')&&!keys.includes('vayuma-public-v16');},{timeout:15000});
   console.log('PASS synthetic browser service-worker upgrade and old cache cleanup');
  }finally{await browser.close();server.close();}
 })().catch(e=>{console.error(e);server.close();process.exitCode=1});

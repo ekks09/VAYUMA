@@ -6,7 +6,7 @@ try { $stmt=$conn->prepare("SELECT o.*,pl.produce_name,pl.location,u.full_name A
  if(!$stmt) throw new RuntimeException('Order prepare failed');$stmt->bind_param('i',$userId);if(!$stmt->execute() || !($orders=$stmt->get_result())) throw new RuntimeException('Order query failed');
 } catch(Throwable $e) { error_log('Accepted buyer orders unavailable: '.$e->getMessage());$orders=null;http_response_code(503); }
 ?>
-<!doctype html><html><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Deliveries | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css">
+<!doctype html><html><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1, interactive-widget=resizes-content"><title>Deliveries | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">

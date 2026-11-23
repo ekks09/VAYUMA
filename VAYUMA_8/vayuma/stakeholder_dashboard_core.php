@@ -27,14 +27,14 @@ foreach($queries as $key=>[$sql,$type,$value]) {
 }
 function hd($v){return htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8');}
 ?>
-<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title><?=hd($config[0])?> Dashboard | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css">
+<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover, interactive-widget=resizes-content"><title><?=hd($config[0])?> Dashboard | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">
 <link rel="stylesheet" href="frontend/css/pages.css">
 <link rel="stylesheet" href="frontend/css/dashboard-shell.css">
 <style>
-</style><link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-4"></head><body>
+</style><link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-6"></head><body>
 <div class="va-dash-layout"><?php
 $dashboardLinks = ['Dashboard' => vayuma_role_route($expected_role, 'dashboard'), 'Marketplace' => 'market_connect.php', 'Exchange' => 'stakeholder_offers.php', 'Requests' => 'stakeholder_requests.php', 'Stakeholder directory' => 'stakeholder_directory.php', 'Edit profile' => $expected_role . '_profile.php?from=' . $expected_role . '_dashboard.php'];
 if (in_array($expected_role, ['veterinary_officer', 'extension_officer'], true)) $dashboardLinks['Support requests'] = 'agricultural_support_requests.php?view=received';
