@@ -47,7 +47,7 @@ foreach ($visits as $candidate) if ((string)$candidate['id'] === $oldVisit) { $v
 $farmerFound = false;
 foreach ($farmers as $candidate) if ((string)$candidate['id'] === $oldFarmer) { $farmerFound = true; break; }
 ?>
-<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Farm Reports | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css">
+<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1, interactive-widget=resizes-content"><title>Farm Reports | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">

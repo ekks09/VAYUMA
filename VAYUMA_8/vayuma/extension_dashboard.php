@@ -36,7 +36,7 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
 <html lang="<?= htmlspecialchars($current_language, ENT_QUOTES, 'UTF-8') ?>">
 <head>
 <?php require __DIR__ . '/includes/pwa.php'; ?>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Extension Officer Dashboard | VAYUMA TRIX</title>
 <link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
@@ -44,7 +44,7 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
 <link rel="stylesheet" href="frontend/css/layout.css">
 <link rel="stylesheet" href="frontend/css/pages.css">
 <link rel="stylesheet" href="frontend/css/dashboard-shell.css">
-<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=extension-ui-2">
+<link rel="stylesheet" href="assets/css/dashboard-layout.css?v=dashboard-ui-6">
 </head>
 <body class="va-extension-dashboard">
 <div class="va-dash-layout">
@@ -83,9 +83,9 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
     <?php require __DIR__ . '/includes/header_user_menu.php'; ?>
   </header>
   <nav class="va-ext-actions" aria-label="Extension account actions">
-    <a href="extension_profile.php?from=extension_dashboard.php">Edit extension profile</a>
-    <a href="agricultural_support_requests.php?view=received">Manage farmer support requests</a>
-    <a href="agricultural_support_requests.php?view=sent">My sent requests</a>
+    <a href="extension_profile.php?from=extension_dashboard.php"><svg aria-hidden="true"><use href="frontend/images/icons.svg#va-ext-profile"></use></svg>Edit extension profile</a>
+    <a href="agricultural_support_requests.php?view=received"><svg aria-hidden="true"><use href="frontend/images/icons.svg#va-ext-advice"></use></svg>Manage farmer support requests</a>
+    <a href="agricultural_support_requests.php?view=sent"><svg aria-hidden="true"><use href="frontend/images/icons.svg#va-ext-report"></use></svg>My sent requests</a>
   </nav>
   <div class="va-dash-role-label">AGRICULTURAL EXTENSION OFFICER</div>
   <h1 class="va-dash-page-title">Good day, <?= htmlspecialchars($full_name, ENT_QUOTES, 'UTF-8') ?></h1>

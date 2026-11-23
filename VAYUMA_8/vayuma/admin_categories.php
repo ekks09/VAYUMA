@@ -126,7 +126,7 @@ $stmt->close();
 <html lang="en">
 <head><?php require __DIR__ . '/includes/pwa.php'; ?>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1, interactive-widget=resizes-content">
 <title>Category Management | VAYUMA TRIX Admin</title>
 <link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">

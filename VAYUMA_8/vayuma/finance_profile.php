@@ -43,7 +43,7 @@ $full_name = $_SESSION['full_name'] ?? 'Financial Institution User';
 
 <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
+    content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content"
 >
 
 <title>Financial Institution Profile | VAYUMA TRIX</title>

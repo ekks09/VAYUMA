@@ -116,7 +116,7 @@ if ($phonePrefill === '') {
 <html lang="en">
 <head><?php require __DIR__ . '/includes/pwa.php'; ?>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
 
 <title>Payment | VAYUMA TRIX</title>
 

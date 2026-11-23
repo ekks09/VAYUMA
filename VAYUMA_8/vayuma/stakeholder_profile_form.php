@@ -35,7 +35,7 @@ $currentCounty = trim((string)($profile['county'] ?? ''));
 $err=$_SESSION['profile_error']??''; unset($_SESSION['profile_error']);
 function h($v){return htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8');}
 ?>
-<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title><?=h($config[0])?> Profile | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css">
+<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1, interactive-widget=resizes-content"><title><?=h($config[0])?> Profile | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">
 <link rel="stylesheet" href="frontend/css/layout.css">

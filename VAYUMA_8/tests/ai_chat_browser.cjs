@@ -6,7 +6,7 @@ const base=process.env.VAYUMA_AI_FIXTURE_URL;if(!base)throw new Error('Set VAYUM
  for(const width of [320,390,768,1024,1280]){
   await page.setViewport({width,height:850});await page.goto(base+'/dashboard.html',{waitUntil:'load'});
   const header=await page.evaluate(()=>{const a=document.querySelector('.vy-staff-entry').getBoundingClientRect(),b=document.querySelector('.vy-user-menu__trigger').getBoundingClientRect();return{scroll:document.documentElement.scrollWidth,staff:{left:a.left,right:a.right,height:a.height},menu:{left:b.left,right:b.right,height:b.height}}});
-  assert.ok(header.scroll<=width+1&&header.staff.left>=0&&header.staff.right<=width&&header.staff.height>=44&&header.menu.height>=44,`header ${width}: ${JSON.stringify(header)}`);
+  assert.ok(header.scroll<=width+1&&header.menu.height>=44&&(width<=767 ? header.staff.height===0 : header.staff.left>=0&&header.staff.right<=width&&header.staff.height>=44),`header ${width}: ${JSON.stringify(header)}`);
   assert.equal(await page.$eval('.vy-staff-entry',e=>e.getAttribute('href')),'onboarding.php');
   await page.click('.vayuma-ai-fab');await page.waitForFunction(()=>document.querySelector('.vayuma-chat--drawer').getBoundingClientRect().right<=innerWidth+1);const drawer=await page.evaluate(()=>{const e=document.querySelector('.vayuma-chat--drawer'),r=e.getBoundingClientRect();return{scroll:document.documentElement.scrollWidth,width:r.width,left:r.left,right:r.right,visible:!document.querySelector('.vai-overlay').hidden,inputFont:parseFloat(getComputedStyle(e.querySelector('textarea')).fontSize)}});
   assert.ok(drawer.visible&&drawer.scroll<=width+1&&drawer.right<=width+1&&drawer.left>=-1&&drawer.width<=400.5&&drawer.inputFont>=16,`drawer ${width}: ${JSON.stringify(drawer)}`);

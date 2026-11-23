@@ -32,7 +32,7 @@ if (!$category || !$category['is_active']) {
     http_response_code(404);
     $message = !$category ? 'The requested category does not exist.' : 'This category is currently inactive.';
     ?>
-    <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Category unavailable | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css"><link rel="stylesheet" href="assets/css/vayuma-ui.css?v=2"><link rel="stylesheet" href="frontend/css/user-menu.css?v=3"></head><body class="vy-denied-page">
+    <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content"><title>Category unavailable | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css"><link rel="stylesheet" href="assets/css/vayuma-ui.css?v=2"><link rel="stylesheet" href="frontend/css/user-menu.css?v=3"></head><body class="vy-denied-page">
     <?php require __DIR__ . '/includes/workspace_back.php'; ?>
     <main class="vy-unavailable"><h1>Category unavailable</h1><p><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></p><a href="market_connect.php">Browse Marketplace</a></main></body></html>
     <?php
@@ -79,7 +79,7 @@ function cat_h($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
 <html lang="en">
 <head><?php require __DIR__ . '/includes/pwa.php'; ?>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1, interactive-widget=resizes-content">
 <title><?= cat_h($category['name']) ?> | VAYUMA TRIX</title>
 <link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">

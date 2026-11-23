@@ -1,5 +1,5 @@
 /* Only the offline document and explicitly listed public files may be cached. */
-const CACHE = 'vayuma-public-v18';
+const CACHE = 'vayuma-public-v19';
 const ROOT = new URL('./', self.registration.scope);
 const OFFLINE = new URL('offline.html', ROOT).href;
 const PUBLIC_FILES = new Map([
@@ -11,6 +11,7 @@ const PUBLIC_FILES = new Map([
   ['frontend/css/extension-workspace.css', 'text/css'],
   ['frontend/css/profile_forms.css', 'text/css'],
   ['frontend/css/pwa-install.css', 'text/css'],
+  ['frontend/css/pwa-splash.css', 'text/css'],
   ['frontend/css/dashboard-shell.css', 'text/css'],
   ['frontend/css/dashboard-sidebar-icons.css', 'text/css'],
   ['frontend/css/dashboard-shell-transitions.css', 'text/css'],

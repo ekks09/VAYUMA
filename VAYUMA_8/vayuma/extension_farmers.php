@@ -13,7 +13,7 @@ $farmers=[];$more=false;$available=true;
 try {$farmers=vayuma_extension_farmers($conn,(int)$_SESSION['user_id'],$search,($page-1)*50);$more=count($farmers)>50;if($more)array_pop($farmers);}
 catch(Throwable $e){error_log('Extension farmer directory failed: '.$e->getMessage());$available=false;http_response_code(503);}
 ?>
-<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Farmers | VAYUMA Extension</title>
+<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1, interactive-widget=resizes-content"><title>Farmers | VAYUMA Extension</title>
 <link rel="stylesheet" href="frontend/css/tokens.css">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css">

@@ -39,10 +39,10 @@ $token = (string)($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
 if ($token === '' || empty($_SESSION['vayuma_csrf_token']) || !hash_equals($_SESSION['vayuma_csrf_token'], $token)) respond(403, ['success'=>false,'error'=>'Your session expired. Refresh and try again.']);
 $now = time();
 $_SESSION['ai_requests'] = array_values(array_filter($_SESSION['ai_requests'] ?? [], static fn($t) => is_int($t) && $t > $now - 3600));
-if (count($_SESSION['ai_requests']) >= 20) respond(429, ['success'=>false,'error'=>'Session limit reached. Please try again later.']);
+if (count($_SESSION['ai_requests']) >= 1000) respond(429, ['success'=>false,'error'=>'Session limit reached (1000 requests per hour). Please try again later.']);
 $_SESSION['ai_requests'][] = $now;
 $raw = file_get_contents('php://input');
-if (strlen($raw) > 40000) respond(413, ['success'=>false,'error'=>'Request is too large.']);
+if (strlen($raw) > 128000) respond(413, ['success'=>false,'error'=>'Request is too large.']);
 $data = json_decode($raw, true);
 
 if (!is_array($data)) {
@@ -65,10 +65,10 @@ if (!in_array($language, ['en', 'sw'], true)) {
     $language = 'en';
 }
 
-if ($question === '' || mb_strlen($question) > 2000) {
+if ($question === '' || mb_strlen($question) > 8000) {
     respond(400, [
         'success' => false,
-        'error' => 'Enter a question of up to 2000 characters.'
+        'error' => 'Enter a question of up to 8000 characters.'
     ]);
 }
 
@@ -76,7 +76,7 @@ if ($question === '' || mb_strlen($question) > 2000) {
 $history = $data['history'] ?? [];
 if (!is_array($history) || !array_is_list($history) || count($history) > 6) respond(400, ['success'=>false,'error'=>'Conversation is too long. Clear chat and try again.']);
 foreach ($history as $turn) {
-    if (!is_array($turn) || !in_array($turn['role'] ?? null, ['user','assistant'], true) || !is_string($turn['content'] ?? null) || trim($turn['content']) === '' || mb_strlen($turn['content']) > 1000) {
+    if (!is_array($turn) || !in_array($turn['role'] ?? null, ['user','assistant'], true) || !is_string($turn['content'] ?? null) || trim($turn['content']) === '' || mb_strlen($turn['content']) > 2000) {
         respond(400, ['success'=>false,'error'=>'Invalid conversation. Clear chat and try again.']);
     }
 }

@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $h = static fn($v) => htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
 $storageReady = (vayuma_avatar_uses_tidb() ? vayuma_avatar_tidb_ready($conn) : vayuma_avatar_directory() !== null) && function_exists('imagecreatefromstring') && function_exists('imagejpeg');
 ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My profile | VAYUMA TRIX</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1, interactive-widget=resizes-content"><title>My profile | VAYUMA TRIX</title>
 <link rel="stylesheet" href="frontend/css/tokens.css"><link rel="stylesheet" href="frontend/css/components.css"><link rel="stylesheet" href="frontend/css/profile-hub.css"><?php require __DIR__ . '/includes/pwa.php'; ?></head><body>
 <header class="vy-profile__header"><a href="<?= $h($returnTo) ?>">← <?= $returnTo === 'role.php' ? 'Back to category selection' : ($returnTo === 'subscription.php' ? 'Back to subscription' : 'Back to dashboard') ?></a><?php require __DIR__ . '/includes/header_user_menu.php'; ?></header>
 <main class="vy-profile"><h1>My profile</h1><p>Manage your personal details and profile photo.</p>

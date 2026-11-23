@@ -7,7 +7,7 @@ $uid=(int)$_SESSION['user_id'];$profile=[];$s=$conn->prepare('SELECT * FROM stak
 $counties=require __DIR__.'/config/kenya_counties.php';$countyOptions=[];foreach($counties as $group){foreach($group as $item){if(!empty($item['name']))$countyOptions[]=$item['name'];}}$countyOptions[]='Marsabit';$countyOptions=array_values(array_unique($countyOptions));sort($countyOptions,SORT_NATURAL|SORT_FLAG_CASE);
 $error=$_SESSION['profile_error']??'';unset($_SESSION['profile_error']);function vh($v){return htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8');}
 ?>
-<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Veterinary Professional Profile | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css?v=20261110">
+<!doctype html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1, interactive-widget=resizes-content"><title>Veterinary Professional Profile | VAYUMA TRIX</title><link rel="stylesheet" href="frontend/css/tokens.css?v=20261110">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css?v=20261110">
 <link rel="stylesheet" href="frontend/css/layout.css">

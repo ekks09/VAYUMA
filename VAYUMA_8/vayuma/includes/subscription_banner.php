@@ -25,10 +25,16 @@ function render_subscription_banner(mysqli $conn, int $userId): string
     .va-sub-banner--free { background: #ecfdf5; border-color: #b7e4c7; }
     .va-sub-banner--negotiated { background: #fef3c7; border-color: #f3d9a8; }
     .va-sub-banner--info { background: #e5f1fc; border-color: #b7d4f7; }
-    .va-sub-banner--content { flex: 1; }
+    .va-sub-banner--content { flex: 1; min-width: 0; }
     .va-sub-banner--title { font-size: var(--va-font-size-sm); font-weight: var(--va-font-weight-bold); color: var(--va-text-primary); margin: 0 0 var(--va-space-1) 0; }
     .va-sub-banner--sub { font-size: var(--va-font-size-xs); color: var(--va-text-secondary); margin: 0; }
-    .va-sub-banner--actions { display: flex; gap: var(--va-space-2); align-items: center; }
+    .va-sub-banner--actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; min-width: 0; }
+    @media (max-width: 767px) {
+        .va-sub-banner { flex-direction: column; align-items: stretch; gap: 12px; }
+        .va-sub-banner--content, .va-sub-banner--actions { width: 100%; }
+        .va-sub-banner--actions { justify-content: flex-start; }
+        .va-sub-banner--actions .va-btn { width: auto; max-width: 100%; white-space: normal; }
+    }
     .va-sub-banner--badge {
         display: inline-flex; align-items: center; gap: var(--va-space-1);
         padding: 0.25rem 0.6rem; font-size: var(--va-font-size-xs); font-weight: var(--va-font-weight-bold);

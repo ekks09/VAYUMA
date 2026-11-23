@@ -8,7 +8,7 @@ $platformHomeUrl = vayuma_platform_home_route();
 <head>
     <?php require __DIR__ . '/includes/pwa.php'; ?>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
 
     <title>VAYUMA TRIX AGRITECH INNOVATIONS KENYA</title>
 

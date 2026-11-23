@@ -55,7 +55,7 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0"
+        content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content"
     >
 
     <title>Researcher Profile | VAYUMA TRIX</title>

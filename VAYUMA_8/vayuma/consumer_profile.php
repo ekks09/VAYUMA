@@ -12,7 +12,7 @@ $countyId=0;
 if(!empty($profile['county'])){$c=$conn->prepare("SELECT id FROM administrative_units WHERE unit_type='county' AND name=? LIMIT 1");if($c){$c->bind_param('s',$profile['county']);$c->execute();$countyId=(int)($c->get_result()->fetch_assoc()['id']??0);$c->close();}}
 function oldv($profile,$key,$fallback=''){return htmlspecialchars((string)($profile[$key]??$fallback),ENT_QUOTES,'UTF-8');}
 ?>
-<!DOCTYPE html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Consumer Profile | VAYUMA TRIX</title>
+<!DOCTYPE html><html lang="en"><head><?php require __DIR__ . '/includes/pwa.php'; ?><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content"><title>Consumer Profile | VAYUMA TRIX</title>
 <link rel="stylesheet" href="frontend/css/tokens.css?v=20261110">
 <link rel="stylesheet" href="frontend/css/components.css">
 <link rel="stylesheet" href="frontend/css/components_addition.css?v=20261110">
