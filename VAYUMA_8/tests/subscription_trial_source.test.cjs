@@ -13,7 +13,7 @@ test('trial claim is authenticated, CSRF protected and one-time', () => {
 });
 test('payment stays disabled and members are not asked to send money', () => {
   assert.match(read('includes/payment_gate.php'), /return false/);
-  assert.match(read('subscription.php'), /Please do not send payment/);
+  assert.match(read('subscription.php'), /payment and renewal are currently disabled/);
 });
 test('all dashboard templates render the shared banner', () => {
   for (const name of ['farmer','buyer','consumer','transport','cooperative','extension','finance','researcher','stakeholder'])

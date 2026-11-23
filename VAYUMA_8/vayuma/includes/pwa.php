@@ -25,7 +25,7 @@
 <link rel="stylesheet" href="assets/css/vayuma-ui.css?v=3">
 <link rel="stylesheet" href="frontend/css/pwa-install.css?v=install-2">
 <script src="frontend/js/pwa.js?v=install-4" defer></script>
-<link rel="stylesheet" href="frontend/css/user-menu.css?v=4">
+<link rel="stylesheet" href="frontend/css/user-menu.css?v=5">
 <script src="frontend/js/user-menu.js?v=1" defer></script>
 <script src="frontend/js/feedback.js?v=1" defer></script>
 <link rel="stylesheet" href="frontend/css/dashboard-sidebar-icons.css?v=1">
@@ -36,6 +36,6 @@ if (($_SESSION['logged_in'] ?? false) === true && isset($_SESSION['user_id']) &&
     require_once __DIR__ . '/csrf.php';
 ?>
 <meta name="vayuma-ai-csrf" content="<?= htmlspecialchars($_SESSION['vayuma_csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
-<link rel="stylesheet" href="frontend/css/ai-chat.css?v=8">
-<script src="frontend/js/ai-chat.js?v=10" defer></script>
+<link rel="stylesheet" href="frontend/css/ai-chat.css?v=9">
+<script src="frontend/js/ai-chat.js?v=11" defer></script>
 <?php endif; ?>

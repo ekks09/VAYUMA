@@ -179,3 +179,6 @@
 @media(max-width:430px){.va-extension-dashboard .va-ext-actions{grid-template-columns:minmax(0,1fr)}}
 /* The bottom clearance replaces the old permanently reserved right rail. */
 .va-extension-dashboard .va-ext-content-grid,.va-extension-dashboard .va-ext-stats{padding-right:0}
+
+/* Give staff access and the account menu room on narrow extension screens. */
+@media(max-width:420px){.va-extension-dashboard .va-dash-topbar{flex-wrap:wrap;gap:8px}.va-extension-dashboard .va-dash-topbar .va-ext-search{order:3;flex:1 0 100%;width:100%}.va-extension-dashboard .va-dash-topbar .vy-account-controls{order:2}.va-extension-dashboard .va-dash-topbar .va-mobile-menu-btn{order:1}}

@@ -32,5 +32,5 @@
 .vy-staff-entry:hover,.vy-staff-entry:focus-visible{background:#e5f5e9;outline-offset:2px}
 @media(max-width:650px){.vy-user-menu__stakeholder-header .vy-account-controls{order:1}.vy-user-menu__dashboard-header .vy-account-controls{margin-left:auto}.vy-staff-entry{font-size:12px;padding-inline:8px}}
 
-/* Staff Access remains in the profile menu on compact screens. */
-@media(max-width:767px){.vy-staff-entry{display:none}.vy-account-controls{gap:0}}
+/* Keep the direct staff link and account menu reachable on compact and installed screens. */
+@media(max-width:767px){.vy-account-controls{gap:4px}.vy-staff-entry{font-size:12px;padding-inline:8px}}
