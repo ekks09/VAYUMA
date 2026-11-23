@@ -36,26 +36,28 @@ try {
     $preview = ($_POST['mode'] ?? '') === 'preview';
     // Separate statements avoid UNION type/collation coercion across legacy
     // profile and onboarding columns. A query failure is never an empty report.
+    // Both statements are static. Search filtering is performed in PHP; no
+    // input is concatenated into WHERE, IN, GROUP BY or ORDER BY clauses.
     $queries = [
-      "SELECT 'Registered account' AS record_type,u.id AS account_id,u.full_name,u.phone,u.email,u.created_at,
-       COALESCE(NULLIF(f.county,''),r.county) AS county, f.sub_county,
-       COALESCE(NULLIF(f.farm_location,''),r.farmer_location) AS location,
-       COALESCE(f.farmer_id_ciphertext,r.farmer_id_ciphertext) AS id_cipher,
-       f.farm_name, COALESCE(NULLIF(f.main_crops,''),r.activity) AS activity,
-       COALESCE(f.farm_size,r.farm_size) AS farm_size, COALESCE(f.farm_size_unit,r.farm_size_unit) AS farm_size_unit,
-       r.preferred_language,r.created_at AS onboarded_at, staff.full_name AS onboarded_by,
-       f.farming_experience,f.soil_type,f.irrigation,f.secondary_crop,u.role AS current_role
-       FROM users u LEFT JOIN farmer_profiles f ON f.user_id=u.id
-       LEFT JOIN onboarding_records r ON r.claimed_by_user_id=u.id AND r.stakeholder_role='farmer'
-       LEFT JOIN users staff ON staff.id=r.onboarded_by_user_id
-       WHERE LOWER(TRIM(u.role))='farmer' OR r.id IS NOT NULL OR f.id IS NOT NULL",
-      "SELECT 'Staff record not claimed' AS record_type,NULL AS account_id,r.full_name,r.phone_identity AS phone,
-       NULL AS email,NULL AS created_at,r.county,NULL AS sub_county,r.farmer_location AS location,
-       r.farmer_id_ciphertext AS id_cipher,NULL AS farm_name,r.activity,r.farm_size,r.farm_size_unit,
-       r.preferred_language,r.created_at AS onboarded_at,staff.full_name AS onboarded_by,
-       NULL AS farming_experience,NULL AS soil_type,NULL AS irrigation,NULL AS secondary_crop,NULL AS current_role
-       FROM onboarding_records r LEFT JOIN users staff ON staff.id=r.onboarded_by_user_id
-       WHERE r.stakeholder_role='farmer' AND r.claimed_by_user_id IS NULL"
+      "SELECT 'Registered account' AS `record_type`,u.`id` AS `account_id`,u.`full_name`,u.`phone`,u.`email`,u.`created_at`,
+       COALESCE(NULLIF(f.`county`,''),r.`county`) AS `county`, f.`sub_county`,
+       COALESCE(NULLIF(f.`farm_location`,''),r.`farmer_location`) AS `location`,
+       COALESCE(f.`farmer_id_ciphertext`,r.`farmer_id_ciphertext`) AS `id_cipher`,
+       f.`farm_name`, COALESCE(NULLIF(f.`main_crops`,''),r.`activity`) AS `activity`,
+       COALESCE(f.`farm_size`,r.`farm_size`) AS `farm_size`, COALESCE(f.`farm_size_unit`,r.`farm_size_unit`) AS `farm_size_unit`,
+       r.`preferred_language`,r.`created_at` AS `onboarded_at`, staff.`full_name` AS `onboarded_by`,
+       f.`farming_experience`,f.`soil_type`,f.`irrigation`,f.`secondary_crop`,u.`role` AS `current_role`
+       FROM `users` AS `u` LEFT JOIN `farmer_profiles` AS `f` ON f.`user_id`=u.`id`
+       LEFT JOIN `onboarding_records` AS `r` ON r.`claimed_by_user_id`=u.`id` AND r.`stakeholder_role`='farmer'
+       LEFT JOIN `users` AS `staff` ON staff.`id`=r.`onboarded_by_user_id`
+       WHERE LOWER(TRIM(u.`role`))='farmer' OR r.`id` IS NOT NULL OR f.`id` IS NOT NULL",
+      "SELECT 'Staff record not claimed' AS `record_type`,NULL AS `account_id`,r.`full_name`,r.`phone_identity` AS `phone`,
+       NULL AS `email`,NULL AS `created_at`,r.`county`,NULL AS `sub_county`,r.`farmer_location` AS `location`,
+       r.`farmer_id_ciphertext` AS `id_cipher`,NULL AS `farm_name`,r.`activity`,r.`farm_size`,r.`farm_size_unit`,
+       r.`preferred_language`,r.`created_at` AS `onboarded_at`,staff.`full_name` AS `onboarded_by`,
+       NULL AS `farming_experience`,NULL AS `soil_type`,NULL AS `irrigation`,NULL AS `secondary_crop`,NULL AS `current_role`
+       FROM `onboarding_records` AS `r` LEFT JOIN `users` AS `staff` ON staff.`id`=r.`onboarded_by_user_id`
+       WHERE r.`stakeholder_role`='farmer' AND r.`claimed_by_user_id` IS NULL"
     ];
     $stage = 'prepare_report';
     $out = fopen('php://temp', 'w+');
@@ -100,12 +102,17 @@ try {
     fclose($out);
 } catch (Throwable $e) {
     if (is_resource($out)) fclose($out);
-    // Stage and exception class are useful for an administrator without logging
-    // SQL, credentials, farmer details, or ciphertext.
+    // Driver details for the static registered query are logged privately,
+    // never returned to the user. It contains no search values or farmer data.
     $errorCode = (int)$e->getCode();
     $sqlState = ($e instanceof mysqli_sql_exception) ? $e->getSqlState() : '';
     if (!is_string($sqlState) || !preg_match('/^[A-Z0-9]{5}$/D', $sqlState)) $sqlState = '';
     error_log('VAYUMA farmer CSV export failed at ' . $stage . ' (' . get_class($e) . ', code ' . $errorCode . ($sqlState !== '' ? ', SQLSTATE ' . $sqlState : '') . ').');
+    if ($stage === 'registered_query' && $e instanceof mysqli_sql_exception) {
+        // Strip line breaks to keep each diagnostic on a single log line.
+        error_log('VAYUMA farmer CSV registered query database error: ' . str_replace(["\r", "\n"], ' ', $e->getMessage()));
+        error_log('VAYUMA farmer CSV registered query SQL: ' . preg_replace('/\s+/', ' ', $queries[0]));
+    }
     while (ob_get_level() > 0) ob_end_clean();
     http_response_code(503); exit('Farmer export is temporarily unavailable. No file was prepared. Please return to Staff Access and try again. <a href="onboarding.php#records">Back to Staff Access</a>');
 }
