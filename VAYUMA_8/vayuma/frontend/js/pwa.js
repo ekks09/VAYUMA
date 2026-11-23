@@ -6,7 +6,7 @@
   const worker = new URL('../../sw.js', script.src);
   let installEvent = null;
   let notice = null;
-  let entry = null;
+  const entries = [];
   let dialog = null;
   let returnFocus = null;
   const dismissalKey = 'vayuma-install-dismissed-until';
@@ -26,7 +26,7 @@
   window.addEventListener('appinstalled', () => {
     installEvent = null;
     if (notice) { notice.remove(); notice = null; }
-    if (entry) entry.hidden = true;
+    entries.forEach(entry => { entry.hidden = true; });
     closeDialog();
   });
 
@@ -67,15 +67,27 @@
     // Browsers may dispatch a fresh beforeinstallprompt after a dismissal.
   }
   function addEntry() {
+    if (standalone()) return;
     const sidebar = document.querySelector('aside.va-sidebar, aside.va-dash-sidebar');
-    // Some stakeholder roles use a top navigation rather than a sidebar.
-    const target = sidebar ? (sidebar.querySelector('.va-sidebar--bottom') || sidebar) : document.querySelector('header.top nav');
-    if (!target || standalone()) return;
-    entry = document.createElement('button'); entry.type = 'button'; entry.className = 'va-install-entry' + (sidebar ? '' : ' va-install-entry--top');
-    const icon = document.createElement('span'); icon.className = 'va-install-entry__icon'; icon.setAttribute('aria-hidden', 'true'); icon.textContent = '↓';
-    const label = document.createElement('span'); label.textContent = text('Install app', 'Sakinisha programu');
-    entry.append(icon, label); entry.addEventListener('click', requestInstall);
-    if (sidebar && target === sidebar) target.append(entry); else target.prepend(entry);
+    const sidebarTarget = sidebar && (sidebar.querySelector('.va-sidebar--bottom') || sidebar);
+    const accountTarget = document.querySelector('.vy-user-menu__popover');
+    // Account menu also covers shared pages with no sidebar. Dismissal of the
+    // notification never dismisses these explicit navigation controls.
+    const targets = [sidebarTarget, accountTarget].filter(Boolean);
+    if (!targets.length) {
+      const nav = document.querySelector('header.top nav');
+      if (nav) targets.push(nav);
+    }
+    targets.forEach(target => {
+      if (target.querySelector('.va-install-entry')) return;
+      const entry = document.createElement('button'); entry.type = 'button';
+      entry.className = 'va-install-entry' + (target === accountTarget ? ' va-install-entry--account' : (target === sidebarTarget ? '' : ' va-install-entry--top'));
+      const icon = document.createElement('span'); icon.className = 'va-install-entry__icon'; icon.setAttribute('aria-hidden', 'true'); icon.textContent = '↓';
+      const label = document.createElement('span'); label.textContent = text('Install app', 'Sakinisha programu');
+      entry.append(icon, label); entry.addEventListener('click', requestInstall);
+      if (target === sidebar) target.append(entry); else target.prepend(entry);
+      entries.push(entry);
+    });
   }
   function showNotice() {
     if (!document.body || notice || standalone() || dismissed() || !(isIOS || isAndroid || installEvent)) return;

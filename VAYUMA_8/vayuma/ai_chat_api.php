@@ -114,10 +114,14 @@ if (!preg_match('/^[a-zA-Z0-9_.\/-]{1,150}$/D', $model) || preg_match('/[\r\n]/'
 require_once __DIR__.'/includes/nvidia_advisor.php';
 try { $vayumaDbReadinessProbe = true; require_once __DIR__.'/config/db.php'; if (!isset($conn) || !$conn) throw new RuntimeException(); } catch (Throwable $ignored) { respond(503,['success'=>false,'error'=>'VAYUMA TRIX AI is temporarily unavailable. Please try again later.']); }
 if (!vayuma_reserve_ai_request($conn, (int)$_SESSION['user_id'])) respond(503,['success'=>false,'error'=>'AI daily limit reached or usage control is unavailable. Please try again later.']);
+// Use only the signed-in session role; never trust a role supplied by the client.
+$sessionRole = is_string($_SESSION['role'] ?? null) ? $_SESSION['role'] : '';
+require_once __DIR__ . '/includes/ai_navigation.php';
+$navigationLinks = vayuma_ai_navigation_links($question, $sessionRole, $language);
 // Close the session before network I/O; all context has already been selected and copied.
 session_write_close();
 $providerEvidence = vayuma_nvidia_minimized_evidence($context, $language);
-$payload = vayuma_nvidia_payload($model, $question, $language, $providerEvidence, $history);
+$payload = vayuma_nvidia_payload($model, $question, $language, $providerEvidence, $history, $sessionRole);
 $ch=curl_init('https://integrate.api.nvidia.com/v1/chat/completions');
 curl_setopt_array($ch,[CURLOPT_POST=>true,CURLOPT_RETURNTRANSFER=>true,CURLOPT_FOLLOWLOCATION=>false,CURLOPT_PROTOCOLS=>CURLPROTO_HTTPS,CURLOPT_HTTPHEADER=>['Content-Type: application/json','Authorization: Bearer '.$apiKey],CURLOPT_POSTFIELDS=>json_encode($payload,JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE),CURLOPT_CONNECTTIMEOUT=>8,CURLOPT_TIMEOUT=>(int)$config['timeout']]);
 $response=curl_exec($ch); $status=(int)curl_getinfo($ch,CURLINFO_HTTP_CODE); curl_close($ch);
@@ -127,4 +131,4 @@ if ($answer === null) {
     error_log('VAYUMA NVIDIA AI unavailable or incomplete. HTTP status '.$status);
     respond(503,['success'=>false,'error'=>'VAYUMA TRIX AI is temporarily unavailable. Please try again later.']);
 }
-respond(200,['success'=>true,'answer'=>$answer,'language'=>$language,'mode'=>'ai_support','context_used'=>$contextUsed]);
+respond(200,['success'=>true,'answer'=>$answer,'language'=>$language,'mode'=>'ai_support','context_used'=>$contextUsed,'navigation_links'=>$navigationLinks]);

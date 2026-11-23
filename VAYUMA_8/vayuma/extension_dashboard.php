@@ -52,6 +52,7 @@ $full_name = $_SESSION['full_name'] ?? 'Extension Officer';
 <aside class="va-dash-sidebar" id="vaDashSidebar" aria-label="Extension dashboard navigation">
   <?php require __DIR__ . '/includes/dashboard_brand.php'; ?>
   <nav aria-label="Extension workspace">
+    <?php require __DIR__ . '/includes/dashboard_category_link.php'; ?>
 <div class="va-dash-sidebar--section">MAIN</div>
 <a class="va-dash-sidebar--nav-item va-dash-sidebar--nav-item--active" href="extension_dashboard.php" aria-current="page"><svg class="va-ext-icon" width="20" height="20" aria-hidden="true"><use href="frontend/images/icons.svg?v=extension-1#va-ext-dashboard"></use></svg><span>Dashboard</span></a>
 <div class="va-dash-sidebar--section">FARMER SUPPORT</div>

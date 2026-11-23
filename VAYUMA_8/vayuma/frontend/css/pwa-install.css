@@ -10,3 +10,6 @@
 @media(max-width:480px){.va-install-notice{right:max(12px,env(safe-area-inset-right));left:max(12px,env(safe-area-inset-left));width:auto}.va-install-dialog{padding:1rem}}
 .va-install-entry[hidden]{display:none}
 .va-install-entry--top{width:auto;flex:0 0 auto;margin:0;font-size:.8rem}
+
+.va-install-entry--account { width:calc(100% - 1rem); margin:.4rem .5rem; font-size:.9rem; }
+.va-install-entry--account[hidden] { display:none; }

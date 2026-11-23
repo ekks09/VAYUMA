@@ -3,6 +3,7 @@
 <aside class="va-dash-sidebar" id="vaDashSidebar" aria-label="Dashboard navigation">
   <?php require __DIR__ . '/dashboard_brand.php'; ?>
   <nav aria-label="Workspace">
+    <?php require __DIR__ . '/dashboard_category_link.php'; ?>
     <?php foreach ($dashboardLinks as $label => $href): ?>
       <?php
         $isActive = basename((string)($_SERVER['SCRIPT_NAME'] ?? '')) === $href;
@@ -14,7 +15,6 @@
   <?php vayuma_language_selector(); ?>
   <div class="va-sidebar--bottom" aria-label="Account utilities">
     <a class="va-dash-sidebar--nav-item" href="subscription.php">Subscription</a>
-    <a class="va-dash-sidebar--nav-item" href="role.php">Account category</a>
     <a class="va-dash-sidebar--nav-item" href="auth/logout.php">Sign out</a>
   </div>
 </aside>

@@ -22,7 +22,7 @@ const root = path.resolve(__dirname, '../vayuma');
    });
    assert.ok(metrics.input.width>=140,`${width} input: ${JSON.stringify(metrics)}`);
    assert.ok(metrics.send.width<120 && metrics.input.right<=metrics.send.left && metrics.send.right<=metrics.form.right,`${width} send: ${JSON.stringify(metrics)}`);
-   assert.ok(metrics.scroll<=metrics.client+1,`${width} prompts overflow`);
+   assert.ok(metrics.scroll>=metrics.client && await page.$eval('.vai-prompts',e=>getComputedStyle(e).overflowX)==='auto',`${width} prompts should scroll within their row`);
    assert.ok(metrics.drawer.height<=height && (height<700 || metrics.drawer.height<height*.95),`${width} drawer size: ${JSON.stringify(metrics)}`);
    assert.ok(!metrics.disabled && metrics.placeholder);
    await page.click('.vai-context summary');
