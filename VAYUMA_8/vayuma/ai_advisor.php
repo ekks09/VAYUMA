@@ -11,9 +11,9 @@ $dashboard = vayuma_dashboard_return_route();
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>VAYUMA TRIX AI</title>
 <?php require __DIR__ . '/includes/pwa.php'; ?>
-<link rel="stylesheet" href="frontend/css/ai-chat.css?v=3">
+<link rel="stylesheet" href="frontend/css/ai-chat.css?v=5">
 <meta name="vayuma-ai-csrf" content="<?= htmlspecialchars($_SESSION['vayuma_csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
-<script src="frontend/js/ai-chat.js?v=5" defer></script>
+<script src="frontend/js/ai-chat.js?v=7" defer></script>
 </head>
 <body class="vayuma-ai-page">
 <header class="vayuma-ai-page-header"><?php require __DIR__ . '/includes/workspace_back.php'; ?></header>

@@ -63,6 +63,7 @@ $full_name = $_SESSION['full_name'] ?? 'Researcher';
 <aside class="va-dash-sidebar" id="vaDashSidebar">
 
     <?php require __DIR__ . '/includes/dashboard_brand.php'; ?>
+    <?php require __DIR__ . '/includes/dashboard_category_link.php'; ?>
 
     <div class="nav-title">MAIN</div>
 

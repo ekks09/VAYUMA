@@ -17,6 +17,9 @@ if (!isset($_SESSION["user_id"]) || ($_SESSION['logged_in'] ?? false) !== true) 
 require_once __DIR__ . '/config/db.php';
 $role_error = $_SESSION["role_error"] ?? "";
 unset($_SESSION["role_error"]);
+$role_notice = (string)($_SESSION["role_notice"] ?? "");
+unset($_SESSION["role_notice"]);
+$currentRole = (string)($_SESSION["role"] ?? "");
 
 $role_groups = [
     "Agriculture & Market" => [
@@ -32,7 +35,7 @@ $role_groups = [
             "Buying, retail & trade",
             "Source produce, serve customers or trade across agricultural markets.",
             [
-                ["buyer", "🛒", "Buyer", "Discover quality produce and connect with verified farmers.", "Marketplace • Orders • Suppliers", "buyer-icon"],
+                ["buyer", "🛒", "Buyer", "Discover produce and connect with farmers.", "Marketplace • Orders • Suppliers", "buyer-icon"],
                 ["consumer", "🥬", "Consumer", "Find trusted agricultural products and make informed purchases.", "Products • Safety • Orders", "consumer-icon"],
                 ["retailer", "🏬", "Retailer", "Purchase agricultural products for resale to customers.", "Products • Sales • Orders", "buyer-icon"],
                 ["agribusiness", "🌽", "Agribusiness / Trader", "Aggregate, trade and distribute agricultural products.", "Trading • Supply • Markets", "transport-icon"],
@@ -190,16 +193,19 @@ $role_groups = [
         <section class="role-card">
             <?php $workspaceBackMenu = false; require __DIR__ . '/includes/workspace_back.php'; ?>
             <div class="role-header">
-                <div class="step-badge">STEP 2 OF 3</div>
-                <h1>Choose Your Role</h1>
+                <div class="step-badge">ALL CATEGORIES</div>
+                <h1>All account categories</h1>
+                <?php if ($role_notice !== ""): ?><p role="status" class="role-selection-hint"><?= htmlspecialchars($role_notice, ENT_QUOTES, "UTF-8") ?></p><?php endif; ?>
+                <?php if (vayuma_role_route($currentRole, 'dashboard')): ?><p>Current category: <strong><?= htmlspecialchars(ucwords(str_replace("_", " ", $currentRole)), ENT_QUOTES, "UTF-8") ?></strong> · <a href="profile.php">Account settings</a> · <a href="<?= htmlspecialchars(vayuma_role_route($currentRole, 'dashboard'), ENT_QUOTES, "UTF-8") ?>">Dashboard</a></p><?php endif; ?>
                 <p><a href="onboarding.php">Staff Access — farmer onboarding</a></p><p>Authorized staff can open the onboarding workspace without an active subscription. Sign in and enter the staff passphrase.</p>
                 <p>Welcome, <strong><?= htmlspecialchars($roleAccountName, ENT_QUOTES, 'UTF-8') ?></strong></p>
-                <span>Tell us how you will use VAYUMA so we can personalize your experience. A different category cannot be selected while a paid subscription is active; you can change it after the subscription expires.</span>
+                <span>Choose a category to preview its focus and then save. Your profile and dashboard will change, and access depends on the new category’s plan and setup. Your one-time trial is not reset. A different category cannot be selected while a paid subscription is active; you can change it after the subscription expires.</span>
                 <?php if (vayuma_role_route((string)($_SESSION['role'] ?? ''), 'dashboard')): ?>
                     <p><a href="subscription.php">View subscription</a></p>
                 <?php endif; ?>
             </div>
 
+            <p>These cards describe each category’s focus; available tools and access depend on your plan and setup.</p>
             <form action="auth/save_role.php" method="POST" id="roleForm" novalidate>
                 <?= vayuma_csrf_field() ?>
                 <?php $categoryIndex = 0; foreach ($role_groups as $group_name => $families): $categoryIndex++; ?>
@@ -218,7 +224,7 @@ $role_groups = [
                                 <div class="role-grid">
                                     <?php foreach ($roles as [$value, $icon, $name, $description, $features, $icon_class]): ?>
                                         <label class="role-option">
-                                            <input type="radio" name="role" value="<?php echo htmlspecialchars($value, ENT_QUOTES, "UTF-8"); ?>" aria-label="<?= htmlspecialchars($name, ENT_QUOTES, "UTF-8") ?>">
+                                            <input type="radio" name="role" value="<?php echo htmlspecialchars($value, ENT_QUOTES, "UTF-8"); ?>" <?= $value === $currentRole ? 'checked' : '' ?> aria-label="<?= htmlspecialchars($name, ENT_QUOTES, "UTF-8") ?>">
                                             <div class="role-inner">
                                                 <div class="role-icon <?php echo htmlspecialchars($icon_class, ENT_QUOTES, "UTF-8"); ?>"><?php echo $icon; ?></div>
                                                 <div class="role-content">
@@ -239,8 +245,8 @@ $role_groups = [
                 <div id="roleError" class="role-error" role="alert" aria-live="assertive"<?php echo $role_error === "" ? "" : " style=\"display: block;\""; ?>><?php echo htmlspecialchars($role_error, ENT_QUOTES, "UTF-8"); ?></div>
                 <p id="roleSelectionHint" class="role-selection-hint" aria-live="polite"></p>
                 <div class="role-footer">
-                    <button type="submit" class="role-button">Continue <span>→</span></button>
-                    <p>Select a role and press Continue, or double-click a role card to continue.</p>
+                    <button type="submit" class="role-button">Save category and continue <span>→</span></button>
+                    <p>Review the category above, then save your selection. <a href="subscription.php">View plan and trial details</a>.</p>
                 </div>
             </form>
         </section>
@@ -268,18 +274,10 @@ $role_groups = [
         const radio = option.querySelector('input[name="role"]');
         radio.addEventListener("change", function () {
             const title = option.querySelector(".role-content h3");
-            selectionHint.textContent = title ? "Selected: " + title.textContent.trim() : "";
+            selectionHint.textContent = title ? "Preview: " + title.textContent.trim() + ". Your dashboard, profile and plan may change; save to confirm." : "";
             roleError.style.display = "none";
         });
-        option.addEventListener("dblclick", function () {
-            radio.checked = true;
-            radio.dispatchEvent(new Event("change", { bubbles: true }));
-            if (typeof roleForm.requestSubmit === "function") {
-                roleForm.requestSubmit();
-            } else {
-                roleForm.submit();
-            }
-        });
+
     });
     </script>
 <script src="assets/js/vayuma-language.js" defer></script>

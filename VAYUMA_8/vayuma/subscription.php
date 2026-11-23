@@ -82,6 +82,35 @@ $hideWorkspaceBack = true;
 require_once __DIR__ . '/includes/ui_simple.php';
 ?>
 
+<style>
+.vy-trial-hero{box-sizing:border-box;background:linear-gradient(130deg,#064e3b,#087d42);color:#fff;border-radius:20px;padding:clamp(20px,4vw,34px);margin:0 0 24px;overflow-wrap:anywhere}.vy-trial-hero h2{color:#fff;font-size:clamp(28px,5vw,44px);margin:8px 0}.vy-trial-hero p{max-width:64ch;line-height:1.5}.vy-trial-hero .vy-trial-tag{display:inline-block;background:#dcfce7;color:#166534;padding:6px 12px;border-radius:999px;font-weight:800}.vy-trial-hero .va-btn{background:#fff;color:#065f46;border:0;white-space:normal}.vy-trial-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px;margin:14px 0 24px}.vy-trial-card{box-sizing:border-box;min-width:0;background:#fff;border:1px solid #d9ebdf;border-radius:14px;padding:18px;overflow-wrap:anywhere}.vy-trial-card h3{margin:0 0 8px}.vy-trial-card ul{padding-left:20px;line-height:1.6}.vy-trial-card p{line-height:1.5}
+</style>
+<section class="vy-trial-hero" aria-labelledby="trial-hero-title">
+  <span class="vy-trial-tag">1 MONTH FREE · 30 DAYS</span>
+  <h2 id="trial-hero-title">Discover VAYUMA with a free trial</h2>
+  <p>Eligible paid-category accounts can claim one 30-day trial. Explore your category dashboard and eligible climate and soil tools. VAYUMA TRIX AI is available to signed-in accounts, including without a trial.</p>
+  <?php if ($subscription && $paid && empty($subscription['has_used_trial']) && !subscription_is_accessible($subscription)): ?>
+    <form method="post" action="claim_trial.php"><?= vayuma_csrf_field() ?><button class="va-btn va-btn--primary" type="submit">Claim 1 month free</button></form>
+  <?php elseif ($subscription && $status === 'trialing'): ?>
+    <p><strong>Your 30-day trial is active.</strong></p>
+  <?php elseif ($subscription && !$paid): ?>
+    <p>This category uses a <?= $subscription['plan_type'] === 'free' ? 'free' : 'negotiated' ?> plan rather than a paid-plan trial.</p>
+  <?php elseif ($subscription): ?>
+    <p>The one-time trial is not available for this account or your access is already active.</p>
+  <?php else: ?>
+    <p>Plan information is currently unavailable. Please try again later.</p>
+  <?php endif; ?>
+  <p>After 30 days, trial access ends. There is no automatic charge; payments are not available yet, so please do not send payment. Plan pricing and access depend on your category.</p>
+</section>
+<div class="vy-trial-cards" aria-label="Plan details">
+  <section class="vy-trial-card"><h3>Your category plan</h3>
+    <?php if ($subscription && $paid): ?><p><strong>KSh <?= number_format((float)($subscription['monthly_price'] ?? 0), 2) ?></strong> / <?= h(str_replace('_', ' ', $billingInterval)) ?></p><p>Price from the configured plan; payment is currently disabled.</p>
+    <?php elseif ($subscription && $subscription['plan_type'] === 'free'): ?><p><strong>Free plan</strong></p><p>No subscription payment required for this category.</p>
+    <?php elseif ($subscription): ?><p><strong>Negotiated plan</strong></p><p>Access is subject to approval and agreed terms.</p>
+    <?php else: ?><p>Plan details are unavailable.</p><?php endif; ?>
+  </section>
+  <section class="vy-trial-card"><h3>Included experience</h3><ul><li>VAYUMA TRIX AI for signed-in members</li><li>Category dashboard, subject to access</li><li>Climate and soil insights when eligible</li></ul><a href="role.php">Explore all categories →</a></section>
+</div>
 <div class="va-mb-6">
   <div class="va-section">
     <div>

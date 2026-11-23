@@ -114,6 +114,11 @@ $_SESSION["role"] = $role;
 /* Registration has already authenticated this session for onboarding. */
 $_SESSION["logged_in"] = true;
 
+if ($currentRole !== '' && $currentRole !== $role) {
+    $_SESSION['role_notice'] = 'Category updated to ' . ucwords(str_replace('_', ' ', $role)) . '. Review your new profile and subscription before continuing.';
+    header('Location: ../role.php');
+    exit;
+}
 $next_page = vayuma_role_route($role, 'profile') ?? 'stakeholder_profile.php';
 
 header("Location: ../" . $next_page);

@@ -103,6 +103,7 @@ try {
 
 
     <?php require __DIR__ . '/includes/dashboard_brand.php'; ?>
+    <?php require __DIR__ . '/includes/dashboard_category_link.php'; ?>
 
 
     <div class="va-dash-sidebar--section">

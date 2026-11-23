@@ -1,0 +1,13 @@
+/* Decorative, colored icons supplement text; disabled actions remain disabled. */
+.va-sidebar--visual .va-action-original-icon{display:none!important}
+.va-sidebar--visual .va-action-symbol{display:inline-grid;place-items:center;flex:0 0 32px;width:32px;height:32px;border-radius:10px;background:#eaf7ef;color:#087443}
+.va-sidebar--visual .va-action-symbol svg{display:block;width:20px;height:20px}
+.va-sidebar--visual :is(.va-nav-item,.va-dash-sidebar--nav-item,.va-logout-item,.va-install-entry,.va-sidebar--bottom>a[href="subscription.php"]){gap:10px;min-height:44px}
+.va-sidebar--visual .va-action-symbol--home,.va-sidebar--visual .va-action-symbol--category,.va-sidebar--visual .va-action-symbol--profile{background:#e4f4e9;color:#087443}
+.va-sidebar--visual .va-action-symbol--weather,.va-sidebar--visual .va-action-symbol--calendar{background:#fff4d9;color:#996000}
+.va-sidebar--visual .va-action-symbol--soil,.va-sidebar--visual .va-action-symbol--crop{background:#f0f6db;color:#50720d}
+.va-sidebar--visual .va-action-symbol--market,.va-sidebar--visual .va-action-symbol--orders,.va-sidebar--visual .va-action-symbol--truck{background:#e7f2ff;color:#245c9c}
+.va-sidebar--visual .va-action-symbol--health,.va-sidebar--visual .va-action-symbol--exit{background:#fff0ed;color:#ad3f36}
+.va-sidebar--visual .va-action-symbol--money,.va-sidebar--visual .va-action-symbol--card{background:#fff0dc;color:#98571b}
+.va-sidebar--visual .va-action-symbol--ai,.va-sidebar--visual .va-action-symbol--book,.va-sidebar--visual .va-action-symbol--people{background:#f0eafe;color:#6946a1}
+.va-sidebar--visual :is(.va-nav-item,.va-dash-sidebar--nav-item,.va-logout-item,.va-install-entry)[aria-disabled="true"] .va-action-symbol{filter:grayscale(.65);opacity:.75}
