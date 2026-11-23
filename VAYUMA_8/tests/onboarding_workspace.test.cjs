@@ -13,7 +13,7 @@ test('onboarding access, consent, duplicate checks and staff attribution (mock d
     fs.writeFileSync(path.join(dir,'config/db.php'), `<?php
 class FakeResult {private $rows; function __construct($rows){$this->rows=$rows;} function fetch_assoc(){return array_shift($this->rows) ?: null;}}
 class FakeStmt {private $sql; private $vars=[]; public $affected_rows=1; function __construct($q){$this->sql=$q;} function bind_param($types,&...$vars){$this->vars=&$vars;} function execute(){if(strpos($this->sql,'INSERT INTO onboarding_records')!==false || strpos($this->sql,'UPDATE onboarding_records SET claim_attempts=0')!==false || strpos($this->sql,'UPDATE onboarding_records SET farmer_id_ciphertext=')!==false){file_put_contents(getenv('TEST_CAPTURE'),json_encode($this->vars));}return true;} function get_result(){if(strpos($this->sql,"SELECT full_name FROM onboarding_records")!==false)return new FakeResult([['full_name'=>'Farmer Example']]); if(strpos($this->sql,'SELECT phone FROM users')!==false)return new FakeResult([['phone'=>'0711111111']]); if(strpos($this->sql,'SELECT id FROM users WHERE phone_identity=')!==false && strpos($this->sql,'LIMIT 2')!==false)return new FakeResult([['id'=>7]]); if(strpos($this->sql,'SELECT phone_key')!==false)return new FakeResult([['phone_key'=>'ok']]); if(strpos($this->sql,'SELECT id FROM users')!==false)return new FakeResult(getenv('TEST_DUP')==='account'?[['id'=>2]]:[]); if(strpos($this->sql,'SELECT r.id, u.full_name')!==false)return new FakeResult(getenv('TEST_DUP')==='record'?[['id'=>8,'staff_name'=>'Example Agent']]:[]); return new FakeResult([]);} function close(){}}
-class FakeConn {function begin_transaction(){return true;} function commit(){return true;} function rollback(){return true;} function prepare($q){return new FakeStmt($q);} function query($q){return new FakeResult(strpos($q,'administrative_units')!==false?[['name'=>'Nairobi']]:[]);}} $conn=new FakeConn();`);
+class FakeConn {function begin_transaction(){return true;} function commit(){return true;} function rollback(){return true;} function prepare($q){return new FakeStmt($q);} function query($q){if(strpos($q,'administrative_units')!==false)throw new RuntimeException('Unexpected county lookup');return new FakeResult([]);}} $conn=new FakeConn();`);
     const capture = path.join(dir,'capture.json');
     function request({allowed='0711111111',enabled='1',duplicate='',consent='yes',method='POST',county='Nairobi'}={}) {
       fs.rmSync(capture,{force:true});
@@ -27,6 +27,8 @@ class FakeConn {function begin_transaction(){return true;} function commit(){ret
     r=request({duplicate:'record'}); assert.match(r.output,/already recorded by Example Agent/i); assert.equal(r.saved,null);
     r=request({consent:''}); assert.match(r.output,/person agreed/i); assert.equal(r.saved,null);
     r=request({county:'nAiRoBi'}); assert.ok(r.saved); assert.equal(r.saved[2],'Nairobi');
+    r=request({county:'Marsabit'}); assert.ok(r.saved); assert.equal(r.saved[2],'Marsabit');
+    r=request({county:'Marsabit',consent:'no'}); assert.equal(r.saved,null); assert.match(r.output,/<option value="Marsabit" selected/);
     r=request({county:'Not a county'}); assert.equal(r.saved,null); assert.match(r.output,/Select a valid county/);
     r=request(); assert.ok(r.saved); assert.equal(r.saved[1],'0712345678'); assert.equal(r.saved[8],7); assert.equal(r.saved[9],'test-cipher'); assert.equal(r.saved[10],'Sample village');
     fs.rmSync(capture,{force:true});

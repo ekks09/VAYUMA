@@ -19,17 +19,6 @@
   document.querySelectorAll('form[action="farmer_export.php"]').forEach(exportForm => exportForm.addEventListener('submit', event => {
     if (navigator.onLine === false) { event.preventDefault(); syncConnectivity(); offline?.scrollIntoView({block:'nearest'}); }
   }));
-  // Use a single editable county control when datalist is supported; retain the
-  // real select as a no-JS / unsupported-browser fallback.
-  const county = document.getElementById('onboarding-county');
-  const countyFallback = document.getElementById('county-fallback');
-  if (county && countyFallback && 'list' in county && window.HTMLDataListElement) {
-    county.name = 'county'; county.disabled = false; county.required = true; county.hidden = false;
-    countyFallback.disabled = true; countyFallback.hidden = true;
-  } else if (countyFallback) {
-    const label = document.querySelector('label[for="onboarding-county"]');
-    if (label) label.htmlFor = 'county-fallback';
-  }
   // Navigation links remain usable as anchors without JavaScript.
   const nav = document.querySelector('[data-workspace-nav]');
   if (nav) {
