@@ -17,10 +17,11 @@ class C {function prepare($q){return new S($q);}function query($q){return new R(
    const code=`ini_set('display_errors','0'); session_start(); $_SESSION=['user_id'=>7,'logged_in'=>true,'onboarding_unlocked_user_id'=>7,'onboarding_key_fingerprint'=>hash('sha256','custom-secret'),'vayuma_csrf_token'=>'token']; if (${claimFlash?'true':'false'}) {$_SESSION['onboarding_claim_code']='abcdef0123456789abcdef0123456789'; $_SESSION['onboarding_claim_name']='<Farmer>'; } $_SERVER['REQUEST_METHOD']='POST'; $_SERVER['SCRIPT_NAME']='/onboarding.php'; $_POST=['csrf_token'=>${JSON.stringify(csrf)},'action'=>'find_record','search_phone'=>${JSON.stringify(phone)}]; register_shutdown_function(function(){fwrite(STDERR,"\\nFLASH=".json_encode(isset($_SESSION['onboarding_claim_code'])));}); require ${JSON.stringify(path.join(dir,'onboarding.php'))};`;
    const r=spawnSync(php,['-r',code],{encoding:'utf8',env:{...process.env,VAYUMA_STAFF_ONBOARD_KEY:'custom-secret',VAYUMA_ONBOARDING_ENABLED:'1',VAYUMA_ONBOARDING_PHONES:'0711111111',VAYUMA_CLAIM_ENABLED:flag,TEST_CAPTURE:capture,TEST_INSERT:insert}});assert.equal(r.status,0,r.stderr);return {html:r.stdout,search:fs.existsSync(capture)?JSON.parse(fs.readFileSync(capture,'utf8')):null,insert:fs.existsSync(insert),stderr:r.stderr};
   }
-  let r=run();assert.deepEqual(r.search,['0712345678']);assert.equal(r.insert,false);assert.match(r.html,/Sample Farmer/);assert.match(r.html,/name="action" value="issue_code"/);assert.match(r.html,/method="post" action="onboarding.php#records"/);assert.doesNotMatch(r.html,/search_phone=0712345678/);
+  let r=run();assert.deepEqual(r.search,['0712345678']);assert.equal(r.insert,false);assert.match(r.html,/Sample Farmer/);assert.match(r.html,/name="action" value="reset_claim"/);assert.match(r.html,/method="post" action="onboarding.php#records"/);assert.doesNotMatch(r.html,/search_phone=0712345678/);
   r=run({csrf:'bad'});assert.equal(r.search,null);assert.equal(r.insert,false);assert.match(r.html,/session expired/i);
   r=run({phone:'not-a-phone'});assert.equal(r.search,null);assert.match(r.html,/valid phone number/i);
-  r=run({flag:'0'});assert.match(r.html,/claiming is currently disabled/i);assert.doesNotMatch(r.html,/name="action" value="issue_code"/);
-  r=run({claimFlash:true});assert.match(r.html,/&lt;Farmer&gt;/);assert.match(r.html,/abcdef0123456789abcdef0123456789/);assert.match(r.stderr,/FLASH=false/);assert.doesNotMatch(r.html,/claim_account\.php\?/);
+  r=run({flag:'0'});assert.match(r.html,/claiming is currently disabled/i);assert.doesNotMatch(r.html,/name="action" value="reset_claim"/);
+  r=run({claimFlash:true});assert.doesNotMatch(r.html,/abcdef0123456789abcdef0123456789/);assert.match(r.stderr,/FLASH=false/);
+
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });

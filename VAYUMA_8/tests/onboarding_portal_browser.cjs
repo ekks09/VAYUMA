@@ -8,8 +8,6 @@ if(!base)throw new Error('Set VAYUMA_PORTAL_FIXTURE_URL');
  const browser=await puppeteer.launch({executablePath:process.env.VAYUMA_CHROMIUM_PATH,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
  try {
   const page=await browser.newPage();
-  // Stub the clipboard so the synthetic code never touches the host clipboard.
-  await page.evaluateOnNewDocument(() => Object.defineProperty(navigator, 'clipboard', {configurable:true, value:{writeText:async value=>{window.__copiedClaimCode=value;}}}));
   for(const width of [320,360,390,768,1024]){
    await page.setViewport({width,height:850});
    for(const fixture of ['onboarding','unlock','claim']){
@@ -24,12 +22,11 @@ if(!base)throw new Error('Set VAYUMA_PORTAL_FIXTURE_URL');
   await page.select('#onboarding-role','buyer');assert.equal(await page.$$eval('[data-farmer-field]',els=>els.every(e=>e.hidden && !e.querySelector('input,select').required)),true);
   await page.select('#onboarding-role','farmer');assert.equal(await page.$$eval('[data-farmer-field]',els=>els.every(e=>!e.hidden && e.querySelector('input,select').required)),true);
   assert.equal(await page.$eval('.onboard-search',e=>e.method),'post');
-  assert.match(await page.$eval('#claim-code',e=>e.textContent),/Sample Farmer/);
-  assert.match(await page.$eval('#claim-code',e=>e.textContent),/does not send SMS/);
-  assert.equal(await page.$eval('#copy-claim-code',e=>e.hidden),false);
-  await page.click('#copy-claim-code');
-  assert.equal(await page.evaluate(()=>window.__copiedClaimCode),'abcdef0123456789abcdef0123456789');
-  assert.match(await page.$eval('#copy-claim-status',e=>e.textContent),/Copied/);
-  console.log('PASS synthetic staff workspace, unlock and claim layouts at five widths; role fields, private search and copy');
+  assert.match(await page.$eval('#add-person',e=>e.textContent),/separate signed-out browser/i);
+  assert.ok(await page.$('input[name="action"][value="reset_claim"]'));
+  await page.goto(`${base}/claim.html`,{waitUntil:'load'});
+  assert.ok(await page.$('input[name="farmer_id"]'));
+  assert.equal(await page.$('input[name="code"]'),null);
+  console.log('PASS synthetic staff workspace, unlock and claim layouts at five widths; role fields, private search and ID claiming');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exitCode=1});

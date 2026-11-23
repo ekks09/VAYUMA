@@ -42,6 +42,8 @@ function h($v) {
     return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
 }
 
+$trialNotice = (string)($_SESSION['trial_notice'] ?? '');
+unset($_SESSION['trial_notice']);
 $paid = $subscription && $subscription['plan_type'] === 'paid';
 $status = $subscription['status'] ?? 'payment_due';
 $billingInterval = $subscription['plan_billing_interval'] ?? $subscription['billing_interval'] ?? 'monthly';
@@ -49,7 +51,9 @@ $role = (string)($_SESSION['role'] ?? '');
 $profileRoute = vayuma_role_route($role, 'profile');
 $profileUrl = $profileRoute !== null ? $profileRoute . '?from=subscription.php' : 'role.php';
 $dashboardUrl = vayuma_role_route($role, 'dashboard');
-$dashboardAccessible = subscription_is_accessible($subscription);
+$dashboardAccessible = subscription_is_accessible($subscription) || subscription_dashboard_day_accessible($subscription);
+$freeMonth = (new DateTimeImmutable('now', new DateTimeZone('Africa/Nairobi')))->format('Y-m');
+$freeDayUsed = ($subscription['dashboard_free_month'] ?? null) === $freeMonth;
 $platformHomeUrl = $dashboardAccessible && $dashboardUrl !== null
     ? $dashboardUrl
     : 'welcome.php';
@@ -84,8 +88,8 @@ require_once __DIR__ . '/includes/ui_simple.php';
       <h1 class="va-section--title">Your Subscription</h1>
       <p class="va-section--sub">Stakeholder: <strong><?= h($subscription['stakeholder_name'] ?? 'Unknown') ?></strong></p>
     </div>
-    <span class="va-status va-status--<?= $status === 'active' ? 'active' : ($status === 'payment_due' ? 'payment-due' : ($status === 'expired' ? 'expired' : ($status === 'free_account' ? 'free' : 'negotiated'))) ?>">
-      <?= ucfirst(str_replace('_', ' ', $status)) ?>
+    <span class="va-status va-status--<?= in_array($status, ['active', 'trialing'], true) ? 'active' : ($status === 'payment_due' ? 'payment-due' : ($status === 'expired' ? 'expired' : ($status === 'free_account' ? 'free' : 'negotiated'))) ?>">
+      <?= h(subscription_status_label($status)) ?>
     </span>
   </div>
 </div>
@@ -109,13 +113,22 @@ require_once __DIR__ . '/includes/ui_simple.php';
   </div>
 <?php endif; ?>
 
+<?php if ($trialNotice !== ''): ?><p role="status"><?= h($trialNotice) ?></p><?php endif; ?>
+
 <?php if (!$subscription): ?>
   <div class="va-toast va-toast--error" role="alert">
     This stakeholder plan is not configured. Please contact VAYUMA support.
   </div>
 <?php else: ?>
 <div class="va-card va-card--p va-mb-6">
-  <?php if ($paid && $status === 'active' && $dashboardAccessible && $dashboardUrl !== null): ?>
+  <?php if ($paid && !subscription_is_accessible($subscription) && subscription_dashboard_day_accessible($subscription)): ?>
+    <h2>Free dashboard access active</h2><p>Your 24-hour dashboard window ends <?= h((new DateTimeImmutable($subscription['dashboard_free_until_utc'], new DateTimeZone('UTC')))->setTimezone(new DateTimeZone('Africa/Nairobi'))->format('d M Y H:i')) ?> Nairobi time. Other subscription features remain restricted.</p>
+    <?php if ($dashboardUrl !== null): ?><a href="<?= h($dashboardUrl) ?>" class="va-btn va-btn--primary">Open dashboard</a><?php endif; ?>
+  <?php elseif ($paid && $status === 'trialing' && $dashboardAccessible): ?>
+    <h2>30-day trial active</h2>
+    <p>Your trial ends <?= h($subscription['trial_ends_at']) ?>. Paybill payments are not yet available; please do not send payment.</p>
+    <?php if ($dashboardUrl !== null): ?><a href="<?= h($dashboardUrl) ?>" class="va-btn va-btn--primary">Continue to dashboard</a><?php endif; ?>
+  <?php elseif ($paid && $status === 'active' && $dashboardAccessible && $dashboardUrl !== null): ?>
     <div class="va-text-center va-py-8">
       <div class="va-text-2xl va-font-bold va-text-success">Subscription active</div>
       <p class="va-text-muted va-text-sm va-mt-2">Your access is active. Continue to your stakeholder dashboard.</p>
@@ -142,36 +155,15 @@ require_once __DIR__ . '/includes/ui_simple.php';
       Your plan and price come from the VAYUMA pricing catalogue. Access starts only after payment is verified.
     </p>
 
-    <?php if (vayuma_payment_processing_enabled()): ?>
-    <div class="va-mb-4">
-      <div class="va-payment-methods">
-        <h3 class="va-method-label">Pay with M-Pesa STK Push</h3>
-        <p>Enter the Safaricom number that should receive the payment prompt. VAYUMA sends an STK push to that phone. Your subscription is activated only after you enter your M-Pesa PIN and Safaricom confirms the payment.</p>
-      </div>
-
-      <?php if ($subscriptionError !== ''): ?>
-      <div class="va-toast va-toast--error va-mb-4" role="alert" aria-live="polite">
-        <div class="va-toast--title">Payment issue</div>
-        <div class="va-toast--msg"><?= h($subscriptionError) ?></div>
-      </div>
-      <?php endif; ?>
-
-      <form method="post" action="subscription_stkpush.php" class="va-w-full" id="mpesaSubscriptionForm">
+    <?php if (empty($subscription['has_used_trial'])): ?>
+      <form method="post" action="claim_trial.php">
         <?= vayuma_csrf_field() ?>
-        <label class="va-form-label-field" for="mpesa-phone">M-Pesa phone number</label>
-        <input class="va-input va-w-full" id="mpesa-phone" name="phone" inputmode="tel" autocomplete="tel" required placeholder="0712345678" value="<?= h($phonePrefill) ?>">
-        <button type="submit" class="va-btn va-btn--primary va-btn--full va-w-full va-mt-3">
-          Send M-Pesa prompt
-        </button>
+        <button class="va-btn va-btn--primary" type="submit">Claim 30-day trial — KSh 0 upfront</button>
       </form>
-
-      <p class="va-text-muted va-text-sm va-mt-2">
-        A pop-up from M-Pesa will appear on that phone. Enter your PIN there. Access starts only after Safaricom confirms the payment.
-      </p>
-    </div>
-    <?php else: ?>
-    <p role="status">M-Pesa payment is temporarily unavailable. No payment prompt will be sent.</p>
     <?php endif; ?>
+    <?php if (!$freeDayUsed): ?><form method="post" action="claim_dashboard_day.php" class="va-mt-4"><?= vayuma_csrf_field() ?><button class="va-btn va-btn--outline" type="submit">Claim 24 hours of dashboard access this month</button></form><?php else: ?><p>This month’s free dashboard access has been used.</p><?php endif; ?>
+    <p class="va-text-muted va-text-sm">One dashboard-only window per Nairobi calendar month; it does not unlock paid features.</p>
+    <p role="status">M-Pesa Paybill payments are not available yet. Please do not send payment. We will enable renewal once verification is ready.</p>
 
   <?php elseif ($subscription['plan_type'] === 'free'): ?>
     <div class="va-text-center va-py-8">

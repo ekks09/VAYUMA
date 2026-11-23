@@ -21,5 +21,5 @@ if (($_SESSION['logged_in'] ?? false) === true && isset($_SESSION['user_id']) &&
 ?>
 <meta name="vayuma-ai-csrf" content="<?= htmlspecialchars($_SESSION['vayuma_csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
 <link rel="stylesheet" href="frontend/css/ai-chat.css?v=3">
-<script src="frontend/js/ai-chat.js?v=4" defer></script>
+<script src="frontend/js/ai-chat.js?v=5" defer></script>
 <?php endif; ?>

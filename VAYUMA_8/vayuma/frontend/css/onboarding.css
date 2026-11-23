@@ -33,3 +33,11 @@ body { background:#f3f7f4; color:#18372a; }
 .onboard--unlock { max-width:580px; padding-top:clamp(24px,8vw,70px); }
 .onboard--unlock .onboard-card { padding:clamp(22px,5vw,36px); }
 @media(max-width:600px) { .onboard-header--workspace { padding:20px; } .onboard-steps { grid-template-columns:1fr; } .onboard-steps a { min-height:64px; } .onboard button { width:auto; max-width:100%; } .onboard-search button,.onboard--unlock form button[type=submit],#onboarding-form > button { width:100%; } }
+/* Make staff navigation and actions recognizable as touch-friendly buttons. */
+.onboard a:not(.onboard-steps a):not(.onboard-tabs a):not(.onboard-pages a){display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:9px 14px;border:1px solid #9fc9ab;border-radius:10px;background:#fff;color:#075f34;text-decoration:none;font-weight:700}
+.onboard a:hover{border-color:#087d42;background:#edf8f0}.onboard-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.onboard-actions form{margin:0}.onboard-actions button{min-width:180px}.onboard-person{border-radius:12px;padding:16px;margin:10px 0;border:1px solid #e1ece4;background:#fbfdfb}.onboard-person strong{color:#153b28}@media(max-width:600px){.onboard-actions>*{width:100%}.onboard-actions button{width:100%}}
+/* Preserve space for the floating assistant and safe-area controls on phones. */
+.onboard { padding-bottom: max(110px, calc(env(safe-area-inset-bottom) + 90px)); }
+.onboard-actions form { display:inline-flex; }
+.onboard button:disabled { opacity:.65; cursor:wait; }
+.onboard .onboard-show-key { font-size:1rem; }

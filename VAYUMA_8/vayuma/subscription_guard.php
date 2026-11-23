@@ -30,7 +30,11 @@ if (
         exit('Subscription access is temporarily unavailable. Please try again later.');
     }
 
-    if (!$subscription || !subscription_is_accessible($subscription)) {
+    require_once __DIR__ . '/includes/role_routes.php';
+    $ownDashboard = vayuma_role_route((string)($_SESSION['role'] ?? ''), 'dashboard');
+    $requestedPage = basename((string)($_SERVER['SCRIPT_NAME'] ?? ''));
+    $isDashboard = $ownDashboard !== null && ($requestedPage === $ownDashboard || $requestedPage === 'dashboard.php');
+    if (!$subscription || (!subscription_is_accessible($subscription) && !($isDashboard && subscription_dashboard_day_accessible($subscription)))) {
         header('Location: subscription.php');
         exit;
     }

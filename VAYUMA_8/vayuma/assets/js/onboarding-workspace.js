@@ -1,5 +1,25 @@
 // Progressive enhancement only; server validation and authorization remain authoritative.
 (() => {
+  // Do not cache or queue personal data. Browser connectivity is only a hint;
+  // a successful server confirmation is still needed to establish a save.
+  const offline = document.getElementById('onboard-offline');
+  const syncConnectivity = () => { if (offline) offline.hidden = navigator.onLine !== false; };
+  window.addEventListener('online', syncConnectivity);
+  window.addEventListener('offline', syncConnectivity);
+  syncConnectivity();
+  const intake = document.getElementById('onboarding-form');
+  if (intake) {
+    const submit = intake.querySelector('button[type="submit"]');
+    intake.addEventListener('submit', event => {
+      if (navigator.onLine === false) { event.preventDefault(); syncConnectivity(); offline?.scrollIntoView({block:'nearest'}); return; }
+      if (submit) { submit.disabled = true; submit.setAttribute('aria-busy', 'true'); }
+    });
+    window.addEventListener('pageshow', () => { if (submit) { submit.disabled = false; submit.removeAttribute('aria-busy'); } });
+  }
+  const exportForm = document.querySelector('form[action="farmer_export.php"]');
+  if (exportForm) exportForm.addEventListener('submit', event => {
+    if (navigator.onLine === false) { event.preventDefault(); syncConnectivity(); offline?.scrollIntoView({block:'nearest'}); }
+  });
   const role = document.getElementById('onboarding-role');
   const fields = document.querySelectorAll('[data-farmer-field]');
   if (role) {
@@ -23,20 +43,6 @@
       passphrase.type = show ? 'text' : 'password';
       reveal.setAttribute('aria-pressed', String(show));
       reveal.textContent = show ? 'Hide passphrase' : 'Show passphrase';
-    });
-  }
-  const button = document.getElementById('copy-claim-code');
-  const code = document.getElementById('staff-claim-code');
-  const status = document.getElementById('copy-claim-status');
-  if (button && code && status && window.isSecureContext && navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
-    button.hidden = false;
-    button.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(code.textContent.trim());
-        status.textContent = button.dataset.copied;
-      } catch (_) {
-        status.textContent = button.dataset.failed;
-      }
     });
   }
 })();
