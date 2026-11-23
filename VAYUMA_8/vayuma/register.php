@@ -21,7 +21,6 @@ if ($current_language === 'sw') {
         'You must accept the Terms of Service and Privacy Policy.' => 'Lazima ukubali Masharti ya Huduma na Sera ya Faragha.',
         'Unable to create your account. Please sign in or try again later.' => 'Imeshindikana kufungua akaunti. Ingia au ujaribu tena baadaye.',
         'That phone number or email is already in use.' => 'Nambari hiyo ya simu au barua pepe tayari inatumika.',
-        'This phone has an onboarding record. Use the claim account link with your staff-issued code.' => 'Nambari hii ina rekodi ya usajili. Tumia kiungo cha kuunganisha akaunti pamoja na msimbo kutoka kwa mfanyakazi.',
         'Unable to create your account. Please try again.' => 'Imeshindikana kufungua akaunti yako. Tafadhali jaribu tena.',
     ];
     $error = $registerErrorTranslations[$error] ?? $error;
@@ -130,7 +129,7 @@ if ($current_language === 'sw') {
                 <?php endif; ?>
 
 
-                <?php if (getenv('VAYUMA_ONBOARDING_ENABLED') === '1' && getenv('VAYUMA_CLAIM_ENABLED') === '1'): ?><p><a class="auth-claim-link" data-claim-source="phone" href="claim_account.php"><?= htmlspecialchars($current_language === 'sw' ? 'Una msimbo wa mfanyakazi? Unganisha akaunti yako ya mkulima' : 'Have a staff-issued code? Claim your farmer account', ENT_QUOTES, 'UTF-8') ?></a></p><?php endif; ?>
+                <?php if (getenv('VAYUMA_ONBOARDING_ENABLED') === '1' && getenv('VAYUMA_CLAIM_ENABLED') === '1'): ?><p><a class="auth-claim-link" data-claim-source="phone" href="claim_account.php"><?= htmlspecialchars($current_language === 'sw' ? 'Umesajiliwa na mfanyakazi? Unganisha akaunti yako ya mkulima' : 'Onboarded by staff? Claim your farmer account', ENT_QUOTES, 'UTF-8') ?></a></p><?php endif; ?>
                 <form
                     action="auth/register_process.php"
                     method="POST"

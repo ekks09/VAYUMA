@@ -1,7 +1,7 @@
 FROM php:8.3-apache-bookworm
-RUN apt-get update && apt-get install -y --no-install-recommends libonig-dev libcurl4-openssl-dev libjpeg62-turbo-dev libpng-dev libwebp-dev ca-certificates \
+RUN apt-get update && apt-get install -y --no-install-recommends libonig-dev libcurl4-openssl-dev libjpeg62-turbo-dev libpng-dev libwebp-dev libsodium-dev ca-certificates \
     && docker-php-ext-configure gd --with-jpeg --with-webp \
-    && docker-php-ext-install -j"$(nproc)" mysqli mbstring curl gd \
+    && docker-php-ext-install -j"$(nproc)" mysqli mbstring curl gd sodium \
     && a2enmod rewrite headers \
     && rm -rf /var/lib/apt/lists/*
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/vayuma PORT=8080 APP_ENV=staging

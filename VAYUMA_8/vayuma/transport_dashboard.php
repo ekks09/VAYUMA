@@ -167,7 +167,7 @@ $full_name = $_SESSION['full_name'] ?? "Transport Provider";
 
 <!-- MAIN CONTENT -->
 
-<main class="va-dash-main">
+<main class="va-dash-main"><?php require_once __DIR__ . "/includes/subscription_banner.php"; echo render_subscription_banner($conn, (int)$_SESSION["user_id"]); ?>
 
 
 

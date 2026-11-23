@@ -1,5 +1,6 @@
 <?php
 session_start();
+header('Cache-Control: private, no-store, max-age=0');
 require_once __DIR__ . '/includes/csrf.php';
 require_once __DIR__ . '/includes/language.php';
 
@@ -11,7 +12,7 @@ require_once __DIR__ . '/config/db.php';
 $user_id = (int)$_SESSION['user_id'];
 $farmProfile = []; $profileDuplicate = false;
 try {
-    $stmt = $conn->prepare('SELECT farm_name,county,sub_county,farm_location,farm_size,farm_size_unit,farming_experience,main_crops,soil_type,irrigation,secondary_crop FROM farmer_profiles WHERE user_id=? ORDER BY id LIMIT 2');
+    $stmt = $conn->prepare('SELECT farm_name,county,sub_county,farm_location,farm_size,farm_size_unit,farming_experience,main_crops,soil_type,irrigation,secondary_crop,farmer_id_ciphertext FROM farmer_profiles WHERE user_id=? ORDER BY id LIMIT 2');
     $stmt->bind_param('i', $user_id); $stmt->execute(); $result = $stmt->get_result();
     $farmProfile = $result->fetch_assoc() ?: []; $profileDuplicate = (bool)$result->fetch_assoc(); $stmt->close();
 } catch (Throwable $e) {
@@ -21,11 +22,13 @@ try {
 // A verified, claimed record can prefill missing fields; it is never shown before ownership verification.
 if (!$farmProfile && !$profileDuplicate && getenv('VAYUMA_ONBOARDING_ENABLED') === '1' && getenv('VAYUMA_CLAIM_ENABLED') === '1') {
     try {
-        $claim = $conn->prepare("SELECT county,activity,farm_size,farm_size_unit FROM onboarding_records WHERE claimed_by_user_id=? AND stakeholder_role='farmer' LIMIT 1");
+        $claim = $conn->prepare("SELECT county,activity,farm_size,farm_size_unit,farmer_location,farmer_id_ciphertext FROM onboarding_records WHERE claimed_by_user_id=? AND stakeholder_role='farmer' LIMIT 1");
         $claim->bind_param('i', $user_id); $claim->execute(); $claimed = $claim->get_result()->fetch_assoc(); $claim->close();
-        if ($claimed) $farmProfile = ['county'=>$claimed['county'], 'main_crops'=>$claimed['activity'], 'farm_size'=>$claimed['farm_size'], 'farm_size_unit'=>$claimed['farm_size_unit']];
+        if ($claimed) $farmProfile = ['farmer_id_ciphertext'=>$claimed['farmer_id_ciphertext'], 'county'=>$claimed['county'], 'farm_location'=>$claimed['farmer_location'], 'main_crops'=>$claimed['activity'], 'farm_size'=>$claimed['farm_size'], 'farm_size_unit'=>$claimed['farm_size_unit']];
     } catch (Throwable $e) { error_log('VAYUMA claim prefill unavailable.'); http_response_code(503); exit('Farm profile is temporarily unavailable. Please try again.'); }
 }
+$hasSavedFarmerId = !empty($farmProfile['farmer_id_ciphertext']);
+unset($farmProfile['farmer_id_ciphertext']);
 $profileError = (string)($_SESSION['farm_profile_error'] ?? ''); unset($_SESSION['farm_profile_error']);
 $old = $_SESSION['farm_profile_old'] ?? []; unset($_SESSION['farm_profile_old']);
 if (is_array($old)) foreach ($old as $key => $value) if (is_string($value)) $farmProfile[$key] = $value;
@@ -147,7 +150,11 @@ $email = $_SESSION['email'] ?? '';
 
 
             <div class="va-profile-form-grid">
-
+                <div class="va-profile-form-group">
+                    <label class="va-profile-label-field" for="farmer-id">National ID number</label>
+                    <input class="va-profile-input" id="farmer-id" name="farmer_id" type="text" inputmode="numeric" pattern="[0-9]{5,20}" maxlength="20" autocomplete="off" <?= $hasSavedFarmerId ? '' : 'required' ?>>
+                    <small class="va-profile-hint"><?= $hasSavedFarmerId ? 'An ID is already recorded. Leave blank to keep it, or enter a replacement.' : 'Enter 5–20 digits. Authorized staff can access and export this ID for onboarding records.' ?></small>
+                </div>
                 <div class="va-profile-form-group">
 
                     <label class="va-profile-label-field">Full Name</label>

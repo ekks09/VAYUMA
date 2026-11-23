@@ -77,7 +77,7 @@ $full_name = $_SESSION["full_name"] ?? "Member";
 <div class="va-dash-layout"><?php
 $dashboardLinks = ['Dashboard' => 'stakeholder_dashboard.php', 'Marketplace' => 'market_connect.php', 'Exchange' => 'stakeholder_offers.php', 'Requests' => 'stakeholder_requests.php', 'Edit profile' => 'stakeholder_profile.php?from=stakeholder_dashboard.php'];
 require __DIR__ . '/includes/dashboard_generic_sidebar.php'; ?>
-    <main class="shell va-generic-main">
+    <main class="shell va-generic-main"><?php require_once __DIR__ . "/includes/subscription_banner.php"; echo render_subscription_banner($conn, (int)$_SESSION["user_id"]); ?>
         <header class="top vy-user-menu__stakeholder-header"><button type="button" class="va-mobile-menu-btn" aria-controls="vaDashSidebar" aria-expanded="false" aria-label="Open navigation">Menu</button><div class="brand">VAYUMA TRIX<small>AGRITECH INNOVATIONS KENYA</small></div><?php require __DIR__ . '/includes/header_user_menu.php'; ?></header>
         <section class="hero"><small><?php echo htmlspecialchars(strtoupper($role_name), ENT_QUOTES, "UTF-8"); ?> DASHBOARD</small><h1>Welcome, <?php echo htmlspecialchars($full_name, ENT_QUOTES, "UTF-8"); ?> <?php echo $icon; ?></h1><p><?php echo htmlspecialchars($intro, ENT_QUOTES, "UTF-8"); ?></p></section>
         <section class="profile"><div><h2><?php echo htmlspecialchars($profile["organization_name"], ENT_QUOTES, "UTF-8"); ?></h2><p><?php echo htmlspecialchars($profile["county"], ENT_QUOTES, "UTF-8"); ?><?php echo $profile["service_focus"] ? " · " . htmlspecialchars($profile["service_focus"], ENT_QUOTES, "UTF-8") : ""; ?></p></div><a class="va-dash-sidebar--nav-item button" href="stakeholder_profile.php?from=stakeholder_dashboard.php">Edit Profile</a></section>

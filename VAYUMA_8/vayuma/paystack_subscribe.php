@@ -1,8 +1,8 @@
 <?php
 /**
  * VAYUMA — Paystack subscription entry (DISABLED).
- * All new subscription payments now use M-Pesa PayBill STK Push.
- * This file is preserved for historical bookmarks but redirects to the M-Pesa flow.
+ * Subscription payment processing is currently disabled.
+ * This file is preserved for historical bookmarks and redirects to the subscription page.
  */
 session_start();
 require_once __DIR__ . '/config/db.php';
@@ -13,7 +13,6 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['logged_in'] ?? false) !== true) 
     exit;
 }
 
-// All new subscription payments go through M-Pesa STK Push only.
-$_SESSION['mpesa_info'] = 'Paystack checkout is no longer available. Please use M-Pesa PayBill to pay for your subscription.';
+// Never instruct members to send money until verified payments are available.
 header('Location: subscription.php');
 exit;

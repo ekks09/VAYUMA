@@ -77,6 +77,19 @@ function render_subscription_banner(mysqli $conn, int $userId): string
         $title = 'Custom Plan';
         $subText = 'Your account uses a negotiated plan. Institutional invoice support can be added later.';
         $action = '<a href="dashboard.php" class="va-btn va-btn--primary va-btn--sm">Continue to Dashboard</a>';
+    } elseif (!$isAccessible && subscription_dashboard_day_accessible($sub)) {
+        $badgeClass = 'va-sub-banner--info';
+        $badgeText = 'Free day';
+        $title = 'Free dashboard access';
+        $subText = 'Your 24-hour dashboard window is active. Other subscription features remain restricted.';
+        $action = '<a href="subscription.php" class="va-btn va-btn--outline va-btn--sm">View subscription</a>';
+    } elseif ($status === 'trialing' && $isAccessible) {
+        $badgeClass = 'va-sub-banner--active';
+        $badgeText = 'Trial';
+        $title = 'Your trial is active';
+        $days = (int)ceil(max(0, strtotime($sub['trial_ends_at']) - time()) / 86400);
+        $subText = 'Trial ends ' . date('d M Y H:i', strtotime($sub['trial_ends_at'])) . ' (' . $days . ' days remaining). Paybill payments are not yet available.';
+        $action = '<a href="subscription.php" class="va-btn va-btn--outline va-btn--sm">View subscription</a>';
     } elseif ($isAccessible) {
         $badgeClass = 'va-sub-banner--active';
         $badgeText = 'Active';
@@ -89,7 +102,7 @@ function render_subscription_banner(mysqli $conn, int $userId): string
         $badgeText = 'Payment Due';
         $title = 'Payment Required';
         $subText = "Your {$stakeholderName} plan requires payment to activate access.";
-        $action = '<a href="subscription.php" class="va-btn va-btn--primary va-btn--sm">Pay Now</a>';
+        $action = '<a href="subscription.php" class="va-btn va-btn--primary va-btn--sm">View Subscription</a>';
     }
 
     $badgeStyle = '';

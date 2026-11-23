@@ -29,14 +29,14 @@ function subscription_for_user(mysqli $conn, int $userId): ?array
     // Expiration and its history are one atomic transition. Re-check the
     // observed deadline after taking the lock so a renewal cannot be undone.
     $deadlineField = $row && $row['status'] === 'active' ? 'expires_at'
-        : ($row && $row['status'] === 'payment_due' ? 'grace_period_ends_at' : null);
-    if ($deadlineField !== null && !empty($row[$deadlineField]) && strtotime($row[$deadlineField]) < time()) {
+        : ($row && $row['status'] === 'trialing' ? 'trial_ends_at' : null);
+    if ($deadlineField !== null && !empty($row[$deadlineField]) && strtotime($row[$deadlineField]) <= time()) {
         $observedStatus = $row['status'];
         $observedDeadline = $row[$deadlineField];
         $id = (int)$row['id'];
         if (!$conn->begin_transaction()) throw new RuntimeException('Subscription expiry transaction failed');
         try {
-            $lock = $conn->prepare('SELECT status, expires_at, grace_period_ends_at FROM user_subscriptions WHERE id=? FOR UPDATE');
+            $lock = $conn->prepare('SELECT status, expires_at, grace_period_ends_at, trial_ends_at FROM user_subscriptions WHERE id=? FOR UPDATE');
             if (!$lock) throw new RuntimeException('Subscription expiry lookup unavailable');
             $lock->bind_param('i', $id);
             if (!$lock->execute() || !($result = $lock->get_result())) throw new RuntimeException('Subscription expiry lookup unavailable');
@@ -47,13 +47,13 @@ function subscription_for_user(mysqli $conn, int $userId): ?array
                 return null;
             }
             if ($current['status'] === $observedStatus && ($current[$deadlineField] ?? null) === $observedDeadline
-                && !empty($current[$deadlineField]) && strtotime($current[$deadlineField]) < time()) {
+                && !empty($current[$deadlineField]) && strtotime($current[$deadlineField]) <= time()) {
                 $update = $conn->prepare("UPDATE user_subscriptions SET status='expired', updated_at=NOW() WHERE id=? AND status=?");
                 if (!$update) throw new RuntimeException('Subscription expiry update unavailable');
                 $update->bind_param('is', $id, $observedStatus);
                 if (!$update->execute() || $update->affected_rows !== 1) throw new RuntimeException('Subscription expiry update failed');
                 $update->close();
-                $reason = $observedStatus === 'active' ? 'Subscription period ended.' : 'Subscription grace period ended unpaid.';
+                $reason = $observedStatus === 'active' ? 'Subscription period ended.' : 'Trial period ended.';
                 $history = $conn->prepare("INSERT INTO subscription_status_history (user_membership_id, old_status, new_status, reason, source) VALUES (?, ?, 'expired', ?, 'subscription_check')");
                 if (!$history) throw new RuntimeException('Subscription history unavailable');
                 $history->bind_param('iss', $id, $observedStatus, $reason);
@@ -112,13 +112,13 @@ function ensure_user_subscription(mysqli $conn, int $userId, string $role): ?arr
         if ($current) {
             $stmt = $conn->prepare(
                 'UPDATE user_subscriptions
-                 SET plan_id=?, status=?, payment_provider=NULL, paystack_customer_code=NULL,
+                 SET plan_id=?, status=CASE WHEN ?=\'payment_due\' AND has_used_trial=1 AND trial_ends_at>NOW() THEN \'trialing\' ELSE ? END, payment_provider=NULL, paystack_customer_code=NULL,
                      paystack_subscription_code=NULL, expires_at=NULL, next_billing_date=NULL,
                      billing_interval=?, negotiated_approved=?, updated_at=NOW()
                  WHERE id=?'
             );
             if (!$stmt) throw new RuntimeException('Subscription update unavailable');
-            $stmt->bind_param('issii', $plan['id'], $status, $interval, $approved, $current['id']);
+            $stmt->bind_param('isssii', $plan['id'], $status, $status, $interval, $approved, $current['id']);
         } else {
             $stmt = $conn->prepare(
                 'INSERT INTO user_subscriptions
@@ -146,16 +146,29 @@ function subscription_is_accessible(?array $subscription): bool
     if ($subscription['status'] === 'negotiated_plan') {
         return (int)($subscription['negotiated_approved'] ?? 0) === 1;
     }
-    if ($subscription['status'] === 'payment_due' && !empty($subscription['grace_period_ends_at'])) {
-        return strtotime($subscription['grace_period_ends_at']) >= time();
+    if ($subscription['status'] === 'free_account') {
+        return ($subscription['plan_type'] ?? '') === 'free';
     }
-    return in_array($subscription['status'], ['active', 'free_account'], true);
+    if ($subscription['status'] === 'trialing') {
+        return !empty($subscription['trial_ends_at']) && strtotime($subscription['trial_ends_at']) > time();
+    }
+    return $subscription['status'] === 'active' && !empty($subscription['expires_at'])
+        && strtotime($subscription['expires_at']) > time();
+}
+
+// This exception grants the dashboard only, never paid feature/API access.
+function subscription_dashboard_day_accessible(?array $subscription): bool
+{
+    if (!$subscription || ($subscription['plan_type'] ?? '') !== 'paid' || empty($subscription['dashboard_free_until_utc'])) return false;
+    $deadline = strtotime($subscription['dashboard_free_until_utc'] . ' UTC');
+    return $deadline !== false && $deadline > time();
 }
 
 function subscription_status_label(string $status): string
 {
     return [
         'active' => 'Active',
+        'trialing' => 'Trial',
         'payment_due' => 'Payment due',
         'expired' => 'Expired',
         'free_account' => 'Free account',

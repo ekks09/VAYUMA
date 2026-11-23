@@ -87,7 +87,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
                 <?php if (!empty($_SESSION['claim_success'])): unset($_SESSION['claim_success']); ?>
                     <div class="login-success" role="status"><?= htmlspecialchars($current_language === 'sw' ? 'Akaunti imeunganishwa. Ingia ili kukamilisha wasifu wako.' : 'Account claimed. Sign in to complete your profile.', ENT_QUOTES, 'UTF-8') ?></div>
                 <?php endif; ?>
-                <?php if (getenv('VAYUMA_ONBOARDING_ENABLED') === '1' && getenv('VAYUMA_CLAIM_ENABLED') === '1'): ?><p><a class="auth-claim-link" data-claim-source="loginIdentifier" href="claim_account.php"><?= htmlspecialchars($current_language === 'sw' ? 'Una msimbo? Unganisha akaunti yako ya mkulima' : 'Have a code? Claim your farmer account', ENT_QUOTES, 'UTF-8') ?></a></p><?php endif; ?>
+                <?php if (getenv('VAYUMA_ONBOARDING_ENABLED') === '1' && getenv('VAYUMA_CLAIM_ENABLED') === '1'): ?><p><a class="auth-claim-link" data-claim-source="loginIdentifier" href="claim_account.php"><?= htmlspecialchars($current_language === 'sw' ? 'Umesajiliwa na mfanyakazi? Unganisha akaunti yako ya mkulima' : 'Onboarded by staff? Claim your farmer account', ENT_QUOTES, 'UTF-8') ?></a></p><?php endif; ?>
                 <?php if (isset($_GET["error"])): ?>
                     <div class="login-error" role="alert">
                         <?php

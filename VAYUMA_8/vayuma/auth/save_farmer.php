@@ -11,7 +11,8 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['logged_in'] ?? false) !== true) 
 if (($_SESSION['role'] ?? '') !== 'farmer') { http_response_code(403); exit('Access denied.'); }
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') { header('Location: ../profile_setup.php'); exit; }
 require_once __DIR__ . '/../config/db.php';
-
+require_once __DIR__ . '/../includes/farmer_identity.php';
+$farmerId = is_string($_POST['farmer_id'] ?? null) ? trim($_POST['farmer_id']) : '';
 $limits = ['farm_name'=>100, 'county'=>100, 'sub_county'=>100, 'farm_location'=>255,
     'farm_size'=>50, 'farm_size_unit'=>50, 'farming_experience'=>100,
     'main_crops'=>255, 'soil_type'=>100, 'irrigation'=>100, 'secondary_crop'=>50];
@@ -25,15 +26,20 @@ foreach ($limits as $key => $max) {
         header('Location: ../profile_setup.php'); exit;
     }
 }
+if ($farmerId !== '' && !vayuma_farmer_id_valid($farmerId)) {
+    $_SESSION['farm_profile_error'] = 'Enter a valid ID number of 5 to 20 digits.';
+    $_SESSION['farm_profile_old'] = $data;
+    header('Location: ../profile_setup.php'); exit;
+}
 $userId = (int) $_SESSION['user_id'];
 try {
-    $conn->begin_transaction();
+    if (!$conn->begin_transaction()) throw new RuntimeException('Profile save unavailable');
     // Serialize saves for this user even though the attached schema lacks a unique user_id index.
     $lock = $conn->prepare('SELECT id FROM users WHERE id=? FOR UPDATE');
     $lock->bind_param('i', $userId); $lock->execute();
     $user = $lock->get_result()->fetch_assoc(); $lock->close();
     if (!$user) throw new RuntimeException('User unavailable');
-    $lookup = $conn->prepare('SELECT id FROM farmer_profiles WHERE user_id=? ORDER BY id LIMIT 2');
+    $lookup = $conn->prepare('SELECT id, farmer_id_ciphertext FROM farmer_profiles WHERE user_id=? ORDER BY id LIMIT 2');
     $lookup->bind_param('i', $userId); $lookup->execute();
     $result = $lookup->get_result(); $existing = $result->fetch_assoc(); $duplicate = $result->fetch_assoc(); $lookup->close();
     if ($duplicate) {
@@ -41,6 +47,24 @@ try {
         $_SESSION['farm_profile_error'] = 'Multiple farm profiles were found. Please contact support before editing.';
         header('Location: ../profile_setup.php'); exit;
     }
+    $cipher = $farmerId !== '' ? vayuma_farmer_id_encrypt($farmerId) : ($existing['farmer_id_ciphertext'] ?? null);
+    if (!$cipher && $farmerId === '') {
+        // A staff-entered ID may be carried forward only after the record was claimed.
+        $claimed = $conn->prepare("SELECT farmer_id_ciphertext FROM onboarding_records WHERE claimed_by_user_id=? AND stakeholder_role='farmer' LIMIT 1");
+        if (!$claimed) throw new RuntimeException('Profile save unavailable');
+        $claimed->bind_param('i', $userId);
+        if (!$claimed->execute()) throw new RuntimeException('Profile save unavailable');
+        $claimRow = $claimed->get_result()->fetch_assoc(); $claimed->close();
+        $cipher = $claimRow['farmer_id_ciphertext'] ?? null;
+    }
+    if (!$cipher) {
+        $conn->rollback();
+        $_SESSION['farm_profile_error'] = 'Enter a valid ID number of 5 to 20 digits.';
+        $_SESSION['farm_profile_old'] = $data;
+        header('Location: ../profile_setup.php'); exit;
+    }
+    // Fail closed if a saved ID is unreadable with the configured key.
+    if ($farmerId === '') vayuma_farmer_id_decrypt($cipher);
     if ($existing) {
         $stmt = $conn->prepare('UPDATE farmer_profiles SET farm_name=?, county=?, sub_county=?, farm_location=?, farm_size=?, farm_size_unit=?, farming_experience=?, main_crops=?, soil_type=?, irrigation=?, secondary_crop=? WHERE id=? AND user_id=?');
         $id = (int)$existing['id'];
@@ -50,7 +74,13 @@ try {
         $stmt->bind_param('isssssssssss', $userId, $data['farm_name'], $data['county'], $data['sub_county'], $data['farm_location'], $data['farm_size'], $data['farm_size_unit'], $data['farming_experience'], $data['main_crops'], $data['soil_type'], $data['irrigation'], $data['secondary_crop']);
     }
     if (!$stmt->execute()) throw new RuntimeException('Profile save failed');
-    $stmt->close(); $conn->commit();
+    $stmt->close();
+    $saveId = $conn->prepare('UPDATE farmer_profiles SET farmer_id_ciphertext=? WHERE user_id=?');
+    if (!$saveId) throw new RuntimeException('Profile save failed');
+    $saveId->bind_param('si', $cipher, $userId);
+    if (!$saveId->execute()) throw new RuntimeException('Profile save failed');
+    $saveId->close();
+    if (!$conn->commit()) throw new RuntimeException('Profile save failed');
     unset($_SESSION['farm_profile_old']);
     header('Location: ../farmer_dashboard.php'); exit;
 } catch (Throwable $e) {
