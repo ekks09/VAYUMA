@@ -9,7 +9,7 @@ w.eval(fs.readFileSync(path.join(__dirname,'../vayuma/frontend/js/ai-chat.js'),'
 d.querySelector('.vayuma-ai-fab').click();const overlay=d.querySelector('.vai-overlay'),messages=d.querySelector('.vai-messages');
 assert.equal(d.body.classList.contains('vai-dialog-open'),true);assert.equal(overlay.style.getPropertyValue('--vai-vv-height'),'800px');
 Object.defineProperty(messages,'scrollHeight',{value:1200,configurable:true});messages.scrollTop=100; const compose=d.querySelector('.vai-compose');Object.defineProperty(compose,'scrollHeight',{value:500,configurable:true});
-viewport.height=480;viewport.offsetTop=16;events.resize();
+d.querySelector('textarea').focus();viewport.height=480;viewport.offsetTop=16;events.resize();
 assert.equal(overlay.style.getPropertyValue('--vai-vv-height'),'480px');assert.equal(overlay.style.getPropertyValue('--vai-vv-top'),'16px');assert.equal(messages.scrollTop,1200);assert.equal(compose.scrollTop,500);
 viewport.offsetTop=5;events.scroll();assert.equal(overlay.style.getPropertyValue('--vai-vv-top'),'5px');
 w.innerWidth=1000;w.dispatchEvent(new w.Event('resize'));assert.equal(overlay.style.getPropertyValue('--vai-vv-height'),'');
