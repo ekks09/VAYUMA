@@ -64,7 +64,7 @@
     };
     const focusDetails = () => {
       updateFields();
-      const target = role.value === 'farmer' ? document.querySelector('[data-farmer-field]:not([hidden]) input') : intake?.querySelector('[name="preferred_language"]');
+      const target = role.value === 'farmer' ? intake?.querySelector('[data-intake-step="1"] [data-farmer-field]:not([hidden]) input') : intake?.querySelector('[name="preferred_language"]');
       if (target) { goIntakeStep(1); target.scrollIntoView({block:'nearest'}); target.focus({preventScroll:true}); }
     };
     role.addEventListener('change', updateFields);

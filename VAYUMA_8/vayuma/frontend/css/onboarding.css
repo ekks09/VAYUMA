@@ -112,3 +112,9 @@ body{background:#F4F8F6;font-family:'Inter',-apple-system,BlinkMacSystemFont,"Se
   .onboard-records-head{gap:8px}.onboard-export-popover,.onboard-account-menu{max-width:calc(100vw - 32px)}
   .onboard-pages{display:flex;justify-content:center;gap:8px}.onboard-pages a,.onboard-pages button{min-height:44px}
 }
+
+/* Keep the primary download visible, including in the installed mobile app. */
+.onboard-export-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.onboard .onboard-export-actions button{width:auto;min-height:44px}
+.onboard .onboard-export-actions .onboard-export-preview{background:#fff;color:#145d37;border:1px solid #9fc9ab}
+@media(max-width:600px){.onboard-export-actions{width:100%}.onboard .onboard-export-actions button:first-of-type{flex:1}.onboard .onboard-export-actions button{font-size:.85rem;padding:10px 12px}}
